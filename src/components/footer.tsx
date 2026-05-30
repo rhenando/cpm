@@ -19,11 +19,11 @@ export function Footer() {
       <div className="container grid gap-10 py-12 md:grid-cols-[1.1fr_1.2fr_1fr]">
         <div>
           <Image
-            src="/brand/cordova-logo.jpg"
+            src="/brand/CPM-primary-logo-footer.png"
             alt="Cordova Property Management Dubai"
             width={220}
             height={75}
-            className="h-auto w-48 rounded-sm object-contain"
+            className="h-auto w-48 object-contain"
           />
           <p className="mt-5 max-w-sm text-sm leading-7 text-white/72">
             Cordova Property Management supports Dubai landlords with leasing, inspections,
