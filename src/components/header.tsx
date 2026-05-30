@@ -12,9 +12,9 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-[#ece6d8] bg-white/95 backdrop-blur">
       <div className="bg-[#191c33] text-white">
-        <div className="container flex flex-wrap items-center justify-between gap-3 py-2 text-xs font-semibold">
-          <span>The One Tower, Sheikh Zayed Rd, Barsha Heights, Dubai</span>
-          <div className="flex flex-wrap items-center gap-4">
+        <div className="container flex flex-col items-start justify-between gap-2 py-2 text-xs font-semibold sm:flex-row sm:items-center">
+          <span className="leading-5">The One Tower, Sheikh Zayed Rd, Barsha Heights, Dubai</span>
+          <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
             <a className="inline-flex items-center gap-2" href="tel:+971586287157">
               <Phone size={14} aria-hidden />
               +971 58 628 7157
@@ -26,7 +26,7 @@ export function Header() {
           </div>
         </div>
       </div>
-      <div className="container flex h-20 items-center justify-between gap-6">
+      <div className="container flex h-16 items-center justify-between gap-4 sm:h-20 sm:gap-6">
         <Link href="/" className="flex items-center gap-3" aria-label="Cordova Property home">
           <Image
             src="/brand/CPM-primary-logo-header.png"
@@ -34,7 +34,7 @@ export function Header() {
             width={220}
             height={75}
             priority
-            className="h-auto w-44 object-contain"
+            className="h-auto w-36 object-contain sm:w-44"
           />
         </Link>
         <nav className="hidden items-center gap-6 lg:flex">

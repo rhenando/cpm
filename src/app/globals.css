@@ -31,8 +31,16 @@ a {
 
 button,
 input,
-textarea {
+textarea,
+select {
   font: inherit;
+}
+
+img,
+svg,
+video,
+canvas {
+  max-width: 100%;
 }
 
 .section {
@@ -99,10 +107,14 @@ textarea {
 
 @media (max-width: 760px) {
   .section {
-    padding: 64px 0;
+    padding: 56px 0;
   }
 
   .container {
     width: min(100% - 28px, 1180px);
+  }
+
+  .field {
+    padding: 0.85rem 0.9rem;
   }
 }

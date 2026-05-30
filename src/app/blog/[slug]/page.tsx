@@ -37,7 +37,7 @@ export default async function BlogPostPage({ params }: Props) {
       <section className="bg-[#191c33] py-16 text-white md:py-24">
         <div className="container max-w-4xl">
           <p className="eyebrow">Insight</p>
-          <h1 className="mt-4 text-4xl font-extrabold leading-tight md:text-6xl">{post.title}</h1>
+          <h1 className="mt-4 text-3xl font-extrabold leading-tight sm:text-4xl md:text-6xl">{post.title}</h1>
           <p className="mt-5 max-w-2xl text-white/72">{post.description}</p>
         </div>
       </section>
@@ -48,7 +48,7 @@ export default async function BlogPostPage({ params }: Props) {
             alt={post.title}
             width={1200}
             height={620}
-            className="aspect-[16/7] w-full rounded-lg object-cover shadow-xl"
+            className="aspect-[16/10] w-full rounded-lg object-cover shadow-xl sm:aspect-[16/7]"
           />
         </div>
       ) : null}

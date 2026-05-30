@@ -53,7 +53,7 @@ export default async function StaticPage({ params }: Props) {
         {doc.image ? <Image src={doc.image} alt="" fill className="object-cover opacity-25" /> : null}
         <div className="container relative max-w-4xl">
           <p className="eyebrow">Cordova Property Management</p>
-          <h1 className="mt-4 text-4xl font-extrabold leading-tight md:text-6xl">{doc.title}</h1>
+          <h1 className="mt-4 text-3xl font-extrabold leading-tight sm:text-4xl md:text-6xl">{doc.title}</h1>
           <p className="mt-5 max-w-2xl text-white/75">{doc.description}</p>
         </div>
       </section>
@@ -92,7 +92,7 @@ function PropertiesPage() {
     <section className="section bg-[#f6f5f1]">
       <div className="container">
         <p className="eyebrow">Rentals</p>
-        <h1 className="mt-4 text-5xl font-extrabold text-[#191c33]">Properties for rent Dubai</h1>
+        <h1 className="mt-4 text-3xl font-extrabold text-[#191c33] sm:text-5xl">Properties for rent Dubai</h1>
         <p className="mt-5 max-w-2xl leading-8 text-[#626473]">
           Professionally managed luxury residences in Dubai.
         </p>
@@ -107,7 +107,7 @@ function PropertiesPage() {
                 alt={property.imageAlt}
                 width={900}
                 height={430}
-                className="h-[260px] w-full object-cover"
+                className="h-52 w-full object-cover sm:h-64"
               />
               <div className="p-5 md:p-6">
                 <h2 className="text-xl font-extrabold leading-snug text-[#191c33]">
@@ -142,7 +142,7 @@ function ContactPage({ doc }: { doc: { title: string; description: string; conte
       <div className="container grid gap-12 lg:grid-cols-[0.9fr_1.1fr]">
         <div>
           <p className="eyebrow">Contact</p>
-          <h1 className="mt-4 text-5xl font-extrabold text-[#191c33]">{doc.title}</h1>
+          <h1 className="mt-4 text-3xl font-extrabold text-[#191c33] sm:text-5xl">{doc.title}</h1>
           <p className="mt-5 leading-8 text-[#626473]">{doc.description}</p>
           <div className="mt-8 rounded-lg bg-white p-6">
             <DocContent content={doc.content} />

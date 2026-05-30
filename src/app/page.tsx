@@ -14,23 +14,23 @@ const managementImage =
 export default function HomePage() {
   return (
     <>
-      <section className="relative min-h-[720px] overflow-hidden bg-[#191c33] text-white">
+      <section className="relative min-h-[620px] overflow-hidden bg-[#191c33] text-white md:min-h-[720px]">
         <Image src={heroImage} alt="Dubai skyline and property" fill priority className="object-cover" />
         <div className="absolute inset-0 bg-[#080914]/65" />
-        <div className="container relative flex min-h-[720px] items-center py-20">
+        <div className="container relative flex min-h-[620px] items-center py-16 md:min-h-[720px] md:py-20">
           <div className="max-w-2xl">
             <p className="eyebrow">Cordova Property Management</p>
-            <h1 className="mt-5 text-balance text-5xl font-extrabold uppercase leading-tight text-white md:text-7xl">
+            <h1 className="mt-5 text-balance text-4xl font-extrabold uppercase leading-tight text-white sm:text-5xl md:text-7xl">
               Property Management Dubai
             </h1>
             <div className="my-7 h-px w-56 bg-[#bd8f13]" />
-            <p className="max-w-xl text-lg leading-8 text-white/86">
+            <p className="max-w-xl text-base leading-8 text-white/86 sm:text-lg">
               Whether you own a luxury property in Dubai, or you&apos;re looking for a long-term or
               short-term lease, our dedicated team are on hand to help. Explore our comprehensive
               list of services and discover why Cordova Properties is the preferred choice for
               property management in Dubai.
             </p>
-            <div className="mt-9 flex flex-wrap gap-3">
+            <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               <ButtonLink href="/contact">Download brochure</ButtonLink>
               <ButtonLink
                 href="/property-management"
@@ -48,7 +48,7 @@ export default function HomePage() {
         <div className="container grid gap-12 lg:grid-cols-[1.1fr_0.9fr]">
           <div>
             <p className="eyebrow">Expert care</p>
-            <h2 className="mt-4 text-4xl font-extrabold leading-tight text-[#191c33] md:text-5xl">
+            <h2 className="mt-4 text-3xl font-extrabold leading-tight text-[#191c33] sm:text-4xl md:text-5xl">
               Expert Property Management Dubai
             </h2>
             <div className="mt-6 max-w-2xl space-y-4 leading-8 text-[#5e6070]">
@@ -102,7 +102,7 @@ export default function HomePage() {
           />
           <div>
             <p className="eyebrow">Why Cordova</p>
-            <h2 className="mt-4 text-4xl font-extrabold leading-tight text-[#191c33]">
+            <h2 className="mt-4 text-3xl font-extrabold leading-tight text-[#191c33] sm:text-4xl">
               Why You Need Property Management
             </h2>
             <div className="mt-6 space-y-4 leading-8 text-[#5e6070]">
@@ -131,7 +131,7 @@ export default function HomePage() {
         <div className="container grid items-center gap-12 lg:grid-cols-2">
           <div>
             <p className="eyebrow">Services</p>
-            <h2 className="mt-4 text-4xl font-extrabold leading-tight text-[#191c33]">
+            <h2 className="mt-4 text-3xl font-extrabold leading-tight text-[#191c33] sm:text-4xl">
               Our property management services in Dubai
             </h2>
             <div className="mt-6 space-y-4 leading-8 text-[#5e6070]">
@@ -252,7 +252,7 @@ export default function HomePage() {
           <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
             <div className="max-w-2xl">
               <p className="eyebrow">Rentals</p>
-              <h2 className="mt-4 text-4xl font-extrabold">Properties for rent in Dubai</h2>
+              <h2 className="mt-4 text-3xl font-extrabold sm:text-4xl">Properties for rent in Dubai</h2>
               <p className="mt-4 leading-7 text-white/70">
                 Professionally managed residences selected for location, presentation, and tenant
                 readiness.
@@ -271,7 +271,7 @@ export default function HomePage() {
                   alt={property.imageAlt}
                   width={900}
                   height={430}
-                  className="h-[240px] w-full object-cover"
+                  className="h-52 w-full object-cover sm:h-60"
                 />
                 <div className="p-5 md:p-6">
                   <h3 className="text-xl font-extrabold leading-snug">{property.title}</h3>
@@ -301,7 +301,7 @@ export default function HomePage() {
           <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
             <div>
               <p className="eyebrow">News</p>
-              <h2 className="mt-4 text-4xl font-extrabold text-[#191c33]">Dubai real estate insights</h2>
+              <h2 className="mt-4 text-3xl font-extrabold text-[#191c33] sm:text-4xl">Dubai real estate insights</h2>
             </div>
             <ButtonLink href="/blog" variant="ghost">
               Read news

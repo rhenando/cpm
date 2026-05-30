@@ -12,7 +12,9 @@ export default function BlogPage() {
     <section className="section bg-[#f6f5f1]">
       <div className="container">
         <p className="eyebrow">News</p>
-        <h1 className="mt-4 text-5xl font-extrabold text-[#191c33]">News and insights on Dubai real estate</h1>
+        <h1 className="mt-4 text-3xl font-extrabold text-[#191c33] sm:text-5xl">
+          News and insights on Dubai real estate
+        </h1>
         <div className="mt-10 grid gap-5 md:grid-cols-2 lg:grid-cols-3">
           {posts.map((post) => (
             <Link key={post.id} href={docHref(post)} className="rounded-lg bg-white p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
