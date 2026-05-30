@@ -29,12 +29,12 @@ export function Header() {
       <div className="container flex h-20 items-center justify-between gap-6">
         <Link href="/" className="flex items-center gap-3" aria-label="Cordova Property home">
           <Image
-            src="https://cordovaproperty.com/wp-content/uploads/2024/05/cropped-CPM-primary-logo-HD.png"
+            src="/brand/cordova-logo.jpg"
             alt="Cordova Property Management"
-            width={178}
-            height={60}
+            width={220}
+            height={75}
             priority
-            className="h-auto w-40"
+            className="h-auto w-44 rounded-sm object-contain"
           />
         </Link>
         <nav className="hidden items-center gap-6 lg:flex">
