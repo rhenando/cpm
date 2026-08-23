@@ -12,9 +12,9 @@ export function Header() {
   return (
     <header className="sticky top-0 z-50 border-b border-[#d3d3d3] bg-white/95 backdrop-blur">
       <div className="bg-[#191c33] text-white">
-        <div className="container flex flex-col items-start justify-between gap-2 py-2 text-xs font-semibold sm:flex-row sm:items-center">
-          <span className="leading-5">The One Tower, Sheikh Zayed Rd, Barsha Heights, Dubai</span>
-          <div className="flex flex-col gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:gap-4">
+        <div className="container flex items-center justify-between gap-3 py-2 text-[0.68rem] font-semibold sm:text-xs">
+          <span className="hidden leading-5 sm:block">The One Tower, Sheikh Zayed Rd, Barsha Heights, Dubai</span>
+          <div className="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-x-3 gap-y-1 sm:flex-none sm:justify-end sm:gap-4">
             <a className="inline-flex items-center gap-2" href="tel:+971586287157">
               <Phone size={14} aria-hidden />
               +971 58 628 7157
@@ -83,7 +83,7 @@ export function Header() {
         </button>
       </div>
       {open ? (
-        <nav className="border-t border-[#d3d3d3] bg-white lg:hidden">
+        <nav className="max-h-[calc(100svh-7rem)] overflow-y-auto overscroll-contain border-t border-[#d3d3d3] bg-white lg:hidden">
           <div className="container grid gap-1 py-4">
             {navItems.map((item) => (
               <div key={item.href}>

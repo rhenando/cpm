@@ -21,10 +21,13 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
   margin: 0;
+  min-width: 0;
+  overflow-x: hidden;
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-montserrat), Arial, sans-serif;
@@ -49,6 +52,36 @@ canvas {
   max-width: 100%;
 }
 
+main,
+section,
+article,
+aside,
+header,
+footer,
+nav,
+div {
+  min-width: 0;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+li,
+address {
+  overflow-wrap: anywhere;
+}
+
+iframe {
+  max-width: 100%;
+}
+
+pre {
+  max-width: 100%;
+  overflow-x: auto;
+}
+
 .section {
   padding: 88px 0;
 }
@@ -71,6 +104,8 @@ canvas {
 }
 
 .prose-doc {
+  min-width: 0;
+  overflow-wrap: anywhere;
   color: var(--contrast-3);
   font-size: 1rem;
   line-height: 1.85;
@@ -230,5 +265,14 @@ canvas {
 
   .field {
     padding: 0.85rem 0.9rem;
+  }
+
+  .article-prose .prose-doc {
+    font-size: 1rem;
+    line-height: 1.8;
+  }
+
+  .article-prose .prose-doc h2 {
+    margin-top: 2.5rem;
   }
 }

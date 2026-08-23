@@ -36,13 +36,14 @@ export function Footer() {
           <br />
           Dubai, UAE
           <a className="mt-4 flex items-start gap-2 text-white" href="tel:+971586287157">
-            <Phone size={16} aria-hidden /> +971 58 628 7157 | +971 58 658 0518
+            <Phone className="mt-1 shrink-0" size={16} aria-hidden />
+            <span>+971 58 628 7157 | +971 58 658 0518</span>
           </a>
           <a
             className="mt-2 flex items-start gap-2 break-all text-white"
             href="mailto:customer@cordovaproperty.com"
           >
-            <Mail size={16} aria-hidden /> customer@cordovaproperty.com
+            <Mail className="mt-1 shrink-0" size={16} aria-hidden /> customer@cordovaproperty.com
           </a>
         </address>
         <div>

@@ -14,13 +14,13 @@ const managementImage =
 export default function HomePage() {
   return (
     <>
-      <section className="relative min-h-[620px] overflow-hidden bg-[#191c33] text-white md:min-h-[720px]">
+      <section className="relative min-h-[560px] overflow-hidden bg-[#191c33] text-white sm:min-h-[620px] md:min-h-[720px]">
         <Image src={heroImage} alt="Dubai skyline and property" fill priority className="object-cover" />
         <div className="absolute inset-0 bg-[#080914]/65" />
-        <div className="container relative flex min-h-[620px] items-center py-16 md:min-h-[720px] md:py-20">
+        <div className="container relative flex min-h-[560px] items-center py-12 sm:min-h-[620px] sm:py-16 md:min-h-[720px] md:py-20">
           <div className="max-w-2xl">
             <p className="eyebrow">Cordova Property Management</p>
-            <h1 className="mt-5 text-balance text-4xl font-extrabold uppercase leading-tight text-white sm:text-5xl md:text-7xl">
+            <h1 className="mt-5 text-balance text-3xl font-extrabold uppercase leading-tight text-white min-[380px]:text-4xl sm:text-5xl md:text-7xl">
               Property Management Dubai
             </h1>
             <div className="my-7 h-px w-56 bg-[#bd8f13]" />

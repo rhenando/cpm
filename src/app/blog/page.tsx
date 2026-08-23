@@ -32,7 +32,7 @@ export default async function BlogPage() {
             <span className="h-px w-12 bg-[#bd8f13]" /> Cordova journal
           </div>
           <div className="mt-7 grid items-end gap-8 lg:grid-cols-[1fr_0.58fr]">
-            <h1 className="max-w-4xl text-balance text-5xl font-extrabold leading-[1.02] sm:text-6xl md:text-7xl">
+            <h1 className="max-w-4xl text-balance text-4xl font-extrabold leading-[1.05] sm:text-6xl md:text-7xl">
               News and insights on
               <span className="block font-serif font-normal italic text-[#bd8f13]">Dubai real estate.</span>
             </h1>
@@ -51,7 +51,7 @@ export default async function BlogPage() {
               <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[#191c33]/45">Latest edition</span>
             </div>
             <Link href={docHref(featured)} className="group grid overflow-hidden bg-[#191c33] text-white lg:grid-cols-[1.12fr_0.88fr]">
-              <div className="relative min-h-[360px] overflow-hidden bg-[#242424] md:min-h-[520px]">
+              <div className="relative min-h-[260px] overflow-hidden bg-[#242424] sm:min-h-[360px] md:min-h-[520px]">
                 {featured.image ? (
                   <Image src={featured.image} alt={featured.title} fill priority sizes="(max-width: 1024px) 100vw, 58vw" className="object-cover transition duration-700 group-hover:scale-[1.025]" />
                 ) : null}
@@ -60,7 +60,7 @@ export default async function BlogPage() {
               <div className="relative flex flex-col justify-center px-7 py-10 sm:px-12 lg:px-14">
                 <div className="absolute right-0 top-0 h-24 w-1 bg-[#bd8f13]" />
                 <p className="text-xs font-bold uppercase tracking-[0.18em] text-[#bd8f13]">{formatDate(featured.date)}</p>
-                <h2 className="mt-6 text-balance text-3xl font-extrabold leading-tight text-white sm:text-4xl">{featured.title}</h2>
+                <h2 className="mt-6 text-balance text-2xl font-extrabold leading-tight text-white sm:text-4xl">{featured.title}</h2>
                 <span className="mt-9 inline-flex items-center gap-3 text-xs font-extrabold uppercase tracking-[0.18em] text-[#bd8f13]">
                   Read the article
                   <ArrowUpRight size={17} className="transition group-hover:-translate-y-1 group-hover:translate-x-1" aria-hidden />

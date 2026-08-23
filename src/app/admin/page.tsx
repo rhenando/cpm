@@ -52,12 +52,12 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
             <label className="group grid cursor-pointer gap-3 border border-[#d3d3d3] p-6 transition hover:border-[#bd8f13]">
               <span className="flex items-center gap-3 text-sm font-extrabold uppercase tracking-wide text-[#191c33]"><FileText className="text-[#bd8f13]" aria-hidden /> Article PDF</span>
               <span className="text-sm text-[#242424]/60">PDF with selectable text, maximum 4 MB.</span>
-              <input name="pdf" type="file" accept="application/pdf,.pdf" required className="mt-2 block w-full text-sm file:mr-4 file:border-0 file:bg-[#191c33] file:px-4 file:py-3 file:font-bold file:text-white" />
+              <input name="pdf" type="file" accept="application/pdf,.pdf" required className="mt-2 block w-full max-w-full text-xs file:mr-2 file:max-w-full file:border-0 file:bg-[#191c33] file:px-3 file:py-3 file:text-xs file:font-bold file:text-white sm:text-sm sm:file:mr-4 sm:file:px-4" />
             </label>
             <label className="group grid cursor-pointer gap-3 border border-[#d3d3d3] p-6 transition hover:border-[#bd8f13]">
               <span className="flex items-center gap-3 text-sm font-extrabold uppercase tracking-wide text-[#191c33]"><ImageIcon className="text-[#bd8f13]" aria-hidden /> Featured image</span>
               <span className="text-sm text-[#242424]/60">JPG, PNG or WebP, maximum 5 MB.</span>
-              <input name="image" type="file" accept="image/jpeg,image/png,image/webp" required className="mt-2 block w-full text-sm file:mr-4 file:border-0 file:bg-[#191c33] file:px-4 file:py-3 file:font-bold file:text-white" />
+              <input name="image" type="file" accept="image/jpeg,image/png,image/webp" required className="mt-2 block w-full max-w-full text-xs file:mr-2 file:max-w-full file:border-0 file:bg-[#191c33] file:px-3 file:py-3 file:text-xs file:font-bold file:text-white sm:text-sm sm:file:mr-4 sm:file:px-4" />
             </label>
             <label className="grid gap-3 border border-[#d3d3d3] p-6 text-sm font-extrabold uppercase tracking-wide text-[#191c33]">
               Publish date and time

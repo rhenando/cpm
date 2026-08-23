@@ -142,7 +142,7 @@ const team = [
 function AboutPage() {
   return (
     <main className="overflow-hidden bg-white">
-      <section className="relative min-h-[680px] bg-[#191c33] text-white md:min-h-[760px]">
+      <section className="relative min-h-[560px] bg-[#191c33] text-white sm:min-h-[680px] md:min-h-[760px]">
         <Image
           src="https://cordovaproperty.com/wp-content/uploads/2024/06/Dubai-Property1.jpg"
           alt="Luxury property overlooking the Dubai skyline"
@@ -152,13 +152,13 @@ function AboutPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#191c33] via-[#191c33]/85 to-[#191c33]/25" />
         <div className="absolute inset-0 bg-gradient-to-t from-[#191c33] via-transparent to-transparent" />
-        <div className="container relative flex min-h-[680px] items-center py-24 md:min-h-[760px]">
+        <div className="container relative flex min-h-[560px] items-center py-16 sm:min-h-[680px] sm:py-24 md:min-h-[760px]">
           <div className="max-w-3xl">
             <div className="mb-8 flex items-center gap-4 text-xs font-extrabold uppercase tracking-[0.28em] text-[#bd8f13]">
               <span className="h-px w-12 bg-[#bd8f13]" />
               About Cordova
             </div>
-            <h1 className="text-balance text-5xl font-extrabold leading-[1.02] sm:text-6xl md:text-7xl lg:text-[5.5rem]">
+            <h1 className="text-balance text-4xl font-extrabold leading-[1.05] sm:text-6xl md:text-7xl lg:text-[5.5rem]">
               Property care,
               <span className="block font-light italic text-[#bd8f13]">elevated.</span>
             </h1>
@@ -189,7 +189,7 @@ function AboutPage() {
               <span className="h-px w-12 bg-[#bd8f13]" />
               Our story
             </div>
-            <h2 className="mt-6 text-5xl font-extrabold leading-[0.95] text-[#191c33] sm:text-6xl md:text-7xl">
+            <h2 className="mt-6 text-4xl font-extrabold leading-[1] text-[#191c33] sm:text-6xl md:text-7xl">
               About
               <span className="ml-3 font-serif font-normal italic text-[#bd8f13] sm:ml-4">Us</span>
             </h2>
@@ -329,7 +329,7 @@ function AboutPage() {
             {team.map((member) => {
               const card = (
                 <article className="group relative h-full overflow-hidden rounded-xl border border-[#c5a76c] bg-[#191c33] text-left shadow-[0_14px_34px_rgba(25,28,51,0.22),0_0_0_4px_rgba(197,167,108,0.08)] transition duration-300 hover:-translate-y-[7px] hover:border-[#dfc58f] hover:shadow-[0_24px_52px_rgba(25,28,51,0.32),0_0_0_5px_rgba(197,167,108,0.14)]">
-                  <div className="relative h-[400px] overflow-hidden bg-[#d8d1c3]">
+                  <div className="relative h-[340px] overflow-hidden bg-[#d8d1c3] sm:h-[400px]">
                     <Image
                       src={member.image}
                       alt={member.name}
@@ -484,7 +484,7 @@ function PropertiesPage() {
 function ContactPage({ doc }: { doc: { title: string; description: string; content: string } }) {
   return (
     <main className="overflow-hidden bg-[#f7f8f9]">
-      <section className="relative isolate min-h-[580px] overflow-hidden bg-[#191c33] text-white">
+      <section className="relative isolate min-h-[500px] overflow-hidden bg-[#191c33] text-white sm:min-h-[580px]">
         <Image
           src="https://cordovaproperty.com/wp-content/uploads/2024/06/Dubai-Property2.jpg"
           alt="Dubai skyline and luxury property"
@@ -495,13 +495,13 @@ function ContactPage({ doc }: { doc: { title: string; description: string; conte
         />
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#191c33] via-[#191c33]/88 to-[#191c33]/30" />
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-[#191c33]/80 via-transparent to-[#191c33]/20" />
-        <div className="container flex min-h-[580px] items-center py-20">
+        <div className="container flex min-h-[500px] items-center py-14 sm:min-h-[580px] sm:py-20">
           <div className="max-w-3xl">
             <div className="flex items-center gap-4 text-xs font-extrabold uppercase tracking-[0.28em] text-[#bd8f13]">
               <span className="h-px w-12 bg-[#bd8f13]" />
               Contact Cordova
             </div>
-            <h1 className="mt-7 text-balance text-5xl font-extrabold leading-[1.02] sm:text-6xl md:text-7xl">
+            <h1 className="mt-7 text-balance text-4xl font-extrabold leading-[1.05] sm:text-6xl md:text-7xl">
               Let&apos;s discuss your
               <span className="block font-serif font-normal italic text-[#bd8f13]">property goals.</span>
             </h1>

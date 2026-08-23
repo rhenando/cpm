@@ -47,8 +47,8 @@ export default async function BlogPostPage({ params }: Props) {
     <article className="bg-[#f7f8f9]">
       <section className="relative isolate overflow-hidden bg-[#191c33] text-white">
         <div className="absolute -left-48 -top-48 -z-10 h-[520px] w-[520px] rounded-full border border-[#bd8f13]/15" />
-        <div className="container grid min-h-[620px] items-stretch lg:grid-cols-[0.92fr_1.08fr]">
-          <div className="flex flex-col justify-center py-16 pr-0 lg:py-24 lg:pr-16">
+        <div className="container grid items-stretch lg:min-h-[620px] lg:grid-cols-[0.92fr_1.08fr]">
+          <div className="flex flex-col justify-center py-12 pr-0 sm:py-16 lg:py-24 lg:pr-16">
             <Link href="/blog" className="group inline-flex w-fit items-center gap-2 text-xs font-extrabold uppercase tracking-[0.18em]">
               <ArrowLeft size={16} className="text-[#bd8f13] transition group-hover:-translate-x-1" aria-hidden />
               <span className="text-[#bd8f13]">Back to the journal</span>
@@ -57,7 +57,7 @@ export default async function BlogPostPage({ params }: Props) {
               <span className="h-px w-10 bg-[#bd8f13]" />
               Insight
             </div>
-            <h1 className="mt-6 text-balance text-4xl font-extrabold leading-[1.08] text-white sm:text-5xl xl:text-6xl">
+            <h1 className="mt-6 text-balance text-3xl font-extrabold leading-[1.08] text-white sm:text-5xl xl:text-6xl">
               {post.title}
             </h1>
             <div className="mt-8 flex items-center gap-3 text-sm text-white/55">
@@ -66,7 +66,7 @@ export default async function BlogPostPage({ params }: Props) {
             </div>
           </div>
 
-          <div className="relative min-h-[420px] border-l border-[#bd8f13]/25 lg:min-h-full">
+          <div className="relative min-h-[280px] border-t border-[#bd8f13]/25 sm:min-h-[380px] lg:min-h-full lg:border-l lg:border-t-0">
             {post.image ? (
               <Image
                 src={post.image}
@@ -96,7 +96,7 @@ export default async function BlogPostPage({ params }: Props) {
             <p className="mt-2 text-sm leading-6 text-white/70">Cordova property insight</p>
           </aside>
 
-          <div className="article-prose border-t border-[#bd8f13] bg-white px-6 py-10 shadow-[0_24px_70px_rgba(25,28,51,0.08)] sm:px-10 md:px-14 md:py-14 lg:order-1">
+          <div className="article-prose border-t border-[#bd8f13] bg-white px-5 py-9 shadow-[0_24px_70px_rgba(25,28,51,0.08)] sm:px-10 md:px-14 md:py-14 lg:order-1">
             <DocContent content={post.content} title={post.title} />
             <div className="article-contact-panel mt-14 text-center">
               <p className="text-xs font-extrabold uppercase tracking-[0.2em] text-[#bd8f13]">Professional property support</p>
