@@ -40,6 +40,14 @@ function getPublishDate(value: FormDataEntryValue | null) {
   return Number.isNaN(date.getTime()) ? null : date;
 }
 
+async function installPdfNodeGlobals() {
+  const { DOMMatrix, ImageData, Path2D } = await import("@napi-rs/canvas");
+  const nodeGlobals = globalThis as unknown as Record<string, unknown>;
+  nodeGlobals.DOMMatrix ??= DOMMatrix;
+  nodeGlobals.ImageData ??= ImageData;
+  nodeGlobals.Path2D ??= Path2D;
+}
+
 export async function login(formData: FormData) {
   const email = String(formData.get("email") || "").trim().toLowerCase();
   const password = String(formData.get("password") || "");
@@ -82,6 +90,7 @@ export async function publishPost(formData: FormData) {
 
   let content = "";
   try {
+    await installPdfNodeGlobals();
     const { PDFParse } = await import("pdf-parse");
     const parser = new PDFParse({ data: Buffer.from(await pdf.arrayBuffer()) });
     const text = await parser.getText();
