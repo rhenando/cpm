@@ -28,7 +28,7 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
       />
       <button
         type="submit"
-        className="inline-flex min-h-11 items-center justify-center rounded-md bg-[#bd8f13] px-5 py-3 text-sm font-extrabold uppercase tracking-wide text-white shadow-sm transition hover:bg-[#d0a424] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#bd8f13]"
+        className="inline-flex min-h-11 items-center justify-center rounded-md bg-[#bd8f13] px-5 py-3 text-sm font-extrabold uppercase tracking-wide text-white shadow-sm transition hover:bg-[#ca8a04] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#bd8f13]"
       >
         Submit
       </button>

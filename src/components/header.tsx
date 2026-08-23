@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { Mail, Menu, Phone, X } from "lucide-react";
+import { ChevronDown, Mail, Menu, Phone, X } from "lucide-react";
 import { useState } from "react";
 import { navItems } from "@/data/site";
 
@@ -10,7 +10,7 @@ export function Header() {
   const [open, setOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[#ece6d8] bg-white/95 backdrop-blur">
+    <header className="sticky top-0 z-50 border-b border-[#d3d3d3] bg-white/95 backdrop-blur">
       <div className="bg-[#191c33] text-white">
         <div className="container flex flex-col items-start justify-between gap-2 py-2 text-xs font-semibold sm:flex-row sm:items-center">
           <span className="leading-5">The One Tower, Sheikh Zayed Rd, Barsha Heights, Dubai</span>
@@ -38,19 +38,43 @@ export function Header() {
           />
         </Link>
         <nav className="hidden items-center gap-6 lg:flex">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-xs font-extrabold uppercase tracking-wide text-[#191c33] transition hover:text-[#bd8f13]"
-            >
-              {item.label}
-            </Link>
-          ))}
+          {navItems.map((item) =>
+            item.children ? (
+              <div key={item.href} className="group relative">
+                <button
+                  type="button"
+                  className="inline-flex cursor-pointer appearance-none items-center gap-1.5 border-0 bg-transparent px-0 py-7 text-xs font-extrabold uppercase tracking-wide text-[#191c33] transition hover:text-[#bd8f13]"
+                  aria-haspopup="true"
+                >
+                  {item.label}
+                  <ChevronDown size={14} strokeWidth={2.5} className="transition group-hover:rotate-180 group-focus-within:rotate-180" aria-hidden />
+                </button>
+                <div className="invisible absolute left-1/2 top-full w-64 -translate-x-1/2 translate-y-2 border-t-2 border-[#bd8f13] bg-white p-2 opacity-0 shadow-[0_18px_45px_rgba(25,28,51,0.18)] transition duration-200 group-hover:visible group-hover:translate-y-0 group-hover:opacity-100 group-focus-within:visible group-focus-within:translate-y-0 group-focus-within:opacity-100">
+                  {item.children.map((child) => (
+                    <Link
+                      key={child.href}
+                      href={child.href}
+                      className="block border-b border-[#f1f0f3] px-4 py-3.5 text-xs font-bold uppercase tracking-wide text-[#191c33] transition last:border-0 hover:bg-[#f7f8f9] hover:pl-5 hover:text-[#bd8f13]"
+                    >
+                      {child.label}
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <Link
+                key={item.href}
+                href={item.href}
+                className="inline-flex items-center py-7 text-xs font-extrabold uppercase tracking-wide text-[#191c33] transition hover:text-[#bd8f13]"
+              >
+                {item.label}
+              </Link>
+            )
+          )}
         </nav>
         <button
           type="button"
-          className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-[#e6e0d2] text-[#191c33] lg:hidden"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-md border border-[#d3d3d3] text-[#191c33] lg:hidden"
           onClick={() => setOpen((value) => !value)}
           aria-label={open ? "Close menu" : "Open menu"}
           aria-expanded={open}
@@ -59,17 +83,39 @@ export function Header() {
         </button>
       </div>
       {open ? (
-        <nav className="border-t border-[#ece6d8] bg-white lg:hidden">
+        <nav className="border-t border-[#d3d3d3] bg-white lg:hidden">
           <div className="container grid gap-1 py-4">
             {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="rounded-md px-3 py-3 text-sm font-extrabold uppercase tracking-wide text-[#191c33] hover:bg-[#f6f5f1]"
-                onClick={() => setOpen(false)}
-              >
-                {item.label}
-              </Link>
+              <div key={item.href}>
+                {item.children ? (
+                  <div className="flex items-center justify-between rounded-md px-3 py-3 text-sm font-extrabold uppercase tracking-wide text-[#191c33]">
+                    {item.label}
+                    <ChevronDown size={16} className="text-[#bd8f13]" aria-hidden />
+                  </div>
+                ) : (
+                  <Link
+                    href={item.href}
+                    className="flex items-center justify-between rounded-md px-3 py-3 text-sm font-extrabold uppercase tracking-wide text-[#191c33] hover:bg-[#f1f0f3]"
+                    onClick={() => setOpen(false)}
+                  >
+                    {item.label}
+                  </Link>
+                )}
+                {item.children ? (
+                  <div className="ml-3 border-l border-[#bd8f13]/50 pl-3">
+                    {item.children.map((child) => (
+                      <Link
+                        key={child.href}
+                        href={child.href}
+                        className="block rounded-md px-3 py-2.5 text-xs font-bold uppercase tracking-wide text-[#242424] hover:bg-[#f1f0f3] hover:text-[#bd8f13]"
+                        onClick={() => setOpen(false)}
+                      >
+                        {child.label}
+                      </Link>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
             ))}
           </div>
         </nav>

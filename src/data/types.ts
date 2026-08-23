@@ -1,5 +1,5 @@
 export type StaticDoc = {
-  id: number;
+  id: number | string;
   slug: string;
   title: string;
   description: string;
@@ -10,6 +10,7 @@ export type StaticDoc = {
   type: "page" | "post";
   date: string;
   modified: string;
+  pdfUrl?: string;
 };
 
 export type NavItem = {

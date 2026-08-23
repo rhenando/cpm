@@ -15,8 +15,8 @@ export function ButtonLink({ href, children, variant = "gold", className }: Butt
       href={href}
       className={clsx(
         "inline-flex min-h-11 max-w-full items-center justify-center gap-2 rounded-md px-5 py-3 text-center text-sm font-extrabold uppercase tracking-wide transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#bd8f13]",
-        variant === "gold" && "bg-[#bd8f13] text-white shadow-sm hover:bg-[#d0a424]",
-        variant === "navy" && "bg-[#191c33] text-white hover:bg-[#25294a]",
+        variant === "gold" && "bg-[#bd8f13] text-white shadow-sm hover:bg-[#ca8a04]",
+        variant === "navy" && "bg-[#191c33] text-white hover:bg-[#242424]",
         variant === "ghost" &&
           "border border-[#bd8f13] bg-transparent text-[#191c33] hover:bg-[#bd8f13] hover:text-white",
         className

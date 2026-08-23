@@ -12,7 +12,16 @@ export const posts = docs.filter((doc) => doc.type === "post");
 export const navItems: NavItem[] = [
   { label: "Home", href: "/" },
   { label: "About Us", href: "/about-cordova-property-management" },
-  { label: "Our Services", href: "/our-services" },
+  {
+    label: "Our Services",
+    href: "",
+    children: [
+      { label: "Property Management", href: "/property-management" },
+      { label: "Holiday Homes", href: "/holiday-homes" },
+      { label: "Cleaning Services", href: "/cleaning-services" },
+      { label: "Snagging Inspection", href: "/snagging-inspection" }
+    ]
+  },
   { label: "Properties for Rent", href: "/properties-for-rent-dubai" },
   { label: "News", href: "/blog" },
   { label: "Contact", href: "/contact" }
@@ -76,7 +85,7 @@ export function getDocBySlug(slug: string) {
   return docs.find((doc) => doc.slug === normalized);
 }
 
-export function docHref(doc: StaticDoc) {
+export function docHref(doc: Pick<StaticDoc, "slug" | "type">) {
   if (doc.slug === "") return "/";
   if (doc.type === "post") return `/blog/${doc.slug}`;
   return `/${doc.slug}`;

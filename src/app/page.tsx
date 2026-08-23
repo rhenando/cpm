@@ -51,7 +51,7 @@ export default function HomePage() {
             <h2 className="mt-4 text-3xl font-extrabold leading-tight text-[#191c33] sm:text-4xl md:text-5xl">
               Expert Property Management Dubai
             </h2>
-            <div className="mt-6 max-w-2xl space-y-4 leading-8 text-[#5e6070]">
+            <div className="mt-6 max-w-2xl space-y-4 leading-8 text-[#242424]">
               <p>
                 As one of Dubai&apos;s leading property management companies, Cordova Properties has
                 built up a strong reputation for providing an exemplary service, both for tenants
@@ -73,14 +73,14 @@ export default function HomePage() {
                 { icon: Wrench, title: "Maintenance coordination" },
                 { icon: Building2, title: "Dubai market focus" }
               ].map(({ icon: Icon, title }) => (
-                <div key={title} className="rounded-lg border border-[#e6e0d2] bg-[#fbfaf7] p-5 shadow-sm">
+                <div key={title} className="rounded-lg border border-[#d3d3d3] bg-[#f7f8f9] p-5 shadow-sm">
                   <Icon className="text-[#bd8f13]" size={26} aria-hidden />
                   <h3 className="mt-4 font-extrabold text-[#191c33]">{title}</h3>
                 </div>
               ))}
             </div>
           </div>
-          <aside className="rounded-lg border border-[#e6e0d2] bg-[#f6f5f1] p-6 shadow-xl shadow-[#191c33]/10">
+          <aside className="rounded-lg border border-[#d3d3d3] bg-[#f1f0f3] p-6 shadow-xl shadow-[#191c33]/10">
             <p className="text-center text-sm font-extrabold uppercase tracking-wide text-[#191c33]">
               Reach out to us and one of our agents will contact you
             </p>
@@ -91,7 +91,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section bg-[#f6f5f1]">
+      <section className="section bg-[#f1f0f3]">
         <div className="container grid items-center gap-12 lg:grid-cols-2">
           <Image
             src={livingRoom}
@@ -105,7 +105,7 @@ export default function HomePage() {
             <h2 className="mt-4 text-3xl font-extrabold leading-tight text-[#191c33] sm:text-4xl">
               Why You Need Property Management
             </h2>
-            <div className="mt-6 space-y-4 leading-8 text-[#5e6070]">
+            <div className="mt-6 space-y-4 leading-8 text-[#242424]">
               <p>
                 Your property could be equipped with all the finest amenities, but tenants of
                 high-end properties can be demanding, and legal compliance can be difficult to
@@ -134,7 +134,7 @@ export default function HomePage() {
             <h2 className="mt-4 text-3xl font-extrabold leading-tight text-[#191c33] sm:text-4xl">
               Our property management services in Dubai
             </h2>
-            <div className="mt-6 space-y-4 leading-8 text-[#5e6070]">
+            <div className="mt-6 space-y-4 leading-8 text-[#242424]">
               <p>
                 Every property is unique, and every customer is different. With this in mind, we
                 offer a range of property management services designed to meet the diverse needs of
@@ -157,7 +157,7 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-            <ButtonLink href="/our-services" className="mt-8">
+            <ButtonLink href="/property-management" className="mt-8">
               Learn more
             </ButtonLink>
           </div>
@@ -211,7 +211,7 @@ export default function HomePage() {
             ].map((testimonial) => (
               <figure
                 key={testimonial.name}
-                className="rounded-lg border border-[#e6e0d2] bg-[#fbfaf7] p-6 shadow-sm"
+                className="rounded-lg border border-[#d3d3d3] bg-[#f7f8f9] p-6 shadow-sm"
               >
                 {testimonial.image ? (
                   <Image
@@ -226,18 +226,18 @@ export default function HomePage() {
                 )}
                 <figcaption className="font-extrabold text-[#191c33]">{testimonial.name}</figcaption>
                 {testimonial.intro ? (
-                  <p className="mt-4 italic leading-7 text-[#626473]">{testimonial.intro}</p>
+                  <p className="mt-4 italic leading-7 text-[#242424]">{testimonial.intro}</p>
                 ) : null}
-                <blockquote className="mt-5 leading-7 text-[#4f5263]">
+                <blockquote className="mt-5 leading-7 text-[#242424]">
                   {testimonial.quote}
                 </blockquote>
                 {testimonial.paragraphs?.map((paragraph) => (
-                  <p key={paragraph.slice(0, 28)} className="mt-4 leading-7 text-[#4f5263]">
+                  <p key={paragraph.slice(0, 28)} className="mt-4 leading-7 text-[#242424]">
                     {paragraph}
                   </p>
                 ))}
                 {testimonial.closing ? (
-                  <p className="mt-5 font-extrabold leading-7 text-[#4f5263]">
+                  <p className="mt-5 font-extrabold leading-7 text-[#242424]">
                     {testimonial.closing}
                   </p>
                 ) : null}
@@ -275,12 +275,12 @@ export default function HomePage() {
                 />
                 <div className="p-5 md:p-6">
                   <h3 className="text-xl font-extrabold leading-snug">{property.title}</h3>
-                  <p className="mt-4 text-sm text-[#626473]">{property.location}</p>
+                  <p className="mt-4 text-sm text-[#242424]">{property.location}</p>
                   <div className="mt-5 flex flex-wrap gap-3">
                     {property.specs.map((spec) => (
                       <span
                         key={spec}
-                        className="rounded-full bg-[#f6f5f1] px-3 py-2 text-sm text-[#4f5263]"
+                        className="rounded-full bg-[#f1f0f3] px-3 py-2 text-sm text-[#242424]"
                       >
                         {spec}
                       </span>
@@ -296,7 +296,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="section bg-[#f6f5f1]">
+      <section className="section bg-[#f1f0f3]">
         <div className="container">
           <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
             <div>
@@ -312,7 +312,7 @@ export default function HomePage() {
               <Link key={post.id} href={docHref(post)} className="rounded-lg bg-white p-6 shadow-sm">
                 <p className="text-xs font-extrabold uppercase tracking-wide text-[#bd8f13]">Insight</p>
                 <h3 className="mt-3 text-lg font-extrabold leading-snug text-[#191c33]">{post.title}</h3>
-                <p className="mt-3 text-sm leading-6 text-[#626473]">{post.excerpt}</p>
+                <p className="mt-3 text-sm leading-6 text-[#242424]">{post.excerpt}</p>
               </Link>
             ))}
           </div>
