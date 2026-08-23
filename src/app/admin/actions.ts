@@ -81,14 +81,11 @@ export async function publishPost(formData: FormData) {
   if (pdf.size + image.size > MAX_COMBINED_SIZE) redirect("/admin?error=files-too-large");
 
   let content = "";
-  let metadataTitle: unknown;
   try {
     const { PDFParse } = await import("pdf-parse");
     const parser = new PDFParse({ data: Buffer.from(await pdf.arrayBuffer()) });
-    const info = await parser.getInfo();
     const text = await parser.getText();
     content = cleanPdfText(text.text);
-    metadataTitle = info.info?.Title;
     await parser.destroy();
   } catch (error) {
     console.error("Unable to process uploaded PDF:", error);
@@ -96,7 +93,7 @@ export async function publishPost(formData: FormData) {
   }
   if (content.length < 100) redirect("/admin?error=empty-pdf");
 
-  const title = deriveTitle(content, metadataTitle, pdf.name);
+  const title = deriveTitle(content, undefined, pdf.name);
   const articleContent = content.toLowerCase().startsWith(title.toLowerCase())
     ? content.slice(title.length).replace(/^\s+/, "")
     : content;
