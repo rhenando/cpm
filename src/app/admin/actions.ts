@@ -4,8 +4,9 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 
-const MAX_PDF_SIZE = 4 * 1024 * 1024;
-const MAX_IMAGE_SIZE = 5 * 1024 * 1024;
+const MAX_PDF_SIZE = 2.5 * 1024 * 1024;
+const MAX_IMAGE_SIZE = 1.25 * 1024 * 1024;
+const MAX_COMBINED_SIZE = 3.75 * 1024 * 1024;
 const ALLOWED_IMAGES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
 function safeSlug(value: string) {
@@ -77,18 +78,21 @@ export async function publishPost(formData: FormData) {
   }
   if (pdf.type !== "application/pdf" || pdf.size > MAX_PDF_SIZE) redirect("/admin?error=invalid-pdf");
   if (!ALLOWED_IMAGES.has(image.type) || image.size > MAX_IMAGE_SIZE) redirect("/admin?error=invalid-image");
+  if (pdf.size + image.size > MAX_COMBINED_SIZE) redirect("/admin?error=files-too-large");
 
-  const { PDFParse } = await import("pdf-parse");
-  const parser = new PDFParse({ data: Buffer.from(await pdf.arrayBuffer()) });
   let content = "";
   let metadataTitle: unknown;
   try {
+    const { PDFParse } = await import("pdf-parse");
+    const parser = new PDFParse({ data: Buffer.from(await pdf.arrayBuffer()) });
     const info = await parser.getInfo();
     const text = await parser.getText();
     content = cleanPdfText(text.text);
     metadataTitle = info.info?.Title;
-  } finally {
     await parser.destroy();
+  } catch (error) {
+    console.error("Unable to process uploaded PDF:", error);
+    redirect("/admin?error=pdf-processing-failed");
   }
   if (content.length < 100) redirect("/admin?error=empty-pdf");
 
