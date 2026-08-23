@@ -12,7 +12,9 @@ type Props = {
 };
 
 export function generateStaticParams() {
-  return pages.filter((page) => page.slug).map((page) => ({ slug: page.slug.split("/") }));
+  return pages
+    .filter((page) => page.slug && page.slug !== "blog")
+    .map((page) => ({ slug: page.slug.split("/") }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
