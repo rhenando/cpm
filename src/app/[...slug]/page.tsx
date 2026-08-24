@@ -1,11 +1,11 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { notFound } from "next/navigation";
-import { ArrowUpRight, Clock3, Mail, MapPin, Phone } from "lucide-react";
+import { ArrowUpRight, Check, Clock3, KeyRound, Mail, MapPin, Phone, ShieldCheck, Wrench } from "lucide-react";
 import { ButtonLink } from "@/components/button-link";
 import { DocContent } from "@/components/doc-content";
 import { LeadForm } from "@/components/lead-form";
-import { docHref, docs, featuredProperties, getDocBySlug, pages } from "@/data/site";
+import { docHref, docs, getDocBySlug, pages } from "@/data/site";
 
 type Props = {
   params: Promise<{ slug: string[] }>;
@@ -50,6 +50,10 @@ export default async function StaticPage({ params }: Props) {
     return <AboutPage />;
   }
 
+  if (path === "property-management") {
+    return <PropertyManagementPage />;
+  }
+
   const related = docs
     .filter((item) => item.type === doc.type && item.slug && item.slug !== doc.slug)
     .slice(0, 3);
@@ -91,6 +95,309 @@ export default async function StaticPage({ params }: Props) {
         </div>
       </section>
     </article>
+  );
+}
+
+const managementServices = [
+  {
+    icon: KeyRound,
+    number: "01",
+    title: "Tenant & lease management",
+    copy: "From careful screening and compliant contracts to renewals and move-out coordination, every tenancy is handled with precision."
+  },
+  {
+    icon: Wrench,
+    number: "02",
+    title: "Property care & maintenance",
+    copy: "Trusted contractors, proactive inspections and responsive maintenance preserve the finish, comfort and value of your residence."
+  },
+  {
+    icon: ShieldCheck,
+    number: "03",
+    title: "Financial oversight",
+    copy: "Clear rent collection, expense monitoring and concise reporting keep you informed wherever in the world you are."
+  }
+];
+
+const managementBenefits = [
+  "Dedicated property manager",
+  "Tenant screening and onboarding",
+  "Rent collection and renewals",
+  "Routine inspections with reporting",
+  "Maintenance and vendor coordination",
+  "24/7 emergency assistance"
+];
+
+const whyCordova = [
+  ["Expertise and Experience", "We understand the intricacies of the Dubai real estate market and leverage this expertise to maximise your property’s potential—which is why Cordova stands out among property management companies in Dubai."],
+  ["Time-Saving", "Managing a property requires significant time and effort. From tenant queries to maintenance oversight, our property managers take care of the demands so you can focus on your life or business."],
+  ["Tenant Management", "We help your property attract and retain quality tenants. Thorough screening minimises risk, while responsive tenant support encourages satisfaction and long-term occupancy."],
+  ["Financial Management", "From rent collection to maintenance expenses, detailed financial reporting keeps you informed. Efficient oversight helps maximise returns and minimise unnecessary costs."],
+  ["Maintenance and Repairs", "We organise regular maintenance and handle repairs promptly, keeping your property pristine and ensuring your investment retains an air of luxury for its tenants."],
+  ["Legal Compliance", "Our team stays current with evolving regulations and local requirements, helping your property remain compliant and protecting you from potential legal issues."],
+  ["Market Insights", "Our understanding of Dubai real estate informs strategic advice on rental pricing, market trends and investment opportunities, helping you make confident decisions."],
+] as const;
+
+const basicPackage = [
+  "Personal Property Manager", "Marketing of Property", "Finding Tenant", "Deposit hold and release upon approval",
+  "Key handover and tenant move-in", "Banking rent cheques into the owner’s account", "Renewal of Tenancy Contract",
+  "Checking RERA calculator for rent increase", "Re-market when the property becomes vacant"
+];
+
+const premiumPackage = [
+  "Personal Property Manager", "Marketing of Property", "Finding Tenant", "Key Holding", "Deposit hold and release upon approval",
+  "DEWA Connection Assistance", "Ejari Registration Assistance", "Key handover to tenant", "Banking rent cheques into the owner’s account",
+  "Onboarding Inspection, Move-In Inspection, Bi-Annual Inspection & Moved-Out Inspection", "Renewal of Tenancy Contract",
+  "Checking RERA calculator for rent increase", "Re-market when the property becomes vacant",
+  "Snag reporting for off-plan properties directly with the developer", "Payments to third-party vendors (Mollak/service charges etc.)",
+  "Coordination with facility management teams in buildings and communities", "Detailed property inspections with photographs",
+  "Pre-inspection, move-in, move-out and mid-tenancy inspections", "Manage security deposit reimbursement", "Tenant Management"
+];
+
+function PropertyManagementPage() {
+  return (
+    <main className="overflow-hidden bg-white">
+      <section className="relative min-h-[600px] bg-[#191c33] text-white md:min-h-[780px]">
+        <Image
+          src="https://cordovaproperty.com/wp-content/uploads/2024/06/Dubai-PropertyBlog4.webp"
+          alt="Luxury Dubai residence managed by Cordova"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(12,14,30,.96)_0%,rgba(25,28,51,.84)_43%,rgba(25,28,51,.18)_78%)]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#191c33]/90 via-transparent to-[#191c33]/25" />
+        <div className="container relative flex min-h-[600px] items-center py-14 md:min-h-[780px] md:py-20">
+          <div className="max-w-3xl pt-4 md:pt-8">
+            <div className="flex items-center gap-4 text-xs font-extrabold uppercase tracking-[0.28em] text-[#d2ad4b]">
+              <span className="h-px w-12 bg-[#d2ad4b]" />
+              Private property care, Dubai
+            </div>
+            <h1 className="mt-5 text-balance text-4xl font-extrabold leading-[1.03] sm:mt-7 sm:text-6xl md:text-7xl lg:text-[5.35rem]">
+              Your property,
+              <span className="block font-serif font-normal italic text-[#d2ad4b]">beautifully managed.</span>
+            </h1>
+            <p className="mt-6 max-w-xl text-base leading-7 text-white/75 md:mt-8 md:text-lg md:leading-8">
+              Discreet, end-to-end management for Dubai property owners who expect exceptional care, complete clarity and lasting value.
+            </p>
+            <div className="mt-7 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:gap-4">
+              <ButtonLink href="#consultation" className="min-w-52">Arrange a consultation</ButtonLink>
+              <ButtonLink href="#services" variant="ghost" className="border-white/40 text-white hover:border-[#d2ad4b]">
+                Explore our service
+              </ButtonLink>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="relative bg-[#f7f5f0] py-14 md:py-28">
+        <div className="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-[#eadfca]/60 to-transparent" />
+        <div className="container relative grid items-center gap-10 lg:grid-cols-[.92fr_1.08fr] lg:gap-24">
+          <div>
+            <p className="eyebrow">The Cordova standard</p>
+            <h2 className="mt-5 text-balance text-4xl font-extrabold leading-[1.08] text-[#191c33] sm:text-5xl">
+              Ownership without the <span className="font-serif font-normal italic text-[#bd8f13]">everyday demands.</span>
+            </h2>
+            <div className="mt-7 h-px w-28 bg-[#bd8f13]" />
+            <p className="mt-7 text-base leading-8 text-[#242424]/75">
+              A remarkable property deserves remarkable stewardship. Cordova acts as your eyes, ears and trusted representative on the ground—protecting your asset while creating a polished experience for every tenant.
+            </p>
+            <p className="mt-5 text-base leading-8 text-[#242424]/75">
+              Our approach is personal, proactive and transparent. You remain informed and in control, while our specialists take care of the details.
+            </p>
+            <ButtonLink href="/about-cordova-property-management" variant="ghost" className="mt-9">Discover Cordova</ButtonLink>
+          </div>
+          <div className="relative pl-4 sm:pl-10">
+            <div className="absolute bottom-0 left-0 right-10 top-10 border border-[#bd8f13]/55" />
+            <div className="relative aspect-[4/3] overflow-hidden shadow-[0_28px_70px_rgba(25,28,51,.22)]">
+              <Image
+                src="https://cordovaproperty.com/wp-content/uploads/2025/07/modern-cozy-living-room-wooden-wall-texture-background-interior-design-3d-rendering-scaled.jpg"
+                alt="Refined living room interior"
+                fill
+                sizes="(max-width: 1024px) 90vw, 600px"
+                className="object-cover transition duration-700 hover:scale-[1.025]"
+              />
+              <div className="absolute inset-0 bg-gradient-to-tr from-[#191c33]/20 via-transparent to-[#bd8f13]/10" />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="relative bg-white py-14 md:py-28">
+        <div className="container">
+          <div className="grid gap-9 lg:grid-cols-[.72fr_1.28fr] lg:gap-20">
+            <div className="lg:sticky lg:top-28 lg:h-fit">
+              <p className="eyebrow">Why choose Cordova?</p>
+              <h2 className="mt-5 text-balance text-4xl font-extrabold leading-[1.08] text-[#191c33] sm:text-5xl">
+                Comprehensive management for <span className="font-serif font-normal italic text-[#bd8f13]">luxury real estate.</span>
+              </h2>
+              <p className="mt-6 leading-8 text-[#242424]/70">A complete service shaped around the realities of owning and leasing premium property in Dubai.</p>
+              <div className="mt-7 grid gap-3 sm:mt-9">
+                <ButtonLink href="#packages">View management packages</ButtonLink>
+                <ButtonLink href="/contact" variant="ghost">Get our guide for Dubai landlords</ButtonLink>
+                <ButtonLink href="/contact" variant="ghost">Get our checklist for Dubai tenants</ButtonLink>
+              </div>
+            </div>
+            <div className="grid gap-x-10 sm:grid-cols-2">
+              {whyCordova.map(([title, copy], index) => (
+                <article key={title} className={`border-t border-[#d3d3d3] py-5 sm:py-7 ${index === whyCordova.length - 1 ? "sm:col-span-2" : ""}`}>
+                  <div className="flex items-baseline gap-4">
+                    <span className="font-serif text-sm italic text-[#bd8f13]">{String(index + 1).padStart(2, "0")}</span>
+                    <h3 className="text-lg font-extrabold text-[#191c33]">{title}</h3>
+                  </div>
+                  <p className="mt-4 pl-9 text-sm leading-7 text-[#242424]/70">{copy}</p>
+                </article>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-[#f7f5f0] py-14 md:py-28">
+        <div className="container grid items-center gap-9 lg:grid-cols-[.82fr_1.18fr] lg:gap-20">
+          <div>
+            <p className="eyebrow">Why you need property management</p>
+            <h2 className="mt-5 text-4xl font-extrabold leading-tight text-[#191c33] sm:text-5xl">See how our dedicated team supports you.</h2>
+            <p className="mt-6 leading-8 text-[#242424]/70">Watch our informative property management video for an introduction to the main services our specialists provide.</p>
+            <p className="mt-7 font-serif text-xl italic text-[#191c33]">Expert Property Management Dubai · Cordova PM</p>
+          </div>
+          <div className="relative overflow-hidden border border-[#bd8f13]/30 bg-[#191c33] p-2 shadow-[0_25px_65px_rgba(25,28,51,.22)] sm:p-3">
+            <div className="relative aspect-video w-full overflow-hidden bg-black">
+              <iframe
+                className="absolute inset-0 h-full w-full"
+                src="https://www.youtube-nocookie.com/embed/gqZaS0-rPZc?rel=0&modestbranding=1"
+                title="Expert Property Management Dubai | Cordova PM"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="services" className="relative bg-[#191c33] py-14 text-white md:py-28">
+        <div className="absolute inset-0 opacity-30 [background-image:radial-gradient(circle_at_80%_20%,#bd8f13_0,transparent_28%)]" />
+        <div className="container relative">
+          <div className="max-w-3xl">
+            <p className="eyebrow">End-to-end management</p>
+            <h2 className="mt-5 text-balance text-4xl font-extrabold leading-tight sm:text-5xl">Every detail, handled with intention.</h2>
+            <p className="mt-5 max-w-2xl leading-8 text-white/65">A considered service designed around your property, your priorities and the standards your investment deserves.</p>
+          </div>
+          <div className="mt-9 grid gap-px overflow-hidden border border-white/10 bg-white/10 md:mt-14 lg:grid-cols-3">
+            {managementServices.map(({ icon: Icon, number, title, copy }) => (
+              <article key={title} className="group relative bg-[#191c33] p-6 transition duration-300 hover:bg-[#20243f] sm:p-10">
+                <span className="font-serif text-5xl italic text-[#bd8f13]/20">{number}</span>
+                <Icon className="mt-5 text-[#d2ad4b] sm:mt-8" size={30} strokeWidth={1.5} aria-hidden />
+                <h3 className="mt-4 text-xl font-extrabold leading-snug sm:mt-6">{title}</h3>
+                <p className="mt-4 leading-7 text-white/60">{copy}</p>
+                <div className="mt-5 h-px w-12 bg-[#bd8f13] transition-all duration-300 group-hover:w-24 sm:mt-8" />
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section id="packages" className="relative overflow-hidden border-y border-[#bd8f13]/40 bg-[#191c33] py-14 text-white md:py-28">
+        <div className="absolute -right-40 -top-40 h-[520px] w-[520px] rounded-full border border-[#bd8f13]/15" />
+        <div className="absolute -right-20 -top-20 h-[320px] w-[320px] rounded-full border border-[#bd8f13]/10" />
+        <div className="absolute bottom-0 left-0 h-px w-full bg-gradient-to-r from-transparent via-[#bd8f13] to-transparent" />
+        <div className="container relative">
+          <div className="mx-auto max-w-3xl text-center">
+            <div className="mx-auto mb-7 flex items-center justify-center gap-4">
+              <span className="h-px w-12 bg-[#bd8f13]" />
+              <span className="h-2 w-2 rotate-45 border border-[#bd8f13]" />
+              <span className="h-px w-12 bg-[#bd8f13]" />
+            </div>
+            <h2 className="text-4xl font-extrabold sm:text-5xl">Our Property Management Services</h2>
+          </div>
+          <div className="mx-auto mt-9 grid max-w-[1160px] items-start gap-7 md:mt-14 lg:grid-cols-2">
+            {[
+              { name: "Basic Package", rate: "5%", minimum: "Minimum Fee AED 5,000 +5% VAT", items: basicPackage },
+              { name: "Premium Package", rate: "7%", minimum: "Minimum Fee AED 7,000 +5% VAT", items: premiumPackage }
+            ].map((pkg) => (
+              <article key={pkg.name} className="relative overflow-hidden border border-[#bd8f13] bg-white text-[#191c33] shadow-[0_28px_70px_rgba(0,0,0,.28)] transition duration-300 hover:-translate-y-1">
+                <header className="relative grid min-h-[220px] place-items-center overflow-hidden bg-[#34332f] px-6 py-9 text-center text-white sm:min-h-[265px] sm:py-12">
+                  <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(189,143,19,.22),transparent_45%)]" />
+                  <div className="relative">
+                    <h3 className="text-2xl font-extrabold">{pkg.name}</h3>
+                    <p className="mt-5 font-serif text-5xl italic text-[#e1c376]">{pkg.rate}</p>
+                    <p className="mt-1 text-xs font-bold uppercase tracking-[.15em] text-white/75">of annual rent</p>
+                    <p className="mt-5 text-xs text-white/75">{pkg.minimum}</p>
+                  </div>
+                </header>
+                <div className="border-t-2 border-[#bd8f13] p-6 sm:p-10">
+                  <ul className="grid gap-3">
+                    {pkg.items.map((item) => (
+                      <li key={item} className="flex items-start gap-3 text-sm leading-6 text-[#242424]/80">
+                        <Check className="mt-1 shrink-0 text-[#bd8f13]" size={15} strokeWidth={3} aria-hidden />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
+                  <ButtonLink href="#consultation" className="mt-7 w-full sm:mt-9 sm:w-full">Enquire about this package</ButtonLink>
+                </div>
+              </article>
+            ))}
+          </div>
+          <div className="mx-auto mt-10 flex max-w-[1160px] flex-col items-center justify-between gap-6 border border-[#bd8f13]/35 bg-white/5 px-7 py-7 backdrop-blur-sm sm:flex-row sm:px-9">
+            <p className="max-w-2xl font-serif text-lg italic leading-7 text-white/80">Request a brochure and join our mailing list to keep up to date with the property market in Dubai.</p>
+            <ButtonLink href="#consultation" variant="ghost" className="border-[#bd8f13] text-white">Request a brochure</ButtonLink>
+          </div>
+        </div>
+      </section>
+
+      <section className="bg-white py-14 md:py-28">
+        <div className="container grid items-center gap-10 lg:grid-cols-2 lg:gap-24">
+          <div className="relative min-h-[340px] overflow-hidden bg-[#f1f0f3] shadow-[0_25px_60px_rgba(25,28,51,.15)] sm:min-h-[420px] lg:min-h-[520px]">
+            <Image
+              src="https://cordovaproperty.com/wp-content/uploads/2024/06/Dubai-Property1.jpg"
+              alt="Dubai skyline viewed from a luxury residence"
+              fill
+              sizes="(max-width: 1024px) 90vw, 580px"
+              className="object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#191c33]/65 via-transparent to-transparent" />
+          </div>
+          <div>
+            <p className="eyebrow">Included as standard</p>
+            <h2 className="mt-5 text-4xl font-extrabold leading-tight text-[#191c33] sm:text-5xl">Confidence at every stage.</h2>
+            <p className="mt-6 leading-8 text-[#242424]/70">From the first handover to the final inspection, our team provides consistent oversight and a single point of contact.</p>
+            <div className="mt-9 grid gap-5 sm:grid-cols-2">
+              {managementBenefits.map((benefit) => (
+                <div key={benefit} className="flex items-start gap-3 border-b border-[#d3d3d3] pb-5 text-sm font-bold text-[#191c33]">
+                  <span className="mt-0.5 grid h-6 w-6 shrink-0 place-items-center rounded-full border border-[#bd8f13]/50 text-[#bd8f13]">
+                    <Check size={14} strokeWidth={3} aria-hidden />
+                  </span>
+                  <span className="pt-1">{benefit}</span>
+                </div>
+              ))}
+            </div>
+            <p className="mt-9 border-l-2 border-[#bd8f13] pl-5 font-serif text-xl italic leading-8 text-[#191c33]/80">Bespoke support can be tailored to the residence, landlord and tenancy.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="consultation" className="bg-[#f1f0f3] px-3 py-10 sm:px-6 sm:py-16 md:py-24">
+        <div className="relative mx-auto max-w-[1320px] overflow-hidden bg-[#191c33] text-white shadow-[0_30px_80px_rgba(25,28,51,.2)]">
+          <div className="absolute right-0 top-0 h-72 w-72 translate-x-1/3 -translate-y-1/3 rounded-full border border-[#bd8f13]/20" />
+          <div className="grid lg:grid-cols-[.82fr_1.18fr]">
+            <div className="relative p-7 sm:min-h-[440px] sm:p-12 lg:p-16">
+              <p className="eyebrow">Contact us</p>
+              <h2 className="mt-5 text-balance text-4xl font-extrabold leading-tight sm:text-5xl">How can our property management team help you?</h2>
+              <p className="mt-6 max-w-md leading-8 text-white/65">Tell us a little about your residence and priorities. A Cordova specialist will be in touch to discuss a tailored management approach.</p>
+              <div className="mt-7 h-px w-full bg-gradient-to-r from-[#bd8f13] to-transparent sm:mt-10" />
+              <p className="mt-6 text-sm font-bold uppercase tracking-[.18em] text-[#d2ad4b] sm:mt-8">Discreet · Responsive · Personal</p>
+            </div>
+            <div className="relative bg-[#f7f5f0] p-6 text-[#191c33] sm:p-10 lg:p-14">
+              <p className="text-xs font-extrabold uppercase tracking-[.2em] text-[#bd8f13]">Request a consultation</p>
+              <div className="mt-7"><LeadForm /></div>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }
 
@@ -434,50 +741,53 @@ function AboutPage() {
 
 function PropertiesPage() {
   return (
-    <section className="section bg-[#f1f0f3]">
-      <div className="container">
-        <p className="eyebrow">Rentals</p>
-        <h1 className="mt-4 text-3xl font-extrabold text-[#191c33] sm:text-5xl">Properties for rent Dubai</h1>
-        <p className="mt-5 max-w-2xl leading-8 text-[#242424]">
-          Professionally managed luxury residences in Dubai.
-        </p>
-        <div className="mt-10 grid gap-6 md:grid-cols-2">
-          {featuredProperties.map((property) => (
-            <article
-              key={property.slug}
-              className="overflow-hidden rounded-xl border border-[#d3d3d3] bg-white shadow-xl shadow-[#191c33]/5"
-            >
-              <Image
-                src={property.image}
-                alt={property.imageAlt}
-                width={900}
-                height={430}
-                className="h-52 w-full object-cover sm:h-64"
-              />
-              <div className="p-5 md:p-6">
-                <h2 className="text-xl font-extrabold leading-snug text-[#191c33]">
-                  {property.title}
-                </h2>
-                <p className="mt-4 text-sm text-[#242424]">{property.location}</p>
-                <div className="mt-5 flex flex-wrap gap-3">
-                  {property.specs.map((spec) => (
-                    <span
-                      key={spec}
-                      className="rounded-full bg-[#f1f0f3] px-3 py-2 text-sm text-[#242424]"
-                    >
-                      {spec}
-                    </span>
-                  ))}
-                </div>
-                <ButtonLink href={`/${property.slug}`} className="mt-6">
-                  View details
-                </ButtonLink>
-              </div>
-            </article>
-          ))}
+    <main className="overflow-hidden bg-white">
+      <section className="relative min-h-[570px] bg-[#191c33] text-white sm:min-h-[650px]">
+        <Image
+          src="https://cordovaproperty.com/wp-content/uploads/2024/06/Dubai-Property1.jpg"
+          alt="Luxury residences overlooking the Dubai skyline"
+          fill
+          priority
+          sizes="100vw"
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(14,16,34,.94),rgba(25,28,51,.78)_48%,rgba(25,28,51,.3))]" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#191c33]/80 via-transparent to-[#191c33]/20" />
+        <div className="container relative flex min-h-[570px] items-center py-14 sm:min-h-[650px] sm:py-20">
+          <div className="max-w-3xl">
+            <div className="flex items-center gap-4 text-xs font-extrabold uppercase tracking-[.28em] text-[#d2ad4b]">
+              <span className="h-px w-12 bg-[#d2ad4b]" />
+              Dubai rental collection
+            </div>
+            <h1 className="mt-6 text-balance text-4xl font-extrabold leading-[1.05] sm:text-6xl md:text-7xl">
+              Properties for rent
+              <span className="block font-serif font-normal italic text-[#d2ad4b]">in Dubai.</span>
+            </h1>
+            <p className="mt-7 max-w-xl text-base leading-8 text-white/75 sm:text-lg">
+              Our current rental collection is fully occupied. Connect with our team to hear about new residences as they become available.
+            </p>
+            <ButtonLink href="/contact" className="mt-9 min-w-48">Contact our team</ButtonLink>
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <section className="relative bg-[#f7f5f0] py-14 md:py-24">
+        <div className="absolute right-0 top-0 h-full w-1/3 bg-gradient-to-l from-[#eadfca]/60 to-transparent" />
+        <div className="container relative">
+          <div className="mx-auto max-w-4xl border border-[#bd8f13]/35 bg-white px-6 py-12 text-center shadow-[0_24px_60px_rgba(25,28,51,.12)] sm:px-12 md:py-16">
+            <KeyRound className="mx-auto text-[#bd8f13]" size={32} strokeWidth={1.5} aria-hidden />
+            <p className="eyebrow mt-6">Be first to know</p>
+            <h2 className="mx-auto mt-4 max-w-2xl text-balance text-3xl font-extrabold leading-tight text-[#191c33] sm:text-5xl">
+              Looking for your next Dubai residence?
+            </h2>
+            <p className="mx-auto mt-6 max-w-xl leading-8 text-[#242424]/70">
+              Tell us what you are looking for and we will connect you with suitable opportunities when new managed properties become available.
+            </p>
+            <ButtonLink href="/contact" className="mt-8 min-w-52">Register your interest</ButtonLink>
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }
 
