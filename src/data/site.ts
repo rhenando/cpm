@@ -33,7 +33,7 @@ export const featuredProperties: Property[] = [
     title: "The Address Sky View, Downtown Dubai",
     location: "Burj Khalifa View | Large Layout | Furnished",
     image:
-      "https://cordovaproperty.com/wp-content/uploads/2021/07/ralph-ravi-kayden-2d4lAQAlbDA-unsplash.jpg",
+      "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=85",
     imageAlt: "Sky View Apartment",
     specs: ["2 Beds", "3 Baths", "1,698 sqft"],
     summary: "A refined Downtown address supported by Cordova's leasing and management service."
@@ -43,7 +43,7 @@ export const featuredProperties: Property[] = [
     title: "Clayton Residency, Business Bay",
     location: "Fully Furnished | Full Canal View | Upgraded",
     image:
-      "https://cordovaproperty.com/wp-content/uploads/2021/07/alejandra-cifre-gonzalez-ylyn5r4vxcA-unsplash.jpg",
+      "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1600&q=85",
     imageAlt: "Clayton Residency Apartment",
     specs: ["1 Bed", "2 Baths", "781 sqft"],
     summary: "A well-positioned Dubai rental option close to commercial and lifestyle destinations."

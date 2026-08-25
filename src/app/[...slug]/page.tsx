@@ -182,8 +182,8 @@ function PropertyManagementPage() {
               Discreet, end-to-end management for Dubai property owners who expect exceptional care, complete clarity and lasting value.
             </p>
             <div className="mt-7 flex flex-col gap-3 sm:mt-10 sm:flex-row sm:gap-4">
-              <ButtonLink href="#consultation" className="min-w-52">Arrange a consultation</ButtonLink>
-              <ButtonLink href="#services" variant="ghost" className="border-white/40 text-white hover:border-[#d2ad4b]">
+              <ButtonLink href="#consultation" variant="light" className="min-w-52">Arrange a consultation</ButtonLink>
+              <ButtonLink href="#services" variant="lightOutline">
                 Explore our service
               </ButtonLink>
             </div>
@@ -343,7 +343,7 @@ function PropertyManagementPage() {
           </div>
           <div className="mx-auto mt-10 flex max-w-[1160px] flex-col items-center justify-between gap-6 border border-[#bd8f13]/35 bg-white/5 px-7 py-7 backdrop-blur-sm sm:flex-row sm:px-9">
             <p className="max-w-2xl font-serif text-lg italic leading-7 text-white/80">Request a brochure and join our mailing list to keep up to date with the property market in Dubai.</p>
-            <ButtonLink href="#consultation" variant="ghost" className="border-[#bd8f13] text-white">Request a brochure</ButtonLink>
+            <ButtonLink href="#consultation" variant="lightOutline">Request a brochure</ButtonLink>
           </div>
         </div>
       </section>
@@ -474,8 +474,8 @@ function AboutPage() {
               exacting standards and complete peace of mind.
             </p>
             <div className="mt-10 flex flex-wrap gap-4">
-              <ButtonLink href="/contact">Speak with our team</ButtonLink>
-              <ButtonLink href="/property-management" variant="ghost" className="border-white/40 text-white hover:border-[#bd8f13]">
+              <ButtonLink href="/contact" variant="light">Speak with our team</ButtonLink>
+              <ButtonLink href="/property-management" variant="lightOutline">
                 Discover our services
               </ButtonLink>
             </div>
@@ -533,7 +533,7 @@ function AboutPage() {
               </div>
               <div className="group relative mb-20 overflow-hidden bg-[#d8d1c3] shadow-xl shadow-[#191c33]/15 sm:mb-24">
                 <Image
-                  src="https://cordovaproperty.com/wp-content/uploads/2024/06/Dubai-Property2.jpg"
+                  src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1200&q=85"
                   alt="Property keys overlooking Dubai"
                   fill
                   sizes="(max-width: 1024px) 24vw, 150px"
@@ -542,7 +542,7 @@ function AboutPage() {
               </div>
               <div className="group relative mt-20 overflow-hidden bg-[#d8d1c3] shadow-xl shadow-[#191c33]/15 sm:mt-24">
                 <Image
-                  src="https://cordovaproperty.com/wp-content/uploads/elementor/thumbs/Dubai-Property4-qpi9vazc7cemwh5pe08jmac1mfpqyhni8yl9ulrav8.jpg"
+                  src="https://images.unsplash.com/photo-1615874694520-474822394e73?auto=format&fit=crop&w=1200&q=85"
                   alt="Luxury bedroom interior"
                   fill
                   sizes="(max-width: 1024px) 24vw, 150px"
@@ -551,7 +551,7 @@ function AboutPage() {
               </div>
               <div className="group relative my-8 overflow-hidden bg-[#d8d1c3] shadow-xl shadow-[#191c33]/15 sm:my-12">
                 <Image
-                  src="https://cordovaproperty.com/wp-content/uploads/elementor/thumbs/Dubai-lux-Property-qocgrjrxqyxh0234gs2zrdacbkjtanwco9ps3kjwsk.jpg"
+                  src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=85"
                   alt="Luxury courtyard residence"
                   fill
                   sizes="(max-width: 1024px) 24vw, 150px"
@@ -603,7 +603,7 @@ function AboutPage() {
             <div className="absolute bottom-0 left-0 right-10 top-10 border border-[#bd8f13]/55" />
             <div className="relative aspect-[4/3] overflow-hidden bg-[#f1f0f3] shadow-[0_28px_70px_rgba(25,28,51,0.2)]">
               <Image
-                src="https://cordovaproperty.com/wp-content/uploads/2024/06/Dubai-vision.jpg"
+                src="https://images.unsplash.com/photo-1518684079-3c830dcef090?auto=format&fit=crop&w=1600&q=85"
                 alt="Property owner overlooking the Dubai skyline"
                 fill
                 sizes="(max-width: 1024px) 90vw, 560px"
@@ -615,7 +615,7 @@ function AboutPage() {
               <p className="leading-7 text-white/75">
                 For expert property management please contact one of the team.
               </p>
-              <ButtonLink href="/contact" className="mt-5 min-w-44">Contact us</ButtonLink>
+              <ButtonLink href="/contact" variant="light" className="mt-5 min-w-44">Contact us</ButtonLink>
             </div>
           </div>
         </div>
@@ -679,7 +679,7 @@ function AboutPage() {
           <p className="mx-auto mt-6 max-w-xl leading-8 text-white/65">
             Effortlessly managing your property with expertise and precision.
           </p>
-          <ButtonLink href="/property-management" className="mt-9 min-w-44">Learn more</ButtonLink>
+          <ButtonLink href="/property-management" variant="light" className="mt-9 min-w-44">Learn more</ButtonLink>
         </div>
       </section>
 
@@ -727,7 +727,7 @@ function AboutPage() {
               />
               <button
                 type="submit"
-                className="mt-1 inline-flex min-h-12 items-center justify-center rounded-sm bg-[#bd8f13] px-6 text-sm font-semibold text-white transition hover:bg-[#ca8a04] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#bd8f13]"
+                className="brand-button-on-dark mt-1 inline-flex min-h-12 items-center justify-center rounded-[10px] border-2 px-6 text-sm font-black uppercase tracking-[0.1em] transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e1ab39]"
               >
                 Submit
               </button>
@@ -766,7 +766,7 @@ function PropertiesPage() {
             <p className="mt-7 max-w-xl text-base leading-8 text-white/75 sm:text-lg">
               Our current rental collection is fully occupied. Connect with our team to hear about new residences as they become available.
             </p>
-            <ButtonLink href="/contact" className="mt-9 min-w-48">Contact our team</ButtonLink>
+            <ButtonLink href="/contact" variant="light" className="mt-9 min-w-48">Contact our team</ButtonLink>
           </div>
         </div>
       </section>
@@ -796,7 +796,7 @@ function ContactPage({ doc }: { doc: { title: string; description: string; conte
     <main className="overflow-hidden bg-[#f7f8f9]">
       <section className="relative isolate min-h-[500px] overflow-hidden bg-[#191c33] text-white sm:min-h-[580px]">
         <Image
-          src="https://cordovaproperty.com/wp-content/uploads/2024/06/Dubai-Property2.jpg"
+          src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=2000&q=85"
           alt="Dubai skyline and luxury property"
           fill
           priority

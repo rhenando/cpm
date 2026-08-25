@@ -4,13 +4,27 @@
   --background: #ffffff;
   --foreground: #191c33;
   --navy: #191c33;
-  --gold: #bd8f13;
+  --gold-light: #e9c156;
+  --gold-highlight: #ffffaa;
+  --gold: #e1ab39;
+  --gold-deep: #633110;
+  --brand-gradient: linear-gradient(
+    180deg,
+    #e9c156 0%,
+    #ffffaa 18%,
+    #e1ab39 71%,
+    #633110 89%,
+    #e9c156 100%
+  );
   --base: #f1f0f3;
   --base-2: #f7f8f9;
   --base-3: #ffffff;
   --contrast: #000000;
-  --contrast-2: #191c33;
+  --contrast-2: #555069;
   --contrast-3: #242424;
+  --blue-mid: #555069;
+  --blue-soft: #afabb9;
+  --blue-pale: #d5d2db;
   --mist: var(--base);
   --line: #d3d3d3;
 }
@@ -31,6 +45,28 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-montserrat), Arial, sans-serif;
+  font-weight: 300;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+.brand-display {
+  font-family: var(--font-montserrat), Arial, sans-serif;
+  font-weight: 900;
+  letter-spacing: 0;
+}
+
+.brand-gradient {
+  background: var(--brand-gradient);
+}
+
+.brand-gradient-text {
+  background: linear-gradient(90deg, #e9c156, #ffffaa 28%, #e1ab39 66%, #a66b20);
+  background-clip: text;
+  color: transparent;
 }
 
 a {
@@ -92,11 +128,92 @@ pre {
 }
 
 .eyebrow {
-  color: var(--gold);
+  color: var(--navy);
   font-size: 0.75rem;
-  font-weight: 800;
-  letter-spacing: 0.16em;
+  font-weight: 400;
+  letter-spacing: 0.1em;
   text-transform: uppercase;
+}
+
+.brand-rule {
+  height: 3px;
+  width: 3.5rem;
+  background: linear-gradient(90deg, #e9c156, #ffffaa 24%, #e1ab39 62%, #633110);
+}
+
+.brand-button-primary {
+  border-color: #191c33;
+  background-color: #191c33;
+  color: #f1f0f3;
+}
+
+.brand-button-primary:hover {
+  border-color: #191c33;
+  background-color: transparent;
+  color: #191c33;
+}
+
+.brand-button-outline {
+  border-color: #191c33;
+  background-color: transparent;
+  color: #191c33;
+}
+
+.brand-button-outline:hover {
+  background-color: #191c33;
+  color: #f1f0f3;
+}
+
+.brand-button-primary svg,
+.brand-button-outline svg {
+  color: currentColor;
+  flex: 0 0 auto;
+}
+
+.brand-button-on-dark {
+  border-color: #f1f0f3;
+  background-color: #f1f0f3;
+  color: #191c33;
+}
+
+.brand-button-on-dark:hover {
+  border-color: #f1f0f3;
+  background-color: transparent;
+  color: #f1f0f3;
+}
+
+.brand-button-outline-on-dark {
+  border-color: #f1f0f3;
+  background-color: transparent;
+  color: #f1f0f3;
+}
+
+.brand-button-outline-on-dark:hover {
+  border-color: #f1f0f3;
+  background-color: #f1f0f3;
+  color: #191c33;
+}
+
+/* Keep legacy content templates on the approved secondary accent while they
+   are rendered through Tailwind's arbitrary-colour utilities. */
+.text-\[\#bd8f13\] {
+  color: #e1ab39;
+}
+
+.bg-\[\#bd8f13\] {
+  background-color: #e1ab39;
+}
+
+.border-\[\#bd8f13\] {
+  border-color: #e1ab39;
+}
+
+.hover\:text-\[\#bd8f13\]:hover {
+  color: #e1ab39;
+}
+
+.hover\:border-\[\#bd8f13\]:hover {
+  border-color: #e1ab39;
 }
 
 .text-balance {
@@ -223,7 +340,7 @@ pre {
 .field {
   width: 100%;
   border: 1px solid #d3d3d3;
-  border-radius: 8px;
+  border-radius: 10px;
   background: #fff;
   color: var(--navy);
   padding: 0.9rem 1rem;

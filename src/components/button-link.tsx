@@ -5,7 +5,7 @@ import { clsx } from "clsx";
 type ButtonLinkProps = {
   href: string;
   children: React.ReactNode;
-  variant?: "gold" | "navy" | "ghost";
+  variant?: "gold" | "navy" | "ghost" | "light" | "lightOutline";
   className?: string;
 };
 
@@ -14,11 +14,11 @@ export function ButtonLink({ href, children, variant = "gold", className }: Butt
     <Link
       href={href}
       className={clsx(
-        "inline-flex min-h-11 w-full max-w-full items-center justify-center gap-2 rounded-md px-5 py-3 text-center text-sm font-extrabold uppercase tracking-wide transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#bd8f13] sm:w-auto",
-        variant === "gold" && "bg-[#bd8f13] text-white shadow-sm hover:bg-[#ca8a04]",
-        variant === "navy" && "bg-[#191c33] text-white hover:bg-[#242424]",
-        variant === "ghost" &&
-          "border border-[#bd8f13] bg-transparent text-[#191c33] hover:bg-[#bd8f13] hover:text-white",
+        "inline-flex min-h-12 w-full max-w-full items-center justify-center gap-2 rounded-[10px] border-2 px-6 py-3 text-center text-sm font-black uppercase tracking-[0.1em] transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e1ab39] sm:w-auto",
+        (variant === "gold" || variant === "navy") && "brand-button-primary",
+        variant === "ghost" && "brand-button-outline",
+        variant === "light" && "brand-button-on-dark",
+        variant === "lightOutline" && "brand-button-outline-on-dark",
         className
       )}
     >

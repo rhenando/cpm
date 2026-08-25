@@ -3,13 +3,13 @@ import Link from "next/link";
 import { Building2, CheckCircle2, ClipboardCheck, Home, ShieldCheck, Wrench } from "lucide-react";
 import { ButtonLink } from "@/components/button-link";
 import { LeadForm } from "@/components/lead-form";
-import { docHref, featuredProperties, posts, services } from "@/data/site";
+import { docHref, posts, services } from "@/data/site";
 
 const heroImage = "https://cordovaproperty.com/wp-content/uploads/2024/06/Dubai-PropertyBlog4.webp";
 const livingRoom =
   "https://cordovaproperty.com/wp-content/uploads/2025/07/modern-cozy-living-room-wooden-wall-texture-background-interior-design-3d-rendering-scaled.jpg";
 const managementImage =
-  "https://cordovaproperty.com/wp-content/uploads/2021/07/ralph-ravi-kayden-2d4lAQAlbDA-unsplash.jpg";
+  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=85";
 
 export default function HomePage() {
   return (
@@ -19,23 +19,24 @@ export default function HomePage() {
         <div className="absolute inset-0 bg-[#080914]/65" />
         <div className="container relative flex min-h-[560px] items-center py-12 sm:min-h-[620px] sm:py-16 md:min-h-[720px] md:py-20">
           <div className="max-w-2xl">
-            <p className="eyebrow">Cordova Property Management</p>
-            <h1 className="mt-5 text-balance text-3xl font-extrabold uppercase leading-tight text-white min-[380px]:text-4xl sm:text-5xl md:text-7xl">
+            <p className="text-xs font-normal uppercase tracking-[0.1em] text-[#f1f0f3]">Cordova Property Management</p>
+            <h1 className="mt-5 text-balance text-3xl font-black uppercase leading-[0.98] text-white min-[380px]:text-4xl sm:text-5xl md:text-7xl">
               Property Management Dubai
             </h1>
-            <div className="my-7 h-px w-56 bg-[#bd8f13]" />
-            <p className="max-w-xl text-base leading-8 text-white/86 sm:text-lg">
+            <div className="brand-rule my-7" />
+            <p className="max-w-xl text-base font-light leading-8 tracking-[0.005em] text-white/86 sm:text-lg">
               Whether you own a luxury property in Dubai, or you&apos;re looking for a long-term or
               short-term lease, our dedicated team are on hand to help. Explore our comprehensive
               list of services and discover why Cordova Properties is the preferred choice for
               property management in Dubai.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              <ButtonLink href="/contact">Download brochure</ButtonLink>
+              <ButtonLink href="/contact" variant="light">
+                Download brochure
+              </ButtonLink>
               <ButtonLink
                 href="/property-management"
-                variant="ghost"
-                className="border-white/45 text-white hover:border-[#bd8f13]"
+                variant="lightOutline"
               >
                 Explore services
               </ButtonLink>
@@ -184,7 +185,7 @@ export default function HomePage() {
               {
                 name: "Yves M, Dubai Property Owner",
                 image:
-                  "https://cordovaproperty.com/wp-content/uploads/2021/07/alejandra-cifre-gonzalez-ylyn5r4vxcA-unsplash.jpg",
+                  "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85",
                 intro: "\"You fully deserve it.\"",
                 quote:
                   "In my 20 years in Dubai and dealing with tens of agents, you have been the best by far. Very professional, very conscientious, and very knowledgeable. Congratulations and I wish you the best of luck.",
@@ -193,7 +194,7 @@ export default function HomePage() {
               {
                 name: "Katey and Jon M, Dubai Property Owner",
                 image:
-                  "https://cordovaproperty.com/wp-content/uploads/2021/07/ralph-ravi-kayden-2d4lAQAlbDA-unsplash.jpg",
+                  "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=85",
                 quote:
                   "\"The entire process of working with Cordova Properties has been nothing short of exceptional. They quickly secured us some great tenants at a good market rate, and the tenants have stayed in our property much longer than expected as a result of the fantastic service they receive from Cordova."
               },
@@ -242,55 +243,6 @@ export default function HomePage() {
                   </p>
                 ) : null}
               </figure>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="section bg-[#191c33] text-white">
-        <div className="container">
-          <div className="flex flex-col justify-between gap-5 md:flex-row md:items-end">
-            <div className="max-w-2xl">
-              <p className="eyebrow">Rentals</p>
-              <h2 className="mt-4 text-3xl font-extrabold sm:text-4xl">Properties for rent in Dubai</h2>
-              <p className="mt-4 leading-7 text-white/70">
-                Professionally managed residences selected for location, presentation, and tenant
-                readiness.
-              </p>
-            </div>
-            <ButtonLink href="/properties-for-rent-dubai">View all rentals</ButtonLink>
-          </div>
-          <div className="mt-10 grid gap-6 md:grid-cols-2">
-            {featuredProperties.map((property) => (
-              <article
-                key={property.slug}
-                className="overflow-hidden rounded-lg border border-white/10 bg-white text-[#191c33] shadow-lg shadow-black/10"
-              >
-                <Image
-                  src={property.image}
-                  alt={property.imageAlt}
-                  width={900}
-                  height={430}
-                  className="h-52 w-full object-cover sm:h-60"
-                />
-                <div className="p-5 md:p-6">
-                  <h3 className="text-xl font-extrabold leading-snug">{property.title}</h3>
-                  <p className="mt-4 text-sm text-[#242424]">{property.location}</p>
-                  <div className="mt-5 flex flex-wrap gap-3">
-                    {property.specs.map((spec) => (
-                      <span
-                        key={spec}
-                        className="rounded-full bg-[#f1f0f3] px-3 py-2 text-sm text-[#242424]"
-                      >
-                        {spec}
-                      </span>
-                    ))}
-                  </div>
-                  <ButtonLink href={`/${property.slug}`} className="mt-6">
-                    View details
-                  </ButtonLink>
-                </div>
-              </article>
             ))}
           </div>
         </div>

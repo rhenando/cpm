@@ -106,7 +106,7 @@ export default async function BlogPostPage({ params }: Props) {
               <p className="mx-auto mt-4 max-w-xl text-sm leading-7 text-white/65">
                 Speak with our Dubai property management team for attentive support tailored to your portfolio.
               </p>
-              <Link href="/contact" className="mt-7 inline-flex bg-[#bd8f13] px-7 py-3.5 text-xs font-extrabold uppercase tracking-[0.14em] text-white transition hover:bg-[#a1790f]">
+              <Link href="/contact" className="brand-button-primary mt-7 inline-flex min-h-12 items-center justify-center rounded-[10px] border-2 px-7 py-3 text-xs font-black uppercase tracking-[0.1em] transition">
                 Get started today
               </Link>
               <div className="relative z-10 mt-7 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 border-t border-white/10 pt-6 text-xs text-white/65">

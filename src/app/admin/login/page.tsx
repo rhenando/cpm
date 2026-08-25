@@ -44,7 +44,7 @@ export default async function AdminLoginPage({ searchParams }: { searchParams: P
               Password
               <input name="password" type="password" required autoComplete="current-password" className="min-h-12 bg-white px-4 text-base font-normal normal-case tracking-normal text-[#191c33] outline-none focus:ring-2 focus:ring-[#bd8f13]" />
             </label>
-            <button className="mt-2 min-h-12 bg-[#bd8f13] px-6 text-sm font-extrabold uppercase tracking-wide text-white transition hover:bg-[#ca8a04]">Sign in</button>
+            <button className="brand-button-on-dark mt-2 min-h-12 rounded-[10px] border-2 px-6 text-sm font-black uppercase tracking-[0.1em] transition">Sign in</button>
           </form>
         </div>
       </div>

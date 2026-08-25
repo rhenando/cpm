@@ -11,7 +11,7 @@ export function Footer() {
           <h2 className="max-w-2xl text-2xl font-extrabold leading-tight md:text-3xl">
             How can our property management team help you?
           </h2>
-          <ButtonLink href="/contact" className="shrink-0">
+          <ButtonLink href="/contact" variant="light" className="shrink-0">
             Contact us
           </ButtonLink>
         </div>
@@ -76,7 +76,7 @@ export function Footer() {
                 target="_blank"
                 rel="noreferrer"
                 aria-label={label}
-                className="inline-flex h-10 w-10 items-center justify-center rounded-md bg-white/10 transition hover:bg-[#bd8f13] hover:text-[#191c33]"
+                className="inline-flex h-10 w-10 items-center justify-center rounded-[10px] border border-white/20 bg-white/10 transition hover:bg-[#f1f0f3] hover:text-[#191c33]"
               >
                 <Icon size={18} aria-hidden />
               </a>

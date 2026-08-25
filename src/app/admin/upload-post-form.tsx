@@ -57,7 +57,7 @@ export function UploadPostForm() {
         <span className="text-sm font-normal normal-case tracking-normal text-[#242424]/60">Leave empty to publish immediately. Scheduled times use Dubai time (UTC+4).</span>
         <input name="publishAt" type="datetime-local" className="min-h-12 w-full border border-[#d3d3d3] bg-white px-3 font-normal normal-case tracking-normal outline-none focus:border-[#bd8f13] focus:ring-4 focus:ring-[#bd8f13]/10 sm:px-4" />
       </label>
-      <button className="inline-flex min-h-14 items-center justify-center gap-3 bg-[#bd8f13] px-5 text-sm font-extrabold uppercase tracking-wide text-white transition hover:bg-[#ca8a04] sm:px-7"><Upload size={18} aria-hidden /> Upload and publish</button>
+      <button className="brand-button-primary inline-flex min-h-14 items-center justify-center gap-3 rounded-[10px] border-2 px-5 text-sm font-black uppercase tracking-[0.1em] transition sm:px-7"><Upload size={18} aria-hidden /> Upload and publish</button>
     </form>
   );
 }

@@ -28,12 +28,12 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
       />
       <button
         type="submit"
-        className="inline-flex min-h-11 items-center justify-center rounded-md bg-[#bd8f13] px-5 py-3 text-sm font-extrabold uppercase tracking-wide text-white shadow-sm transition hover:bg-[#ca8a04] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#bd8f13]"
+        className="brand-button-primary inline-flex min-h-12 items-center justify-center rounded-[10px] border-2 px-6 py-3 text-sm font-black uppercase tracking-[0.1em] transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#e1ab39]"
       >
         Submit
       </button>
       {submitted ? (
-        <p className="rounded-md border border-[#bd8f13]/35 bg-[#bd8f13]/10 px-4 py-3 text-sm font-semibold text-[#191c33]">
+        <p className="rounded-[10px] border border-[#afabb9] bg-[#f1f0f3] px-4 py-3 text-sm font-semibold text-[#191c33]">
           Thanks. This demo form has validated your request locally.
         </p>
       ) : null}
