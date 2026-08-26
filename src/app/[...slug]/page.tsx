@@ -6,6 +6,9 @@ import { ButtonLink } from "@/components/button-link";
 import { DocContent } from "@/components/doc-content";
 import { LeadForm } from "@/components/lead-form";
 import { docHref, docs, getDocBySlug, pages } from "@/data/site";
+import dubaiVision from "../../../Dubai-vision.webp";
+import lestyPortrait from "../../../lesty.webp";
+import uaeProfessional from "../../../woman-uae.webp";
 
 type Props = {
   params: Promise<{ slug: string[] }>;
@@ -405,7 +408,7 @@ const team = [
   {
     name: "Lesty Cordova",
     role: "CEO",
-    image: "https://cordovaproperty.com/wp-content/uploads/2025/05/Artboard-1.webp",
+    image: lestyPortrait,
     href: ""
   },
   {
@@ -566,9 +569,23 @@ function AboutPage() {
 
       <section className="relative overflow-hidden bg-white py-20 md:py-28">
         <div className="absolute left-0 top-0 h-full w-1 bg-[#bd8f13]" />
-        <div className="container grid items-center gap-14 lg:grid-cols-[1.02fr_0.98fr] lg:gap-24">
-          <div>
-            <article className="relative border-b border-[#d3d3d3] pb-10">
+        <div className="container space-y-20 md:space-y-28">
+          <article className="grid items-center gap-12 lg:grid-cols-[0.92fr_1.08fr] lg:gap-24">
+            <div className="relative order-2 pb-8 pl-5 sm:pl-8 lg:order-1">
+              <div className="absolute bottom-0 left-0 right-8 top-8 border border-[#bd8f13]/55" />
+              <div className="relative aspect-[4/3] overflow-hidden bg-[#f1f0f3] shadow-[0_28px_70px_rgba(25,28,51,0.2)]">
+                <Image
+                  src={dubaiVision}
+                  alt="Emirati property owner overlooking Dubai's skyline"
+                  fill
+                  sizes="(max-width: 1024px) 90vw, 520px"
+                  placeholder="blur"
+                  className="object-cover object-center"
+                />
+                <div className="absolute inset-0 bg-gradient-to-tr from-[#191c33]/20 via-transparent to-[#bd8f13]/10" />
+              </div>
+            </div>
+            <div className="relative order-1 lg:order-2">
               <span className="absolute -left-1 top-1 font-serif text-5xl italic text-[#bd8f13]/20">01</span>
               <div className="relative pl-14 sm:pl-20">
                 <h2 className="text-3xl font-extrabold text-[#191c33] sm:text-4xl">Our Mission</h2>
@@ -580,10 +597,12 @@ function AboutPage() {
                   the price they pay to occupy a luxury property.
                 </p>
               </div>
-            </article>
+            </div>
+          </article>
 
-            <article className="relative pt-10">
-              <span className="absolute -left-1 top-11 font-serif text-5xl italic text-[#bd8f13]/20">02</span>
+          <article className="grid items-center gap-12 lg:grid-cols-[1.08fr_0.92fr] lg:gap-24">
+            <div className="relative">
+              <span className="absolute -left-1 top-1 font-serif text-5xl italic text-[#bd8f13]/20">02</span>
               <div className="relative pl-14 sm:pl-20">
                 <h2 className="text-3xl font-extrabold leading-tight text-[#191c33] sm:text-4xl">
                   Our Commitment to Excellence
@@ -596,28 +615,23 @@ function AboutPage() {
                   precision and care.
                 </p>
               </div>
-            </article>
-          </div>
-
-          <div className="relative pb-10 pl-5 sm:pl-10">
-            <div className="absolute bottom-0 left-0 right-10 top-10 border border-[#bd8f13]/55" />
-            <div className="relative aspect-[4/3] overflow-hidden bg-[#f1f0f3] shadow-[0_28px_70px_rgba(25,28,51,0.2)]">
-              <Image
-                src="https://images.unsplash.com/photo-1518684079-3c830dcef090?auto=format&fit=crop&w=1600&q=85"
-                alt="Property owner overlooking the Dubai skyline"
-                fill
-                sizes="(max-width: 1024px) 90vw, 560px"
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-tr from-[#191c33]/20 via-transparent to-[#bd8f13]/10" />
+              <ButtonLink href="/contact" className="ml-14 mt-8 min-w-44 sm:ml-20">Contact us</ButtonLink>
             </div>
-            <div className="relative ml-auto -mt-1 w-[88%] bg-[#191c33] px-6 py-6 text-white shadow-xl sm:px-8">
-              <p className="leading-7 text-white/75">
-                For expert property management please contact one of the team.
-              </p>
-              <ButtonLink href="/contact" variant="light" className="mt-5 min-w-44">Contact us</ButtonLink>
+            <div className="relative pb-8 pl-5 sm:pl-8">
+              <div className="absolute bottom-0 left-0 right-8 top-8 border border-[#bd8f13]/55" />
+              <div className="relative aspect-[4/3] overflow-hidden bg-[#f1f0f3] shadow-[0_28px_70px_rgba(25,28,51,0.2)]">
+                <Image
+                  src={uaeProfessional}
+                  alt="UAE property professional working with a client"
+                  fill
+                  sizes="(max-width: 1024px) 90vw, 520px"
+                  placeholder="blur"
+                  className="object-cover object-center"
+                />
+                <div className="absolute inset-0 bg-gradient-to-tr from-[#191c33]/20 via-transparent to-[#bd8f13]/10" />
+              </div>
             </div>
-          </div>
+          </article>
         </div>
       </section>
 
