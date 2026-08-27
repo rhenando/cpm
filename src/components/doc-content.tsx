@@ -30,6 +30,8 @@ function removeRepeatedTitle(lines: string[], title?: string) {
 function formatContent(content: string, title?: string): ContentBlock[] {
   let lines = content.replace(/\r/g, "").split("\n").map((line) => line.replace(/\s+/g, " ").trim());
   lines = removeRepeatedTitle(lines, title);
+  const introductionIndex = lines.findIndex((line) => /^introduction$/i.test(line));
+  if (introductionIndex >= 0) lines = lines.slice(introductionIndex);
 
   const blocks: ContentBlock[] = [];
   let paragraph: string[] = [];

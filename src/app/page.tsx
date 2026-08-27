@@ -74,15 +74,16 @@ export default function HomePage() {
                 { icon: Wrench, title: "Maintenance coordination" },
                 { icon: Building2, title: "Dubai market focus" }
               ].map(({ icon: Icon, title }) => (
-                <div key={title} className="rounded-lg border border-[#d3d3d3] bg-[#f7f8f9] p-5 shadow-sm">
-                  <Icon className="text-[#bd8f13]" size={26} aria-hidden />
-                  <h3 className="mt-4 font-extrabold text-[#191c33]">{title}</h3>
+                <div key={title} className="group border-l border-[#afabb9] bg-[#f7f8f9]/70 p-6 transition hover:border-[#e1ab39] hover:bg-white">
+                  <Icon className="text-[#555069] transition group-hover:text-[#e1ab39]" size={24} strokeWidth={1.5} aria-hidden />
+                  <h3 className="mt-5 text-base font-semibold text-[#191c33]">{title}</h3>
                 </div>
               ))}
             </div>
           </div>
-          <aside className="rounded-lg border border-[#d3d3d3] bg-[#f1f0f3] p-6 shadow-xl shadow-[#191c33]/10">
-            <p className="text-center text-sm font-extrabold uppercase tracking-wide text-[#191c33]">
+          <aside className="relative border border-[#d5d2db] bg-[#f1f0f3] p-7 shadow-[0_24px_70px_rgba(25,28,51,0.09)] sm:p-9">
+            <div className="brand-gradient absolute left-0 top-0 h-1 w-full" />
+            <p className="text-center text-xs font-medium uppercase tracking-[0.12em] text-[#191c33]">
               Reach out to us and one of our agents will contact you
             </p>
             <div className="mt-6">
@@ -99,7 +100,7 @@ export default function HomePage() {
             alt="Modern cozy living room"
             width={900}
             height={620}
-            className="aspect-[4/3] rounded-lg object-cover shadow-xl"
+            className="aspect-[4/3] object-cover shadow-[0_28px_70px_rgba(25,28,51,0.14)]"
           />
           <div>
             <p className="eyebrow">Why Cordova</p>
@@ -167,7 +168,7 @@ export default function HomePage() {
             alt="Professional property management in Dubai"
             width={900}
             height={620}
-            className="aspect-[4/3] rounded-lg object-cover shadow-xl"
+            className="aspect-[4/3] object-cover shadow-[0_28px_70px_rgba(25,28,51,0.14)]"
           />
         </div>
       </section>
@@ -212,15 +213,16 @@ export default function HomePage() {
             ].map((testimonial) => (
               <figure
                 key={testimonial.name}
-                className="rounded-lg border border-[#d3d3d3] bg-[#f7f8f9] p-6 shadow-sm"
+                className="luxury-card relative overflow-hidden p-7"
               >
+                <div className="brand-gradient absolute left-0 top-0 h-1 w-full" />
                 {testimonial.image ? (
                   <Image
                     src={testimonial.image}
                     alt="Modern villa with pool"
                     width={420}
                     height={240}
-                    className="mb-6 aspect-[16/9] w-full rounded-md object-cover"
+                    className="mb-7 aspect-[16/9] w-full object-cover grayscale-[12%] transition duration-500 hover:grayscale-0"
                   />
                 ) : (
                   <Home className="text-[#bd8f13]" size={26} aria-hidden />
@@ -261,9 +263,9 @@ export default function HomePage() {
           </div>
           <div className="mt-10 grid gap-5 md:grid-cols-3">
             {posts.slice(0, 3).map((post) => (
-              <Link key={post.id} href={docHref(post)} className="rounded-lg bg-white p-6 shadow-sm">
+              <Link key={post.id} href={docHref(post)} className="luxury-card group p-7">
                 <p className="text-xs font-extrabold uppercase tracking-wide text-[#bd8f13]">Insight</p>
-                <h3 className="mt-3 text-lg font-extrabold leading-snug text-[#191c33]">{post.title}</h3>
+                <h3 className="mt-4 text-lg font-semibold leading-snug text-[#191c33] transition group-hover:text-[#555069]">{post.title}</h3>
                 <p className="mt-3 text-sm leading-6 text-[#242424]">{post.excerpt}</p>
               </Link>
             ))}

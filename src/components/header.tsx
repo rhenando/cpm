@@ -43,7 +43,7 @@ export function Header() {
               <div key={item.href} className="group relative">
                 <button
                   type="button"
-                  className="inline-flex cursor-pointer appearance-none items-center gap-1.5 border-0 bg-transparent px-0 py-7 text-xs font-black uppercase tracking-[0.1em] text-[#191c33] transition hover:text-[#555069]"
+                  className="inline-flex cursor-pointer appearance-none items-center gap-1.5 border-0 bg-transparent px-0 py-7 text-xs font-medium uppercase tracking-[0.1em] text-[#191c33] transition hover:text-[#555069]"
                   aria-haspopup="true"
                 >
                   {item.label}
@@ -54,7 +54,7 @@ export function Header() {
                     <Link
                       key={child.href}
                       href={child.href}
-                      className="block border-b border-[#f1f0f3] px-4 py-3.5 text-xs font-bold uppercase tracking-wide text-[#191c33] transition last:border-0 hover:bg-[#f7f8f9] hover:pl-5 hover:text-[#bd8f13]"
+                      className="block border-b border-[#f1f0f3] px-4 py-3.5 text-xs font-medium uppercase tracking-wide text-[#191c33] transition last:border-0 hover:bg-[#f7f8f9] hover:pl-5 hover:text-[#bd8f13]"
                     >
                       {child.label}
                     </Link>
@@ -65,7 +65,7 @@ export function Header() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="inline-flex items-center py-7 text-xs font-black uppercase tracking-[0.1em] text-[#191c33] transition hover:text-[#555069]"
+                className="inline-flex items-center py-7 text-xs font-medium uppercase tracking-[0.1em] text-[#191c33] transition hover:text-[#555069]"
               >
                 {item.label}
               </Link>
@@ -88,14 +88,14 @@ export function Header() {
             {navItems.map((item) => (
               <div key={item.href}>
                 {item.children ? (
-                  <div className="flex items-center justify-between rounded-md px-3 py-3 text-sm font-extrabold uppercase tracking-wide text-[#191c33]">
+                  <div className="flex items-center justify-between rounded-md px-3 py-3 text-sm font-medium uppercase tracking-wide text-[#191c33]">
                     {item.label}
                     <ChevronDown size={16} className="text-[#bd8f13]" aria-hidden />
                   </div>
                 ) : (
                   <Link
                     href={item.href}
-                    className="flex items-center justify-between rounded-md px-3 py-3 text-sm font-extrabold uppercase tracking-wide text-[#191c33] hover:bg-[#f1f0f3]"
+                    className="flex items-center justify-between rounded-md px-3 py-3 text-sm font-medium uppercase tracking-wide text-[#191c33] hover:bg-[#f1f0f3]"
                     onClick={() => setOpen(false)}
                   >
                     {item.label}
@@ -107,7 +107,7 @@ export function Header() {
                       <Link
                         key={child.href}
                         href={child.href}
-                        className="block rounded-md px-3 py-2.5 text-xs font-bold uppercase tracking-wide text-[#242424] hover:bg-[#f1f0f3] hover:text-[#bd8f13]"
+                        className="block rounded-md px-3 py-2.5 text-xs font-normal uppercase tracking-wide text-[#242424] hover:bg-[#f1f0f3] hover:text-[#bd8f13]"
                         onClick={() => setOpen(false)}
                       >
                         {child.label}
