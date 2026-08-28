@@ -19,7 +19,7 @@ export function Footer() {
       <div className="container grid gap-9 py-10 md:grid-cols-[1.1fr_1.2fr_1fr] md:py-12">
         <div>
           <Image
-            src="/brand/CPM-primary-logo-footer.png"
+            src="/images/brand/CPM-primary-logo-footer.png"
             alt="Cordova Property Management Dubai"
             width={220}
             height={75}

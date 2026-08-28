@@ -29,7 +29,7 @@ export function Header() {
       <div className="container flex h-16 items-center justify-between gap-4 sm:h-20 sm:gap-6">
         <Link href="/" className="flex items-center gap-3" aria-label="Cordova Property home">
           <Image
-            src="/brand/CPM-primary-logo-header.png"
+            src="/images/brand/CPM-primary-logo-header.png"
             alt="Cordova Property Management"
             width={220}
             height={75}

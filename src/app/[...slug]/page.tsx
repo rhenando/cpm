@@ -6,9 +6,10 @@ import { ButtonLink } from "@/components/button-link";
 import { DocContent } from "@/components/doc-content";
 import { LeadForm } from "@/components/lead-form";
 import { docHref, docs, getDocBySlug, pages } from "@/data/site";
-import dubaiVision from "../../../Dubai-vision.webp";
-import lestyPortrait from "../../../lesty.webp";
-import uaeProfessional from "../../../woman-uae.webp";
+
+const dubaiVision = "/images/pages/Dubai-vision.webp";
+const lestyPortrait = "/images/pages/lesty.webp";
+const uaeProfessional = "/images/pages/woman-uae.webp";
 
 type Props = {
   params: Promise<{ slug: string[] }>;
