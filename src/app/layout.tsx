@@ -3,6 +3,7 @@ import { Montserrat } from "next/font/google";
 import "./globals.css";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
+import { getSiteSettings } from "@/lib/cms";
 
 const montserrat = Montserrat({
   variable: "--font-montserrat",
@@ -28,17 +29,18 @@ export const metadata: Metadata = {
   }
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const settings = await getSiteSettings();
   return (
     <html lang="en">
       <body className={montserrat.variable}>
-        <Header />
+        <Header settings={settings} />
         <main>{children}</main>
-        <Footer />
+        <Footer settings={settings} />
       </body>
     </html>
   );

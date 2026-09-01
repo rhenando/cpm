@@ -6,6 +6,7 @@ import { ButtonLink } from "@/components/button-link";
 import { DocContent } from "@/components/doc-content";
 import { LeadForm } from "@/components/lead-form";
 import { docHref, docs, getDocBySlug, pages } from "@/data/site";
+import { getPageOverride, getSiteSettings } from "@/lib/cms";
 
 const dubaiVision = "/images/pages/Dubai-vision.webp";
 const lestyPortrait = "/images/pages/lesty.webp";
@@ -23,7 +24,11 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const doc = getDocBySlug(slug.join("/"));
+  const member = team.find((item) => item.href === `/${slug.join("/")}`);
+  if (member) return { title: member.name, description: `${member.name}, ${member.role} at Cordova Property Management in Dubai.` };
+  const source = getDocBySlug(slug.join("/"));
+  const override = await getPageOverride(slug.join("/"));
+  const doc = source ? { ...source, ...override } : source;
   if (!doc) return {};
   return {
     title: doc.title,
@@ -39,7 +44,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function StaticPage({ params }: Props) {
   const { slug } = await params;
   const path = slug.join("/");
-  const doc = getDocBySlug(path);
+  const source = getDocBySlug(path);
+  const member = team.find((item) => item.href === `/${path}`);
+  if (member) return <TeamProfilePage member={member} doc={source} />;
+  const override = await getPageOverride(path);
+  const doc = source ? { ...source, ...override } : source;
   if (!doc || doc.type === "post") notFound();
 
   if (path === "properties-for-rent-dubai") {
@@ -410,45 +419,139 @@ const team = [
     name: "Lesty Cordova",
     role: "CEO",
     image: lestyPortrait,
-    href: ""
+    href: "/lesty-cordova",
+    summary: "Leading Cordova with a clear standard: personal service, disciplined oversight and enduring value for every property entrusted to the team.",
+    strengths: ["Executive leadership", "Client strategy", "Luxury service standards", "Property investment oversight"]
   },
   {
-    name: "Christine Cabezas",
+    name: "Cristine Cabezas",
     role: "Head of Administration",
-    image: "https://cordovaproperty.com/wp-content/uploads/2026/08/cris4-scaled.jpg",
-    href: "/cristine-cabezas"
+    image: "/images/pages/cris4.jpg",
+    href: "/cristine-cabezas",
+    summary: "Bringing precision, warmth and dependable coordination to every client relationship and every detail behind the scenes.",
+    strengths: ["Organizational excellence", "Client support", "Clear communication", "Practical problem-solving"]
   },
   {
     name: "Mamerto Adao",
     role: "Facilities Inspection Officer",
-    image: "https://cordovaproperty.com/wp-content/uploads/2026/08/mame-scaled.jpg",
-    href: "/mamerto-adao"
+    image: "/images/pages/mame.jpg",
+    href: "/mamerto-adao",
+    summary: "Protecting property standards through attentive inspections, practical expertise and a meticulous eye for detail.",
+    strengths: ["Detailed inspections", "Quality assurance", "Maintenance assessment", "Technical reporting"]
   },
   {
     name: "Mary Joy Mendoza",
     role: "FM Operations Manager",
-    image: "https://cordovaproperty.com/wp-content/uploads/2026/08/joy1-scaled.jpg",
-    href: "/mary-joy-mendoza"
+    image: "/images/pages/joy1.jpg",
+    href: "/mary-joy-mendoza",
+    summary: "Guiding facilities operations with calm leadership, responsive coordination and an unwavering focus on service quality.",
+    strengths: ["Facilities operations", "Vendor coordination", "Team leadership", "Service delivery"]
   },
   {
     name: "William Galang",
     role: "Senior Property Manager",
-    image: "https://cordovaproperty.com/wp-content/uploads/2026/08/will-scaled.jpg",
-    href: "/william-galang"
+    image: "/images/pages/will.jpg",
+    href: "/william-galang",
+    summary: "Combining technical understanding and operational discipline to deliver consistently well-managed properties.",
+    strengths: ["Operational leadership", "Preventive maintenance", "Process optimization", "Contractor management"]
   },
   {
     name: "Rosewell Sangco",
     role: "Property Manager",
-    image: "https://cordovaproperty.com/wp-content/uploads/2026/08/rose1-scaled.jpg",
-    href: ""
+    image: "/images/pages/rose1.jpg",
+    href: "/rosewell-sangco",
+    summary: "Supporting owners and tenants with proactive communication, thoughtful care and reliable day-to-day property management.",
+    strengths: ["Tenant relations", "Property coordination", "Client communication", "Responsive support"]
   },
   {
     name: "Carl Manalang",
     role: "Property Manager",
-    image: "https://cordovaproperty.com/wp-content/uploads/2026/08/car-scaled.jpg",
-    href: ""
+    image: "/images/pages/car.jpg",
+    href: "/carl-manalang",
+    summary: "Delivering responsive property support with professionalism, practical judgment and close attention to client priorities.",
+    strengths: ["Property operations", "Client care", "Issue resolution", "Service coordination"]
   }
 ];
+
+async function TeamProfilePage({ member, doc }: { member: (typeof team)[number]; doc?: (typeof docs)[number] }) {
+  const settings = await getSiteSettings();
+
+  return (
+    <main className="overflow-hidden bg-[#f4efe5]">
+      <section className="relative bg-[#191c33] text-white">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(189,143,19,.22),transparent_34%)]" />
+        <div className="container relative grid min-h-[680px] items-stretch lg:grid-cols-[.92fr_1.08fr]">
+          <div className="flex flex-col justify-center py-16 lg:py-24 lg:pr-16">
+            <ButtonLink href="/about-cordova-property-management#team" variant="lightOutline" className="mb-10 w-fit">Back to our team</ButtonLink>
+            <p className="eyebrow">Our people</p>
+            <h1 className="mt-5 text-balance text-5xl font-extrabold leading-[1.02] sm:text-6xl xl:text-7xl">{member.name}</h1>
+            <p className="mt-5 text-sm font-extrabold uppercase tracking-[.22em] text-[#d2ad4b]">{member.role}</p>
+            <div className="mt-9 h-px w-24 bg-[#bd8f13]" />
+            <p className="mt-8 max-w-xl text-lg leading-8 text-white/72">{member.summary}</p>
+          </div>
+          <div className="relative min-h-[520px] overflow-hidden lg:min-h-[680px]">
+            <Image src={member.image} alt={`${member.name}, ${member.role}`} fill priority className="object-cover object-top" sizes="(max-width: 1024px) 100vw, 55vw" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#191c33]/55 via-transparent to-transparent lg:bg-gradient-to-r lg:from-[#191c33]/35 lg:to-transparent" />
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="container grid gap-10 lg:grid-cols-[1fr_330px] lg:gap-16">
+          <article className="border-t-2 border-[#bd8f13] bg-white p-7 shadow-[0_24px_70px_rgba(25,28,51,.10)] sm:p-12">
+            <p className="eyebrow">Professional profile</p>
+            {doc ? <AuthoritativeProfileContent content={doc.content} name={member.name} role={member.role} /> : <FallbackProfileContent member={member} />}
+          </article>
+          <aside className="h-fit bg-[#191c33] p-7 text-white shadow-[0_24px_60px_rgba(25,28,51,.2)] sm:p-9">
+            <p className="text-xs font-extrabold uppercase tracking-[.22em] text-[#d2ad4b]">Connect with Cordova</p>
+            <h2 className="mt-4 text-2xl font-extrabold">Speak with our team</h2>
+            <p className="mt-4 text-sm leading-7 text-white/65">Discuss your property requirements with our Dubai office.</p>
+            <div className="mt-7 grid gap-4 border-t border-white/15 pt-7 text-sm">
+              <a className="flex items-center gap-3 hover:text-[#d2ad4b]" href={`tel:${settings.phone.replace(/[^+\d]/g, "")}`}><Phone size={17} aria-hidden />{settings.phone}</a>
+              <a className="flex items-center gap-3 break-all hover:text-[#d2ad4b]" href={`mailto:${settings.email}`}><Mail size={17} aria-hidden />{settings.email}</a>
+              <p className="flex items-start gap-3 text-white/70"><MapPin className="mt-1 shrink-0" size={17} aria-hidden />{settings.address}</p>
+            </div>
+            <ButtonLink href="/contact" variant="light" className="mt-8 w-full justify-center">Contact us</ButtonLink>
+          </aside>
+        </div>
+      </section>
+      <section className="bg-[#191c33] py-14 text-white">
+        <div className="container flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
+          <div><p className="eyebrow">The Cordova standard</p><h2 className="mt-4 text-3xl font-extrabold">Property care, delivered personally.</h2></div>
+          <ButtonLink href="/property-management" variant="lightOutline">Explore our services</ButtonLink>
+        </div>
+      </section>
+    </main>
+  );
+}
+
+function AuthoritativeProfileContent({ content, name, role }: { content: string; name: string; role: string }) {
+  const lines = content.replace(/\r/g, "").split("\n").map((line) => line.replace(/\s+/g, " ").trim()).filter(Boolean);
+  return (
+    <div className="mt-7">
+      {lines.map((line, index) => {
+        if ((index === 0 && /cabezas|adao|mendoza|galang/i.test(line)) || line === name || line === role) return null;
+        if (/^(About |Core Strengths$|Contact )/i.test(line)) return <h2 key={`${index}-${line}`} className="mt-10 border-l-4 border-[#bd8f13] pl-5 text-2xl font-extrabold text-[#191c33] first:mt-0 sm:text-3xl">{line}</h2>;
+        if (/^(Phone|Email|Office)$/i.test(line)) return <h3 key={`${index}-${line}`} className="mt-7 text-xs font-extrabold uppercase tracking-[.2em] text-[#bd8f13]">{line}</h3>;
+        const isStrength = /^[A-Za-z &/]+:/.test(line);
+        return isStrength
+          ? <div key={`${index}-${line}`} className="mt-4 border border-[#d8ccb3] bg-[#faf8f3] p-5 text-sm leading-7 text-[#242424]/80 shadow-[0_8px_20px_rgba(25,28,51,.04)]"><span className="font-extrabold text-[#191c33]">{line.split(":")[0]}:</span>{line.slice(line.indexOf(":") + 1)}</div>
+          : <p key={`${index}-${line}`} className="mt-4 text-base leading-8 text-[#242424]/75 sm:text-lg sm:leading-9">{line}</p>;
+      })}
+    </div>
+  );
+}
+
+function FallbackProfileContent({ member }: { member: (typeof team)[number] }) {
+  return (
+    <div className="mt-7">
+      <h2 className="text-3xl font-extrabold text-[#191c33]">About {member.name.split(" ")[0]}</h2>
+      <p className="mt-6 text-lg leading-9 text-[#242424]/75">{member.summary}</p>
+      <h2 className="mt-10 border-l-4 border-[#bd8f13] pl-5 text-2xl font-extrabold text-[#191c33]">Core Strengths</h2>
+      <div className="mt-6 grid gap-4 sm:grid-cols-2">{member.strengths.map((strength) => <div key={strength} className="border border-[#d8ccb3] bg-[#faf8f3] p-5 font-bold text-[#191c33]">{strength}</div>)}</div>
+    </div>
+  );
+}
 
 function AboutPage() {
   return (
@@ -580,7 +683,6 @@ function AboutPage() {
                   alt="Emirati property owner overlooking Dubai's skyline"
                   fill
                   sizes="(max-width: 1024px) 90vw, 520px"
-                  placeholder="blur"
                   className="object-cover object-center"
                 />
                 <div className="absolute inset-0 bg-gradient-to-tr from-[#191c33]/20 via-transparent to-[#bd8f13]/10" />
@@ -626,7 +728,6 @@ function AboutPage() {
                   alt="UAE property professional working with a client"
                   fill
                   sizes="(max-width: 1024px) 90vw, 520px"
-                  placeholder="blur"
                   className="object-cover object-center"
                 />
                 <div className="absolute inset-0 bg-gradient-to-tr from-[#191c33]/20 via-transparent to-[#bd8f13]/10" />
@@ -636,7 +737,7 @@ function AboutPage() {
         </div>
       </section>
 
-      <section className="section bg-[radial-gradient(circle_at_top,#ffffff_0%,#f3ede1_55%,#e9dfcd_100%)]">
+      <section id="team" className="section scroll-mt-28 bg-[radial-gradient(circle_at_top,#ffffff_0%,#f3ede1_55%,#e9dfcd_100%)]">
         <div className="container">
           <div className="flex flex-col justify-between gap-6 md:flex-row md:items-end">
             <div>

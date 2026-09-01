@@ -5,23 +5,24 @@ import Link from "next/link";
 import { ChevronDown, Mail, Menu, Phone, X } from "lucide-react";
 import { useState } from "react";
 import { navItems } from "@/data/site";
+import { defaultSiteSettings, type SiteSettings } from "@/data/site-settings";
 
-export function Header() {
+export function Header({ settings = defaultSiteSettings }: { settings?: SiteSettings }) {
   const [open, setOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 border-b border-[#d5d2db] bg-white/95 backdrop-blur">
       <div className="bg-[#191c33] text-white">
         <div className="container flex items-center justify-between gap-3 py-2 text-[0.68rem] font-semibold sm:text-xs">
-          <span className="hidden leading-5 sm:block">The One Tower, Sheikh Zayed Rd, Barsha Heights, Dubai</span>
+          <span className="hidden leading-5 sm:block">{settings.address}</span>
           <div className="flex min-w-0 flex-1 flex-wrap items-center justify-between gap-x-3 gap-y-1 sm:flex-none sm:justify-end sm:gap-4">
-            <a className="inline-flex items-center gap-2" href="tel:+971586287157">
+            <a className="inline-flex items-center gap-2" href={`tel:${settings.phone.replace(/[^+\d]/g, "")}`}>
               <Phone size={14} aria-hidden />
-              +971 58 628 7157
+              {settings.phone}
             </a>
-            <a className="inline-flex items-center gap-2" href="mailto:customer@cordovaproperty.com">
+            <a className="inline-flex items-center gap-2" href={`mailto:${settings.email}`}>
               <Mail size={14} aria-hidden />
-              customer@cordovaproperty.com
+              {settings.email}
             </a>
           </div>
         </div>

@@ -2,14 +2,15 @@
 import Link from "next/link";
 import { Facebook, Instagram, Linkedin, Mail, Phone, Youtube } from "lucide-react";
 import { ButtonLink } from "./button-link";
+import { defaultSiteSettings, type SiteSettings } from "@/data/site-settings";
 
-export function Footer() {
+export function Footer({ settings = defaultSiteSettings }: { settings?: SiteSettings }) {
   return (
     <footer className="bg-[#191c33] text-white">
       <div className="border-b border-white/10">
         <div className="container flex flex-col items-start justify-between gap-6 py-8 md:flex-row md:items-center md:py-10">
           <h2 className="max-w-2xl text-2xl font-extrabold leading-tight md:text-3xl">
-            How can our property management team help you?
+            {settings.footerHeading}
           </h2>
           <ButtonLink href="/contact" variant="light" className="shrink-0">
             Contact us
@@ -26,24 +27,21 @@ export function Footer() {
             className="h-auto w-40 object-contain sm:w-48"
           />
           <p className="mt-5 max-w-sm text-sm leading-7 text-white/72">
-            Cordova Property Management supports Dubai landlords with leasing, inspections,
-            maintenance coordination, tenant care, and premium property readiness.
+            {settings.footerDescription}
           </p>
         </div>
         <address className="not-italic text-sm leading-7 text-white/75">
           <strong className="block text-base text-white">Cordova Property Management</strong>
-          The One Tower, Sheikh Zayed Rd, Tecom, Barsha Heights
-          <br />
-          Dubai, UAE
-          <a className="mt-4 flex items-start gap-2 text-white" href="tel:+971586287157">
+          {settings.address}
+          <a className="mt-4 flex items-start gap-2 text-white" href={`tel:${settings.phone.replace(/[^+\d]/g, "")}`}>
             <Phone className="mt-1 shrink-0" size={16} aria-hidden />
-            <span>+971 58 628 7157 | +971 58 658 0518</span>
+            <span>{settings.phone}{settings.secondaryPhone ? ` | ${settings.secondaryPhone}` : ""}</span>
           </a>
           <a
             className="mt-2 flex items-start gap-2 break-all text-white"
-            href="mailto:customer@cordovaproperty.com"
+            href={`mailto:${settings.email}`}
           >
-            <Mail className="mt-1 shrink-0" size={16} aria-hidden /> customer@cordovaproperty.com
+            <Mail className="mt-1 shrink-0" size={16} aria-hidden /> {settings.email}
           </a>
         </address>
         <div>
@@ -51,22 +49,22 @@ export function Footer() {
             {[
               {
                 icon: Linkedin,
-                href: "https://www.linkedin.com/company/cordova-property-mangement/about/",
+                href: settings.linkedin,
                 label: "LinkedIn"
               },
               {
                 icon: Facebook,
-                href: "https://www.facebook.com/profile.php?id=61559895031581",
+                href: settings.facebook,
                 label: "Facebook"
               },
               {
                 icon: Youtube,
-                href: "https://www.youtube.com/channel/UCjfrb24xHEWa5j1SDbnZFUg",
+                href: settings.youtube,
                 label: "YouTube"
               },
               {
                 icon: Instagram,
-                href: "https://www.instagram.com/thecordova_group/",
+                href: settings.instagram,
                 label: "Instagram"
               }
             ].map(({ icon: Icon, href, label }) => (

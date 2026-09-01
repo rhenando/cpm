@@ -3,10 +3,12 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { requireAdmin } from "@/lib/admin";
 
 const MAX_PDF_SIZE = 2.5 * 1024 * 1024;
 const MAX_IMAGE_SIZE = 1.25 * 1024 * 1024;
 const MAX_COMBINED_SIZE = 3.75 * 1024 * 1024;
+const MAX_BATCH_SIZE = 8;
 const ALLOWED_IMAGES = new Set(["image/jpeg", "image/png", "image/webp"]);
 
 function safeSlug(value: string) {
@@ -73,76 +75,76 @@ export async function logout() {
 }
 
 export async function publishPost(formData: FormData) {
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/admin/login");
+  const { supabase, user } = await requireAdmin();
 
-  const pdf = formData.get("pdf");
-  const image = formData.get("image");
+  const pdfs = formData.getAll("pdf").filter((file): file is File => file instanceof File && file.size > 0);
+  const images = formData.getAll("image").filter((file): file is File => file instanceof File && file.size > 0);
   const publishDate = getPublishDate(formData.get("publishAt"));
   if (!publishDate) redirect("/admin?error=invalid-date");
-  if (!(pdf instanceof File) || !(image instanceof File) || !pdf.size || !image.size) {
-    redirect("/admin?error=missing-files");
+  if (!pdfs.length || !images.length) redirect("/admin?error=missing-files");
+  if (pdfs.length !== images.length) redirect("/admin?error=file-count-mismatch");
+  if (pdfs.length > MAX_BATCH_SIZE) redirect("/admin?error=batch-too-large");
+  if (pdfs.some((pdf) => pdf.type !== "application/pdf" || pdf.size > MAX_PDF_SIZE)) redirect("/admin?error=invalid-pdf");
+  if (images.some((image) => !ALLOWED_IMAGES.has(image.type) || image.size > MAX_IMAGE_SIZE)) redirect("/admin?error=invalid-image");
+  if (pdfs.some((pdf, index) => pdf.size + images[index].size > MAX_COMBINED_SIZE)) redirect("/admin?error=files-too-large");
+
+  await installPdfNodeGlobals();
+  const { PDFParse } = await import("pdf-parse");
+  const publishedSlugs: string[] = [];
+  for (let index = 0; index < pdfs.length; index++) {
+    const pdf = pdfs[index];
+    const image = images[index];
+    let content = "";
+    try {
+      const parser = new PDFParse({ data: Buffer.from(await pdf.arrayBuffer()) });
+      const text = await parser.getText();
+      content = cleanPdfText(text.text);
+      await parser.destroy();
+    } catch (error) {
+      console.error(`Unable to process uploaded PDF ${pdf.name}:`, error);
+      redirect(`/admin?error=${publishedSlugs.length ? "batch-partial" : "pdf-processing-failed"}`);
+    }
+    if (content.length < 100) redirect(`/admin?error=${publishedSlugs.length ? "batch-partial" : "empty-pdf"}`);
+
+    const title = deriveTitle(content, undefined, pdf.name);
+    const articleContent = content.toLowerCase().startsWith(title.toLowerCase())
+      ? content.slice(title.length).replace(/^\s+/, "")
+      : content;
+    const timestamp = Date.now() + index;
+    const baseSlug = safeSlug(title) || `article-${timestamp}`;
+    const slug = `${baseSlug}-${timestamp.toString().slice(-6)}`;
+    const folder = `${user.id}/${slug}`;
+    const imageExtension = image.name.split(".").pop()?.toLowerCase() || "jpg";
+    const imagePath = `${folder}/featured.${imageExtension}`;
+    const pdfPath = `${folder}/article.pdf`;
+    const [imageUpload, pdfUpload] = await Promise.all([
+      supabase.storage.from("blog-assets").upload(imagePath, image, { contentType: image.type }),
+      supabase.storage.from("blog-assets").upload(pdfPath, pdf, { contentType: "application/pdf" })
+    ]);
+    if (imageUpload.error || pdfUpload.error) {
+      const uploadedPaths = [!imageUpload.error ? imagePath : null, !pdfUpload.error ? pdfPath : null].filter((path): path is string => Boolean(path));
+      if (uploadedPaths.length) await supabase.storage.from("blog-assets").remove(uploadedPaths);
+      redirect(`/admin?error=${publishedSlugs.length ? "batch-partial" : "upload-failed"}`);
+    }
+    const imageUrl = supabase.storage.from("blog-assets").getPublicUrl(imagePath).data.publicUrl;
+    const pdfUrl = supabase.storage.from("blog-assets").getPublicUrl(pdfPath).data.publicUrl;
+    const { error } = await supabase.from("posts").insert({
+      author_id: user.id, slug, title,
+      excerpt: articleContent.replace(/\s+/g, " ").trim().slice(0, 220),
+      content: articleContent, image_url: imageUrl, pdf_url: pdfUrl,
+      published: true, published_at: publishDate.toISOString()
+    });
+    if (error) {
+      await supabase.storage.from("blog-assets").remove([imagePath, pdfPath]);
+      redirect(`/admin?error=${publishedSlugs.length ? "batch-partial" : "publish-failed"}`);
+    }
+    publishedSlugs.push(slug);
+    revalidatePath(`/blog/${slug}`);
   }
-  if (pdf.type !== "application/pdf" || pdf.size > MAX_PDF_SIZE) redirect("/admin?error=invalid-pdf");
-  if (!ALLOWED_IMAGES.has(image.type) || image.size > MAX_IMAGE_SIZE) redirect("/admin?error=invalid-image");
-  if (pdf.size + image.size > MAX_COMBINED_SIZE) redirect("/admin?error=files-too-large");
-
-  let content = "";
-  try {
-    await installPdfNodeGlobals();
-    const { PDFParse } = await import("pdf-parse");
-    const parser = new PDFParse({ data: Buffer.from(await pdf.arrayBuffer()) });
-    const text = await parser.getText();
-    content = cleanPdfText(text.text);
-    await parser.destroy();
-  } catch (error) {
-    console.error("Unable to process uploaded PDF:", error);
-    redirect("/admin?error=pdf-processing-failed");
-  }
-  if (content.length < 100) redirect("/admin?error=empty-pdf");
-
-  const title = deriveTitle(content, undefined, pdf.name);
-  const articleContent = content.toLowerCase().startsWith(title.toLowerCase())
-    ? content.slice(title.length).replace(/^\s+/, "")
-    : content;
-  const baseSlug = safeSlug(title) || `article-${Date.now()}`;
-  const slug = `${baseSlug}-${Date.now().toString().slice(-6)}`;
-  const folder = `${user.id}/${slug}`;
-  const imageExtension = image.name.split(".").pop()?.toLowerCase() || "jpg";
-  const imagePath = `${folder}/featured.${imageExtension}`;
-  const pdfPath = `${folder}/article.pdf`;
-
-  const [imageUpload, pdfUpload] = await Promise.all([
-    supabase.storage.from("blog-assets").upload(imagePath, image, { contentType: image.type }),
-    supabase.storage.from("blog-assets").upload(pdfPath, pdf, { contentType: "application/pdf" })
-  ]);
-  if (imageUpload.error || pdfUpload.error) redirect("/admin?error=upload-failed");
-
-  const imageUrl = supabase.storage.from("blog-assets").getPublicUrl(imagePath).data.publicUrl;
-  const pdfUrl = supabase.storage.from("blog-assets").getPublicUrl(pdfPath).data.publicUrl;
-  const excerpt = articleContent.replace(/\s+/g, " ").trim().slice(0, 220);
-  const { error } = await supabase.from("posts").insert({
-    author_id: user.id,
-    slug,
-    title,
-    excerpt,
-    content: articleContent,
-    image_url: imageUrl,
-    pdf_url: pdfUrl,
-    published: true,
-    published_at: publishDate.toISOString()
-  });
-
-  if (error) {
-    await supabase.storage.from("blog-assets").remove([imagePath, pdfPath]);
-    redirect("/admin?error=publish-failed");
-  }
-
   revalidatePath("/blog");
-  revalidatePath(`/blog/${slug}`);
+  if (publishedSlugs.length > 1) redirect(`/admin?success=${publishDate.getTime() > Date.now() ? "batch-scheduled" : "batch-published"}&count=${publishedSlugs.length}`);
   if (publishDate.getTime() > Date.now()) redirect("/admin?success=scheduled");
-  redirect(`/blog/${slug}`);
+  redirect(`/blog/${publishedSlugs[0]}`);
 }
 
 function storagePathFromPublicUrl(url: string) {
@@ -157,9 +159,7 @@ function storagePathFromPublicUrl(url: string) {
 }
 
 export async function deletePost(formData: FormData) {
-  const supabase = await createSupabaseServerClient();
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) redirect("/admin/login");
+  const { supabase, user } = await requireAdmin();
 
   const id = String(formData.get("id") || "");
   if (!id) redirect("/admin?error=delete-failed");
@@ -178,7 +178,10 @@ export async function deletePost(formData: FormData) {
   const assetPaths = [storagePathFromPublicUrl(post.image_url), storagePathFromPublicUrl(post.pdf_url)].filter(
     (path): path is string => Boolean(path)
   );
-  if (assetPaths.length) await supabase.storage.from("blog-assets").remove(assetPaths);
+  if (assetPaths.length) {
+    const { error: storageError } = await supabase.storage.from("blog-assets").remove(assetPaths);
+    if (storageError) redirect("/admin?error=delete-assets-failed");
+  }
 
   revalidatePath("/blog");
   revalidatePath(`/blog/${post.slug}`);
