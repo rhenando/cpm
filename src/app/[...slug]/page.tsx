@@ -420,8 +420,8 @@ const team = [
     role: "CEO",
     image: lestyPortrait,
     href: "/lesty-cordova",
-    summary: "Leading Cordova with a clear standard: personal service, disciplined oversight and enduring value for every property entrusted to the team.",
-    strengths: ["Executive leadership", "Client strategy", "Luxury service standards", "Property investment oversight"]
+    summary: "",
+    strengths: []
   },
   {
     name: "Cristine Cabezas",
@@ -460,16 +460,16 @@ const team = [
     role: "Property Manager",
     image: "/images/pages/rose1.jpg",
     href: "/rosewell-sangco",
-    summary: "Supporting owners and tenants with proactive communication, thoughtful care and reliable day-to-day property management.",
-    strengths: ["Tenant relations", "Property coordination", "Client communication", "Responsive support"]
+    summary: "",
+    strengths: []
   },
   {
     name: "Carl Manalang",
     role: "Property Manager",
     image: "/images/pages/car.jpg",
     href: "/carl-manalang",
-    summary: "Delivering responsive property support with professionalism, practical judgment and close attention to client priorities.",
-    strengths: ["Property operations", "Client care", "Issue resolution", "Service coordination"]
+    summary: "",
+    strengths: []
   }
 ];
 
@@ -487,7 +487,7 @@ async function TeamProfilePage({ member, doc }: { member: (typeof team)[number];
             <h1 className="mt-5 text-balance text-5xl font-extrabold leading-[1.02] sm:text-6xl xl:text-7xl">{member.name}</h1>
             <p className="mt-5 text-sm font-extrabold uppercase tracking-[.22em] text-[#d2ad4b]">{member.role}</p>
             <div className="mt-9 h-px w-24 bg-[#bd8f13]" />
-            <p className="mt-8 max-w-xl text-lg leading-8 text-white/72">{member.summary}</p>
+            {member.summary ? <p className="mt-8 max-w-xl text-lg leading-8 text-white/72">{member.summary}</p> : null}
           </div>
           <div className="relative min-h-[520px] overflow-hidden lg:min-h-[680px]">
             <Image src={member.image} alt={`${member.name}, ${member.role}`} fill priority className="object-cover object-top" sizes="(max-width: 1024px) 100vw, 55vw" />
@@ -546,9 +546,8 @@ function FallbackProfileContent({ member }: { member: (typeof team)[number] }) {
   return (
     <div className="mt-7">
       <h2 className="text-3xl font-extrabold text-[#191c33]">About {member.name.split(" ")[0]}</h2>
-      <p className="mt-6 text-lg leading-9 text-[#242424]/75">{member.summary}</p>
-      <h2 className="mt-10 border-l-4 border-[#bd8f13] pl-5 text-2xl font-extrabold text-[#191c33]">Core Strengths</h2>
-      <div className="mt-6 grid gap-4 sm:grid-cols-2">{member.strengths.map((strength) => <div key={strength} className="border border-[#d8ccb3] bg-[#faf8f3] p-5 font-bold text-[#191c33]">{strength}</div>)}</div>
+      {member.summary ? <p className="mt-6 text-lg leading-9 text-[#242424]/75">{member.summary}</p> : <p className="mt-6 text-lg leading-9 text-[#242424]/75">The current Cordova source record lists {member.name} as {member.role}. Additional approved profile details have not been published.</p>}
+      {member.strengths.length ? <><h2 className="mt-10 border-l-4 border-[#bd8f13] pl-5 text-2xl font-extrabold text-[#191c33]">Core Strengths</h2><div className="mt-6 grid gap-4 sm:grid-cols-2">{member.strengths.map((strength) => <div key={strength} className="border border-[#d8ccb3] bg-[#faf8f3] p-5 font-bold text-[#191c33]">{strength}</div>)}</div></> : null}
     </div>
   );
 }

@@ -16,14 +16,37 @@ type PostRow = {
   updated_at: string;
 };
 
+const postCorrections: Record<string, { title: string; removeLeadingContent?: string }> = {
+  "d1dc1747-6ea7-4f52-967e-b871e26474f5": {
+    title: "Coordinating Cleaning, Repairs, and Listing Readiness Between Tenancies",
+    removeLeadingContent: "Readiness Between Tenancies"
+  },
+  "5c6826cd-f287-42b1-91a9-417519fd4998": {
+    title: "What Landlords Gain From a Clear Document Renewal Calendar",
+    removeLeadingContent: "Renewal Calendar"
+  },
+  "df88458b-a577-4e9b-b70a-8f6907b24adb": {
+    title: "How Drainage Checks Protect Terraces During Dust and Rain Events",
+    removeLeadingContent: "Dust and Rain Events"
+  },
+  "cd0918f3-50ce-44e6-9828-1da944b1c8e3": {
+    title: "How Unusual Water Usage Can Reveal Hidden Leaks",
+    removeLeadingContent: "Leaks"
+  }
+};
+
 function mapPost(row: PostRow): StaticDoc {
+  const correction = postCorrections[row.id];
+  const content = correction?.removeLeadingContent && row.content.trimStart().startsWith(correction.removeLeadingContent)
+    ? row.content.trimStart().slice(correction.removeLeadingContent.length).trimStart()
+    : row.content;
   return {
     id: row.id,
     slug: row.slug,
-    title: row.title,
+    title: correction?.title || row.title,
     description: row.excerpt,
     excerpt: row.excerpt,
-    content: row.content,
+    content,
     image: row.image_url,
     sourceUrl: row.pdf_url,
     pdfUrl: row.pdf_url,

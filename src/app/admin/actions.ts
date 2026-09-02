@@ -32,8 +32,11 @@ function cleanPdfText(value: string) {
 
 function deriveTitle(content: string, metadataTitle: unknown, filename: string) {
   if (typeof metadataTitle === "string" && metadataTitle.trim().length > 4) return metadataTitle.trim();
-  const firstLine = content.split("\n").map((line) => line.trim()).find((line) => line.length >= 8 && line.length <= 180);
-  return firstLine || filename.replace(/\.pdf$/i, "").replace(/[-_]+/g, " ").trim();
+  const lines = content.split("\n").map((line) => line.replace(/\s+/g, " ").trim()).filter(Boolean);
+  const bylineIndex = lines.findIndex((line) => /^By Cordova Property Management\b/i.test(line));
+  const titleLines = bylineIndex > 0 ? lines.slice(0, bylineIndex) : lines.slice(0, 1);
+  const title = titleLines.join(" ").trim();
+  return title || filename.replace(/\.pdf$/i, "").replace(/[-_]+/g, " ").trim();
 }
 
 function getPublishDate(value: FormDataEntryValue | null) {
@@ -107,9 +110,13 @@ export async function publishPost(formData: FormData) {
     if (content.length < 100) redirect(`/admin?error=${publishedSlugs.length ? "batch-partial" : "empty-pdf"}`);
 
     const title = deriveTitle(content, undefined, pdf.name);
-    const articleContent = content.toLowerCase().startsWith(title.toLowerCase())
-      ? content.slice(title.length).replace(/^\s+/, "")
-      : content;
+    const contentLines = content.split("\n");
+    const bylineLineIndex = contentLines.findIndex((line) => /^\s*By Cordova Property Management\b/i.test(line));
+    const articleContent = bylineLineIndex > 0
+      ? contentLines.slice(bylineLineIndex).join("\n").trim()
+      : content.toLowerCase().startsWith(title.toLowerCase())
+        ? content.slice(title.length).replace(/^\s+/, "")
+        : content;
     const timestamp = Date.now() + index;
     const baseSlug = safeSlug(title) || `article-${timestamp}`;
     const slug = `${baseSlug}-${timestamp.toString().slice(-6)}`;
