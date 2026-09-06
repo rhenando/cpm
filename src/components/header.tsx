@@ -3,15 +3,29 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ChevronDown, Mail, Menu, Phone, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { navItems } from "@/data/site";
 import { defaultSiteSettings, type SiteSettings } from "@/data/site-settings";
 
 export function Header({ settings = defaultSiteSettings }: { settings?: SiteSettings }) {
   const [open, setOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    const header = headerRef.current;
+    if (!header) return;
+    const updateHeight = () => document.documentElement.style.setProperty("--site-header-height", `${header.getBoundingClientRect().height}px`);
+    updateHeight();
+    const observer = new ResizeObserver(updateHeight);
+    observer.observe(header);
+    return () => {
+      observer.disconnect();
+      document.documentElement.style.removeProperty("--site-header-height");
+    };
+  }, []);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-[#d5d2db] bg-white/95 backdrop-blur">
+    <header ref={headerRef} className="sticky top-0 z-50 border-b border-[#d5d2db] bg-white/95 backdrop-blur">
       <div className="bg-[#191c33] text-white">
         <div className="container flex items-center justify-between gap-3 py-2 text-[0.68rem] font-semibold sm:text-xs">
           <span className="hidden leading-5 sm:block">{settings.address}</span>

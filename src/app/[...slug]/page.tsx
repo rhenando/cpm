@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowUpRight, Check, Clock3, KeyRound, Mail, MapPin, Phone, ShieldCheck, Wrench } from "lucide-react";
 import { ButtonLink } from "@/components/button-link";
@@ -475,64 +476,99 @@ const team = [
 
 async function TeamProfilePage({ member, doc }: { member: (typeof team)[number]; doc?: (typeof docs)[number] }) {
   const settings = await getSiteSettings();
+  const nextMember = team[(team.indexOf(member) + 1) % team.length];
+  const profileLines = (doc?.content ?? "").split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+  const contactValue = (label: string, fallback: string) => {
+    const index = profileLines.findIndex((line) => line.toLowerCase() === label);
+    return index >= 0 ? profileLines[index + 1] || fallback : fallback;
+  };
+  const memberPhone = contactValue("phone", settings.phone);
+  const memberEmail = contactValue("email", settings.email);
+  const memberOffice = contactValue("office", settings.address);
 
   return (
-    <main className="overflow-hidden bg-[#f4efe5]">
-      <section className="relative bg-[#191c33] text-white">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_80%_20%,rgba(189,143,19,.22),transparent_34%)]" />
-        <div className="container relative grid min-h-[680px] items-stretch lg:grid-cols-[.92fr_1.08fr]">
-          <div className="flex flex-col justify-center py-16 lg:py-24 lg:pr-16">
-            <ButtonLink href="/about-cordova-property-management#team" variant="lightOutline" className="mb-10 w-fit">Back to our team</ButtonLink>
-            <p className="eyebrow">Our people</p>
-            <h1 className="mt-5 text-balance text-5xl font-extrabold leading-[1.02] sm:text-6xl xl:text-7xl">{member.name}</h1>
-            <p className="mt-5 text-sm font-extrabold uppercase tracking-[.22em] text-[#d2ad4b]">{member.role}</p>
-            <div className="mt-9 h-px w-24 bg-[#bd8f13]" />
-            {member.summary ? <p className="mt-8 max-w-xl text-lg leading-8 text-white/72">{member.summary}</p> : null}
-          </div>
-          <div className="relative min-h-[520px] overflow-hidden lg:min-h-[680px]">
-            <Image src={member.image} alt={`${member.name}, ${member.role}`} fill priority className="object-cover object-top" sizes="(max-width: 1024px) 100vw, 55vw" />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#191c33]/55 via-transparent to-transparent lg:bg-gradient-to-r lg:from-[#191c33]/35 lg:to-transparent" />
+    <main className="member-profile">
+      <section className="profile-hero">
+        <div className="container">
+          <Link href="/about-cordova-property-management#team" className="profile-back"><span aria-hidden>&larr;</span> Our people</Link>
+          <div className="profile-hero-grid">
+            <div className="profile-intro">
+              <p className="profile-label">Cordova Property Management</p>
+              <h1>{member.name}</h1>
+              <p className="profile-role">{member.role}</p>
+              <div className="profile-rule" />
+              {member.summary ? <p className="profile-summary">{member.summary}</p> : <p className="profile-summary">A personal approach to property management.<br />Part of the people behind Cordova.</p>}
+              <a href="#biography" className="profile-text-link">Read biography <span aria-hidden>&darr;</span></a>
+            </div>
+            <figure className="profile-portrait">
+              <div className="profile-portrait-image">
+                <Image src={member.image} alt={`${member.name}, ${member.role}`} fill priority className="object-cover object-top" sizes="(max-width: 767px) calc(100vw - 48px), (max-width: 1280px) 46vw, 560px" />
+              </div>
+              <figcaption><span>Cordova Property Management</span><span>Dubai, UAE</span></figcaption>
+            </figure>
           </div>
         </div>
       </section>
 
-      <section className="section">
-        <div className="container grid gap-10 lg:grid-cols-[1fr_330px] lg:gap-16">
-          <article className="border-t-2 border-[#bd8f13] bg-white p-7 shadow-[0_24px_70px_rgba(25,28,51,.10)] sm:p-12">
-            <p className="eyebrow">Professional profile</p>
+      <section id="biography" className="profile-biography">
+        <div className="container profile-body-grid">
+          <aside className="profile-section-label">
+            <span className="profile-label">Get to know</span><h2>{member.name.split(" ")[0]}</h2><span className="profile-section-line" />
+            <address className="profile-member-contact">
+              <a href={`tel:${memberPhone.replace(/[^+\d]/g, "")}`}><Phone size={16} aria-hidden /><span><small>Phone</small>{memberPhone}</span></a>
+              <a href={`mailto:${memberEmail}`}><Mail size={16} aria-hidden /><span><small>Email</small>{memberEmail}</span></a>
+              <div><MapPin size={16} aria-hidden /><span><small>Office</small>{memberOffice}</span></div>
+            </address>
+          </aside>
+          <article className="profile-copy">
             {doc ? <AuthoritativeProfileContent content={doc.content} name={member.name} role={member.role} /> : <FallbackProfileContent member={member} />}
           </article>
-          <aside className="h-fit bg-[#191c33] p-7 text-white shadow-[0_24px_60px_rgba(25,28,51,.2)] sm:p-9">
-            <p className="text-xs font-extrabold uppercase tracking-[.22em] text-[#d2ad4b]">Connect with Cordova</p>
-            <h2 className="mt-4 text-2xl font-extrabold">Speak with our team</h2>
-            <p className="mt-4 text-sm leading-7 text-white/65">Discuss your property requirements with our Dubai office.</p>
-            <div className="mt-7 grid gap-4 border-t border-white/15 pt-7 text-sm">
-              <a className="flex items-center gap-3 hover:text-[#d2ad4b]" href={`tel:${settings.phone.replace(/[^+\d]/g, "")}`}><Phone size={17} aria-hidden />{settings.phone}</a>
-              <a className="flex items-center gap-3 break-all hover:text-[#d2ad4b]" href={`mailto:${settings.email}`}><Mail size={17} aria-hidden />{settings.email}</a>
-              <p className="flex items-start gap-3 text-white/70"><MapPin className="mt-1 shrink-0" size={17} aria-hidden />{settings.address}</p>
-            </div>
-            <ButtonLink href="/contact" variant="light" className="mt-8 w-full justify-center">Contact us</ButtonLink>
-          </aside>
         </div>
       </section>
-      <section className="bg-[#191c33] py-14 text-white">
-        <div className="container flex flex-col items-start justify-between gap-6 md:flex-row md:items-center">
-          <div><p className="eyebrow">The Cordova standard</p><h2 className="mt-4 text-3xl font-extrabold">Property care, delivered personally.</h2></div>
-          <ButtonLink href="/property-management" variant="lightOutline">Explore our services</ButtonLink>
+
+      <section className="profile-connect">
+        <div className="container profile-connect-grid">
+          <div>
+            <p className="profile-label">A conversation starts here</p>
+            <h2>Your property.<br /><em>Our personal attention.</em></h2>
+            <p className="profile-connect-description">Connect with our Dubai team to discuss your property and what matters most to you.</p>
+            <Link href="/contact" className="profile-contact-button">Let&apos;s talk <ArrowUpRight size={20} aria-hidden /></Link>
+          </div>
+          <address className="profile-contact-details">
+            <a href={`tel:${settings.phone.replace(/[^+\d]/g, "")}`}><Phone size={18} aria-hidden /><span><small>Call our office</small>{settings.phone}</span><ArrowUpRight size={16} aria-hidden /></a>
+            <a href={`mailto:${settings.email}`}><Mail size={18} aria-hidden /><span><small>Email us</small>{settings.email}</span><ArrowUpRight size={16} aria-hidden /></a>
+            <div><MapPin size={18} aria-hidden /><span><small>Visit us</small>{settings.address}</span></div>
+          </address>
         </div>
       </section>
+
+      <nav className="profile-next container" aria-label="Team profiles">
+        <Link href="/about-cordova-property-management#team" className="profile-text-link">Meet the whole team <ArrowUpRight size={17} aria-hidden /></Link>
+        <Link href={nextMember.href} className="profile-next-person">
+          <div className="profile-next-image"><Image src={nextMember.image} alt="" fill sizes="72px" className="object-cover object-top" /></div>
+          <div><span className="profile-label">Meet next</span><p>{nextMember.name}</p><small>{nextMember.role}</small></div>
+          <ArrowUpRight size={25} aria-hidden />
+        </Link>
+      </nav>
     </main>
   );
 }
 
 function AuthoritativeProfileContent({ content, name, role }: { content: string; name: string; role: string }) {
   const lines = content.replace(/\r/g, "").split("\n").map((line) => line.replace(/\s+/g, " ").trim()).filter(Boolean);
+  // Imported profiles include contact labels and values between biography sections.
+  // Contact information is presented separately in the dedicated contact section.
+  const isContactLabel = (line: string) => /^(Phone|Email|Office)$/i.test(line);
+  const biographyLines = lines.filter((line, index) =>
+    !isContactLabel(line) &&
+    !(index > 0 && isContactLabel(lines[index - 1])) &&
+    !/^Contact(?:\s|$)/i.test(line)
+  );
   return (
     <div className="mt-7">
-      {lines.map((line, index) => {
+      {biographyLines.map((line, index) => {
         if ((index === 0 && /cabezas|adao|mendoza|galang/i.test(line)) || line === name || line === role) return null;
-        if (/^(About |Core Strengths$|Contact )/i.test(line)) return <h2 key={`${index}-${line}`} className="mt-10 border-l-4 border-[#bd8f13] pl-5 text-2xl font-extrabold text-[#191c33] first:mt-0 sm:text-3xl">{line}</h2>;
-        if (/^(Phone|Email|Office)$/i.test(line)) return <h3 key={`${index}-${line}`} className="mt-7 text-xs font-extrabold uppercase tracking-[.2em] text-[#bd8f13]">{line}</h3>;
+        if (/^(About(?:\s|$)|Core Strengths$)/i.test(line)) return <h2 key={`${index}-${line}`} className="mt-10 border-l-4 border-[#bd8f13] pl-5 text-2xl font-extrabold text-[#191c33] first:mt-0 sm:text-3xl">{line}</h2>;
         const isStrength = /^[A-Za-z &/]+:/.test(line);
         return isStrength
           ? <div key={`${index}-${line}`} className="mt-4 border border-[#d8ccb3] bg-[#faf8f3] p-5 text-sm leading-7 text-[#242424]/80 shadow-[0_8px_20px_rgba(25,28,51,.04)]"><span className="font-extrabold text-[#191c33]">{line.split(":")[0]}:</span>{line.slice(line.indexOf(":") + 1)}</div>
@@ -546,7 +582,7 @@ function FallbackProfileContent({ member }: { member: (typeof team)[number] }) {
   return (
     <div className="mt-7">
       <h2 className="text-3xl font-extrabold text-[#191c33]">About {member.name.split(" ")[0]}</h2>
-      {member.summary ? <p className="mt-6 text-lg leading-9 text-[#242424]/75">{member.summary}</p> : <p className="mt-6 text-lg leading-9 text-[#242424]/75">The current Cordova source record lists {member.name} as {member.role}. Additional approved profile details have not been published.</p>}
+      {member.summary ? <p className="mt-6 text-lg leading-9 text-[#242424]/75">{member.summary}</p> : <p className="mt-6 text-lg leading-9 text-[#242424]/75">{member.name} is part of the Cordova Property Management team, serving as {member.role}. Connect with our team to discuss your property requirements.</p>}
       {member.strengths.length ? <><h2 className="mt-10 border-l-4 border-[#bd8f13] pl-5 text-2xl font-extrabold text-[#191c33]">Core Strengths</h2><div className="mt-6 grid gap-4 sm:grid-cols-2">{member.strengths.map((strength) => <div key={strength} className="border border-[#d8ccb3] bg-[#faf8f3] p-5 font-bold text-[#191c33]">{strength}</div>)}</div></> : null}
     </div>
   );
