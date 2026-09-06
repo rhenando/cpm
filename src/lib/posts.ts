@@ -16,13 +16,14 @@ type PostRow = {
   updated_at: string;
 };
 
-const postCorrections: Record<string, { title: string; removeLeadingContent?: string }> = {
+const postCorrections: Record<string, { title: string; image?: string; removeLeadingContent?: string }> = {
   "d1dc1747-6ea7-4f52-967e-b871e26474f5": {
     title: "Coordinating Cleaning, Repairs, and Listing Readiness Between Tenancies",
     removeLeadingContent: "Readiness Between Tenancies"
   },
   "5c6826cd-f287-42b1-91a9-417519fd4998": {
     title: "What Landlords Gain From a Clear Document Renewal Calendar",
+    image: "/images/articles/2150225265.jpg",
     removeLeadingContent: "Renewal Calendar"
   },
   "df88458b-a577-4e9b-b70a-8f6907b24adb": {
@@ -47,7 +48,7 @@ function mapPost(row: PostRow): StaticDoc {
     description: row.excerpt,
     excerpt: row.excerpt,
     content,
-    image: row.image_url,
+    image: correction?.image || row.image_url,
     sourceUrl: row.pdf_url,
     pdfUrl: row.pdf_url,
     type: "post",
