@@ -663,40 +663,45 @@ function AboutPage() {
           <div className="relative mx-auto h-[52svh] min-h-[390px] w-full max-w-[650px] lg:h-[68svh] lg:max-h-[660px]" aria-label="Cordova managed properties">
             <div className="absolute left-0 top-0 h-px w-2/3 bg-gradient-to-r from-[#bd8f13] to-transparent" />
             <div className="absolute bottom-0 right-0 h-px w-2/3 bg-gradient-to-l from-[#bd8f13] to-transparent" />
+            {/* Size sources for the tall object-cover crop, which enlarges landscape images to fill the panel height. */}
             <div className="grid h-full grid-cols-4 gap-2.5 sm:gap-4">
               <div className="group relative my-12 overflow-hidden bg-[#d8d1c3] shadow-xl shadow-[#191c33]/15 sm:my-16">
                 <Image
-                  src="https://cordovaproperty.com/wp-content/uploads/2024/06/Dubai-Property1.jpg"
+                  src="/images/pages/4.png"
                   alt="Dubai skyline at sunset"
                   fill
-                  sizes="(max-width: 1024px) 24vw, 150px"
+                  sizes="500px"
+                  quality={90}
                   className="object-cover transition duration-700 group-hover:scale-[1.035]"
                 />
               </div>
               <div className="group relative mb-20 overflow-hidden bg-[#d8d1c3] shadow-xl shadow-[#191c33]/15 sm:mb-24">
                 <Image
-                  src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?auto=format&fit=crop&w=1200&q=85"
-                  alt="Property keys overlooking Dubai"
+                  src="/images/pages/1.jpg"
+                  alt="Burj Khalifa and the Dubai skyline at sunset"
                   fill
-                  sizes="(max-width: 1024px) 24vw, 150px"
+                  sizes="1200px"
+                  quality={90}
                   className="object-cover transition duration-700 group-hover:scale-[1.035]"
                 />
               </div>
               <div className="group relative mt-20 overflow-hidden bg-[#d8d1c3] shadow-xl shadow-[#191c33]/15 sm:mt-24">
                 <Image
-                  src="https://images.unsplash.com/photo-1615874694520-474822394e73?auto=format&fit=crop&w=1200&q=85"
-                  alt="Luxury bedroom interior"
+                  src="/images/pages/2.png"
+                  alt="Luxury living room with a fireplace and chandelier"
                   fill
-                  sizes="(max-width: 1024px) 24vw, 150px"
+                  sizes="660px"
+                  quality={90}
                   className="object-cover transition duration-700 group-hover:scale-[1.05]"
                 />
               </div>
               <div className="group relative my-8 overflow-hidden bg-[#d8d1c3] shadow-xl shadow-[#191c33]/15 sm:my-12">
                 <Image
-                  src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=85"
-                  alt="Luxury courtyard residence"
+                  src="/images/pages/3.png"
+                  alt="Modern luxury villa with a swimming pool"
                   fill
-                  sizes="(max-width: 1024px) 24vw, 150px"
+                  sizes="1000px"
+                  quality={90}
                   className="object-cover transition duration-700 group-hover:scale-[1.05]"
                 />
               </div>

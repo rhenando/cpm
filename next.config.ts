@@ -4,6 +4,7 @@ const nextConfig: NextConfig = {
   deploymentId: process.env.VERCEL_GIT_COMMIT_SHA?.slice(0, 32),
   serverExternalPackages: ["pdf-parse", "@napi-rs/canvas"],
   images: {
+    qualities: [75, 90],
     remotePatterns: [
       { protocol: "https", hostname: "cordovaproperty.com" },
       { protocol: "https", hostname: "property.breakout-website.com" },
