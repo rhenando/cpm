@@ -184,6 +184,19 @@ export default function HomePage() {
           <div className="mt-10 grid gap-6 lg:grid-cols-3">
             {[
               {
+                name: "Amina Fattal",
+                image:
+                  "https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=85",
+                quote:
+                  "I had an excellent experience with Cordova Property Management and would highly recommend their services.",
+                paragraphs: [
+                  "William and the team supported us throughout the entire process and made everything smooth and easy from start to finish. They were professional, responsive and always available whenever we needed assistance.",
+                  "What impressed us most was the preparation of the villa before our move-in and the handover itself. Everything was handled with great attention to detail, and the property was perfectly prepared and ready for us. The handover was extremely well organized, clear and stress-free.",
+                  "It is rare to find a property management team that genuinely takes ownership and makes sure everything is properly taken care of. We really appreciated the level of service and support we received and would happily recommend Cordova Property Management and William to anyone looking for a reliable and professional property management company.",
+                  "Thank you William and the team for making our move-in such a positive experience!"
+                ]
+              },
+              {
                 name: "Yves M, Dubai Property Owner",
                 image:
                   "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=85",
