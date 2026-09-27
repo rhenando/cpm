@@ -2,8 +2,8 @@ import "server-only";
 
 import { createClient } from "@supabase/supabase-js";
 import { getSupabaseConfig, isSupabaseConfigured } from "@/lib/supabase/config";
-import { defaultSiteSettings, type SiteSettings } from "@/data/site-settings";
-export { defaultSiteSettings, type SiteSettings } from "@/data/site-settings";
+import { defaultSiteSettings, mergeSiteSettings, type SiteSettings } from "@/data/site-settings";
+export { defaultSiteSettings, mergeSiteSettings, type SiteSettings } from "@/data/site-settings";
 
 function publicClient() {
   const { url, key } = getSupabaseConfig();
@@ -13,7 +13,7 @@ function publicClient() {
 export async function getSiteSettings(): Promise<SiteSettings> {
   if (!isSupabaseConfigured()) return defaultSiteSettings;
   const { data } = await publicClient().from("site_settings").select("settings").eq("id", "main").maybeSingle();
-  return { ...defaultSiteSettings, ...(data?.settings as Partial<SiteSettings> | undefined) };
+  return mergeSiteSettings(data?.settings as Partial<SiteSettings> | undefined);
 }
 
 export type PageOverride = { slug: string; title: string; description: string; content: string; image: string };

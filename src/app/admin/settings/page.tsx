@@ -1,6 +1,6 @@
 import { AdminNav } from "@/components/admin-nav";
 import { requireAdmin } from "@/lib/admin";
-import { defaultSiteSettings, type SiteSettings } from "@/lib/cms";
+import { mergeSiteSettings, type SiteSettings } from "@/lib/cms";
 import { saveSiteSettings } from "../cms-actions";
 
 export const dynamic = "force-dynamic";
@@ -9,9 +9,13 @@ const fields: Array<{ key: keyof SiteSettings; label: string; type?: string }> =
   { key: "address", label: "Office address" },
   { key: "phone", label: "Primary phone", type: "tel" },
   { key: "secondaryPhone", label: "Secondary phone", type: "tel" },
+  { key: "tertiaryPhone", label: "Third phone", type: "tel" },
   { key: "email", label: "Contact email", type: "email" },
   { key: "footerHeading", label: "Footer call-to-action heading" },
   { key: "footerDescription", label: "Footer company description" },
+  { key: "blogCtaHeading", label: "Blog call-to-action heading" },
+  { key: "blogCtaDescription", label: "Blog call-to-action description" },
+  { key: "blogCtaButtonLabel", label: "Blog call-to-action button" },
   { key: "linkedin", label: "LinkedIn URL", type: "url" },
   { key: "facebook", label: "Facebook URL", type: "url" },
   { key: "youtube", label: "YouTube URL", type: "url" },
@@ -21,7 +25,7 @@ const fields: Array<{ key: keyof SiteSettings; label: string; type?: string }> =
 export default async function SettingsPage({ searchParams }: { searchParams: Promise<{ error?: string; success?: string }> }) {
   const { supabase } = await requireAdmin();
   const { data } = await supabase.from("site_settings").select("settings").eq("id", "main").maybeSingle();
-  const settings = { ...defaultSiteSettings, ...(data?.settings as Partial<SiteSettings> | undefined) };
+  const settings = mergeSiteSettings(data?.settings as Partial<SiteSettings> | undefined);
   const query = await searchParams;
 
   return (
@@ -35,9 +39,9 @@ export default async function SettingsPage({ searchParams }: { searchParams: Pro
           {query.error ? <p role="alert" className="border border-red-200 bg-red-50 p-3 text-sm text-red-800 sm:col-span-2">Settings could not be saved. Run the CMS database migration and try again.</p> : null}
           {query.success ? <p className="border border-emerald-200 bg-emerald-50 p-3 text-sm text-emerald-800 sm:col-span-2">Settings saved.</p> : null}
           {fields.map((field) => (
-            <label key={field.key} className={`grid gap-2 text-xs font-bold uppercase tracking-wider text-[#191c33] ${field.key === "footerDescription" ? "sm:col-span-2" : ""}`}>
+            <label key={field.key} className={`grid gap-2 text-xs font-bold uppercase tracking-wider text-[#191c33] ${field.key === "footerDescription" || field.key === "blogCtaDescription" ? "sm:col-span-2" : ""}`}>
               {field.label}
-              {field.key === "footerDescription" ? (
+              {field.key === "footerDescription" || field.key === "blogCtaDescription" ? (
                 <textarea name={field.key} defaultValue={settings[field.key]} rows={4} className="border border-[#d3d3d3] p-3 text-base font-normal normal-case tracking-normal" />
               ) : (
                 <input name={field.key} type={field.type || "text"} defaultValue={settings[field.key]} required className="min-h-12 border border-[#d3d3d3] px-3 text-base font-normal normal-case tracking-normal" />

@@ -35,7 +35,11 @@ export function Footer({ settings = defaultSiteSettings }: { settings?: SiteSett
           {settings.address}
           <a className="mt-4 flex items-start gap-2 text-white" href={`tel:${settings.phone.replace(/[^+\d]/g, "")}`}>
             <Phone className="mt-1 shrink-0" size={16} aria-hidden />
-            <span>{settings.phone}{settings.secondaryPhone ? ` | ${settings.secondaryPhone}` : ""}</span>
+            <span>
+              {settings.phone}
+              {settings.secondaryPhone ? ` | ${settings.secondaryPhone}` : ""}
+              {settings.tertiaryPhone ? ` | ${settings.tertiaryPhone}` : ""}
+            </span>
           </a>
           <a
             className="mt-2 flex items-start gap-2 break-all text-white"

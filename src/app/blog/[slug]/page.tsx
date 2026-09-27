@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
+import { BlogArticleCta } from "@/components/blog-article-cta";
 import { DocContent } from "@/components/doc-content";
 import { posts } from "@/data/site";
+import { getSiteSettings } from "@/lib/cms";
 import { getPublishedPostBySlug } from "@/lib/posts";
 
 type Props = {
@@ -39,7 +40,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params;
-  const post = await getPublishedPostBySlug(slug);
+  const [post, settings] = await Promise.all([
+    getPublishedPostBySlug(slug),
+    getSiteSettings()
+  ]);
   if (!post) notFound();
 
   return (
@@ -66,14 +70,7 @@ export default async function BlogPostPage({ params }: Props) {
           <DocContent content={post.content} title={post.title} />
         </div>
 
-        <footer className="news-article-footer">
-          <strong>Professional Property Management Support</strong>
-          <br />
-          Cordova Property Management helps Dubai landlords protect property performance and long-term value.
-          <br />
-          <Link href="/contact" className="news-article-cta">Get Started Today</Link>
-          <p>+971 58 628 7157 &nbsp; | &nbsp; +971 52 284 5716 &nbsp; | &nbsp; www.cordovaproperty.com</p>
-        </footer>
+        <BlogArticleCta settings={settings} />
       </div>
     </article>
   );

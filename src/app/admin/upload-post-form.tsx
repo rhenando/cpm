@@ -55,7 +55,7 @@ export function UploadPostForm() {
       ) : null}
       <label className="group grid cursor-pointer gap-3 border border-[#d3d3d3] p-5 transition hover:border-[#bd8f13] sm:p-6">
         <span className="flex items-center gap-3 text-sm font-extrabold uppercase tracking-wide text-[#191c33]"><FileText className="shrink-0 text-[#bd8f13]" aria-hidden /> Article PDFs</span>
-        <span className="text-sm text-[#242424]/60">Select up to 8 text-based PDFs in publishing order, maximum 2.5 MB each.</span>
+        <span className="text-sm text-[#242424]/60">Select up to 8 text-based PDFs in publishing order, maximum 2.5 MB each. The contact section is added automatically to every article.</span>
         <input name="pdf" type="file" accept="application/pdf,.pdf" multiple required className="mt-2 block w-full max-w-full text-xs file:mr-2 file:max-w-full file:border-0 file:bg-[#191c33] file:px-3 file:py-3 file:text-xs file:font-bold file:text-white sm:text-sm sm:file:mr-4 sm:file:px-4" />
       </label>
       <label className="group grid cursor-pointer gap-3 border border-[#d3d3d3] p-5 transition hover:border-[#bd8f13] sm:p-6">
