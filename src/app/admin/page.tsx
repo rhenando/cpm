@@ -1,11 +1,13 @@
 import { redirect } from "next/navigation";
-import { LogOut } from "lucide-react";
+import Link from "next/link";
+import { Eye, LogOut } from "lucide-react";
 import { logout } from "./actions";
 import { DeletePostButton } from "./delete-post-button";
 import { UploadPostForm } from "./upload-post-form";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { AdminNav } from "@/components/admin-nav";
 import { requireAdmin } from "@/lib/admin";
+import { cleanPostTitle } from "@/lib/post-title";
 
 export const dynamic = "force-dynamic";
 
@@ -66,10 +68,11 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
           <div className="mt-6 divide-y divide-[#d3d3d3]">
             {recentPosts?.length ? recentPosts.map((post) => {
               const scheduled = new Date(post.published_at).getTime() > Date.now();
+              const displayTitle = cleanPostTitle(post.title);
               return (
                 <div key={post.id} className="flex flex-col justify-between gap-3 py-5 sm:flex-row sm:items-center">
                   <div>
-                    <p className="font-extrabold text-[#191c33]">{post.title}</p>
+                    <p className="font-extrabold text-[#191c33]">{displayTitle}</p>
                     <p className="mt-1 text-xs text-[#242424]/60">
                       {new Date(post.published_at).toLocaleString("en-AE", { timeZone: "Asia/Dubai", dateStyle: "medium", timeStyle: "short" })} Dubai time
                     </p>
@@ -78,7 +81,15 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
                     <span className={`w-fit px-3 py-1.5 text-[0.65rem] font-extrabold uppercase tracking-wider ${scheduled ? "bg-[#bd8f13]/10 text-[#9f7410]" : "bg-emerald-50 text-emerald-700"}`}>
                       {scheduled ? "Scheduled" : "Published"}
                     </span>
-                    <DeletePostButton id={post.id} title={post.title} />
+                    <Link
+                      href={`/admin/preview/${post.id}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center gap-1.5 px-2 py-1.5 text-[0.65rem] font-extrabold uppercase tracking-wider text-[#191c33] transition hover:bg-[#f1f0f3] hover:text-[#bd8f13]"
+                    >
+                      <Eye size={14} aria-hidden /> Preview
+                    </Link>
+                    <DeletePostButton id={post.id} title={displayTitle} />
                   </div>
                 </div>
               );

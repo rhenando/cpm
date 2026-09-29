@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/admin";
+import { cleanPostTitle } from "@/lib/post-title";
 
 const MAX_PDF_SIZE = 2.5 * 1024 * 1024;
 const MAX_IMAGE_SIZE = 1.25 * 1024 * 1024;
@@ -24,6 +25,8 @@ function safeSlug(value: string) {
 function cleanPdfText(value: string) {
   return value
     .replace(/--\s*\d+\s+of\s+\d+\s*--/gi, "")
+    .replace(/^\s*CORDOVA PROPERTY MANAGEMENT\s*\|\s*BLOG DRAFT\s*$/gim, "")
+    .replace(/^\s*Cordova Property Management\s*\|\s*[A-Z][a-z]+\s+\d{1,2},\s+\d{4}\s*\|\s*\d+\s*$/gim, "")
     .replace(/\r/g, "")
     .replace(/[ \t]+\n/g, "\n")
     .replace(/\n{3,}/g, "\n\n")
@@ -31,12 +34,12 @@ function cleanPdfText(value: string) {
 }
 
 function deriveTitle(content: string, metadataTitle: unknown, filename: string) {
-  if (typeof metadataTitle === "string" && metadataTitle.trim().length > 4) return metadataTitle.trim();
+  if (typeof metadataTitle === "string" && metadataTitle.trim().length > 4) return cleanPostTitle(metadataTitle);
   const lines = content.split("\n").map((line) => line.replace(/\s+/g, " ").trim()).filter(Boolean);
   const bylineIndex = lines.findIndex((line) => /^By Cordova Property Management\b/i.test(line));
   const titleLines = bylineIndex > 0 ? lines.slice(0, bylineIndex) : lines.slice(0, 1);
   const title = titleLines.join(" ").trim();
-  return title || filename.replace(/\.pdf$/i, "").replace(/[-_]+/g, " ").trim();
+  return cleanPostTitle(title || filename.replace(/\.pdf$/i, "").replace(/[-_]+/g, " ").trim());
 }
 
 function getPublishDate(value: FormDataEntryValue | null) {

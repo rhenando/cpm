@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { posts as importedPosts } from "@/data/site";
 import type { StaticDoc } from "@/data/types";
 import { getSupabaseConfig, isSupabaseConfigured } from "@/lib/supabase/config";
+import { cleanPostTitle } from "@/lib/post-title";
 
 type PostRow = {
   id: string;
@@ -44,7 +45,7 @@ function mapPost(row: PostRow): StaticDoc {
   return {
     id: row.id,
     slug: row.slug,
-    title: correction?.title || row.title,
+    title: correction?.title || cleanPostTitle(row.title),
     description: row.excerpt,
     excerpt: row.excerpt,
     content,

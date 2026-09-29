@@ -3,16 +3,48 @@ type ContentBlock =
   | { type: "list"; items: string[] };
 
 function isPdfArtifact(line: string) {
-  return /^file:\/\//i.test(line) || /^\d+\/\d+\/\d+,?\s+\d{1,2}:\d{2}\s+(?:AM|PM)/i.test(line) || /^\d+\s*\/\s*\d+$/.test(line) || /^--\s*\d+\s+of\s+\d+\s*--$/i.test(line);
+  return /^file:\/\//i.test(line)
+    || /^\d+\/\d+\/\d+,?\s+\d{1,2}:\d{2}\s+(?:AM|PM)/i.test(line)
+    || /^\d+\s*\/\s*\d+$/.test(line)
+    || /^--\s*\d+\s+of\s+\d+\s*--$/i.test(line)
+    || /^CORDOVA PROPERTY MANAGEMENT\s*\|\s*BLOG DRAFT$/i.test(line)
+    || /^Cordova Property Management\s*\|\s*[A-Z][a-z]+\s+\d{1,2},\s+\d{4}\s*\|\s*\d+$/i.test(line);
+}
+
+function isNamedSectionHeading(line: string) {
+  if (line.length > 105 || /[.!?]$/.test(line)) return false;
+  return /^(?:introduction|conclusion|summary|final thoughts|key takeaways)$/i.test(line)
+    || /^(?:step[- ]by[- ]step|how|why|what|when|where|common|key|the importance|benefits|warning signs|best practices)\b/i.test(line);
+}
+
+function isTitleCaseHeading(line: string) {
+  if (line.length > 105 || /[.!?:]$/.test(line)) return false;
+  const words = line.split(/\s+/).filter(Boolean);
+  if (words.length < 2) return false;
+  const minorWords = /^(?:a|an|and|as|at|but|by|for|from|in|of|on|or|the|to|with)$/i;
+  return words.every((word, index) => {
+    const plain = word.replace(/^[('“”]+|[),'“”]+$/g, "");
+    return (index > 0 && minorWords.test(plain)) || /^[A-Z0-9]/.test(plain);
+  });
 }
 
 function isSectionHeading(line: string) {
-  if (line.length > 105 || /[.!?]$/.test(line)) return false;
-  return /^(?:introduction|conclusion|summary|final thoughts|key takeaways)$/i.test(line) || /^(?:step[- ]by[- ]step|how|why|what|when|where|common|key|the importance|benefits|warning signs|best practices)\b/i.test(line);
+  if (isNamedSectionHeading(line)) return true;
+  return line.split(/\s+/).length >= 4 && isTitleCaseHeading(line);
 }
 
 function isSubheading(line: string) {
-  return /^\d+\.\s+[A-Z]/.test(line) && line.length <= 105 && !/[.!?]$/.test(line);
+  if (/^\d+\.\s+[A-Z]/.test(line) && line.length <= 105 && !/[.!?]$/.test(line)) return true;
+  return line.split(/\s+/).length <= 3 && isTitleCaseHeading(line) && !isNamedSectionHeading(line);
+}
+
+function getBulletText(line: string) {
+  const match = line.match(/^[\u2022\u2023\u25E6\u2043\u2219\uF0B7\uF0A7\u25AA\u25CF\-\u2013]\s*(.+)$/);
+  return match?.[1]?.trim() || null;
+}
+
+function isEmbeddedArticleCta(line: string) {
+  return /^(?:Get Started Today|Looking to .+\?\s*Contact Cordova Property|Contact Cordova Property Management|&#128222;)/i.test(line);
 }
 
 function removeRepeatedTitle(lines: string[], title?: string) {
@@ -53,14 +85,24 @@ function formatContent(content: string, title?: string): ContentBlock[] {
       continue;
     }
     if (isPdfArtifact(line) || /^By Cordova Property Management\b/i.test(line)) continue;
-    if (/^(?:Get Started Today|📞|&#128222;)/i.test(line)) {
+    if (isEmbeddedArticleCta(line)) {
       flushParagraph();
       flushList();
       break;
     }
+
+    const bulletText = getBulletText(line);
+    if (bulletText) {
+      flushParagraph();
+      listItems.push(bulletText);
+      collectingList = false;
+      continue;
+    }
+    if (listItems.length) flushList();
+
     if (collectingList) {
       if (!/[.!?]$/.test(line) && !isSectionHeading(line) && !isSubheading(line)) {
-        listItems.push(line.replace(/^[•\-–]\s*/, ""));
+        listItems.push(line.replace(/^[\u2022\uF0B7\-\u2013]\s*/, ""));
         continue;
       }
       flushList();
@@ -78,11 +120,10 @@ function formatContent(content: string, title?: string): ContentBlock[] {
     }
 
     paragraph.push(line);
-    const length = paragraph.join(" ").length;
     if (/:$/.test(line)) {
       flushParagraph();
       collectingList = true;
-    } else if (/[.!?][”\"]?$/.test(line) && length >= 220) {
+    } else if (/[.!?][”"]?$/.test(line)) {
       flushParagraph();
     }
   }
