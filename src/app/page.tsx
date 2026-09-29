@@ -5,9 +5,8 @@ import { ButtonLink } from "@/components/button-link";
 import { LeadForm } from "@/components/lead-form";
 import { docHref, posts, services } from "@/data/site";
 
-const heroImage = "https://cordovaproperty.com/wp-content/uploads/2024/06/Dubai-PropertyBlog4.webp";
-const livingRoom =
-  "https://cordovaproperty.com/wp-content/uploads/2025/07/modern-cozy-living-room-wooden-wall-texture-background-interior-design-3d-rendering-scaled.jpg";
+const heroImage = "/images/articles/Dubai-PropertyBlog4.jpg";
+const livingRoom = "/images/articles/modern-cozy-living-room-wooden-wall-texture-background-interior-design-3d-rendering-scaled.jpg";
 const managementImage =
   "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=85";
 
@@ -15,7 +14,7 @@ export default function HomePage() {
   return (
     <>
       <section className="relative min-h-[560px] overflow-hidden bg-[#191c33] text-white sm:min-h-[620px] md:min-h-[720px]">
-        <Image src={heroImage} alt="Dubai skyline and property" fill priority className="object-cover" />
+        <Image src={heroImage} alt="Dubai skyline and property" fill priority unoptimized className="object-cover" />
         <div className="absolute inset-0 bg-[#080914]/65" />
         <div className="container relative flex min-h-[560px] items-center py-12 sm:min-h-[620px] sm:py-16 md:min-h-[720px] md:py-20">
           <div className="max-w-2xl">
@@ -100,6 +99,7 @@ export default function HomePage() {
             alt="Modern cozy living room"
             width={900}
             height={620}
+            unoptimized
             className="aspect-[4/3] object-cover shadow-[0_28px_70px_rgba(25,28,51,0.14)]"
           />
           <div>

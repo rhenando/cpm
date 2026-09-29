@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     description:
       "Expert property management in Dubai for landlords, tenants, and premium rental homes.",
     images: [
-      "https://cordovaproperty.com/wp-content/uploads/2025/07/modern-cozy-living-room-wooden-wall-texture-background-interior-design-3d-rendering-scaled.jpg"
+      "/images/articles/modern-cozy-living-room-wooden-wall-texture-background-interior-design-3d-rendering-scaled.jpg"
     ]
   }
 };

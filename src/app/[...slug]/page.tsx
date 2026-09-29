@@ -75,7 +75,7 @@ export default async function StaticPage({ params }: Props) {
   return (
     <article>
       <section className="relative overflow-hidden bg-[#191c33] py-20 text-white md:py-28">
-        {doc.image ? <Image src={doc.image} alt="" fill className="object-cover opacity-25" /> : null}
+        {doc.image ? <Image src={doc.image} alt="" fill unoptimized={doc.image.startsWith("/")} className="object-cover opacity-25" /> : null}
         <div className="container relative max-w-4xl">
           <p className="eyebrow">Cordova Property Management</p>
           <h1 className="mt-4 text-3xl font-extrabold leading-tight sm:text-4xl md:text-6xl">{doc.title}</h1>
@@ -173,10 +173,11 @@ function PropertyManagementPage() {
     <main className="overflow-hidden bg-white">
       <section className="relative min-h-[600px] bg-[#191c33] text-white md:min-h-[780px]">
         <Image
-          src="https://cordovaproperty.com/wp-content/uploads/2024/06/Dubai-PropertyBlog4.webp"
+          src="/images/articles/Dubai-PropertyBlog4.jpg"
           alt="Luxury Dubai residence managed by Cordova"
           fill
           priority
+          unoptimized
           sizes="100vw"
           className="object-cover object-center"
         />
@@ -226,9 +227,10 @@ function PropertyManagementPage() {
             <div className="absolute bottom-0 left-0 right-10 top-10 border border-[#bd8f13]/55" />
             <div className="relative aspect-[4/3] overflow-hidden shadow-[0_28px_70px_rgba(25,28,51,.22)]">
               <Image
-                src="https://cordovaproperty.com/wp-content/uploads/2025/07/modern-cozy-living-room-wooden-wall-texture-background-interior-design-3d-rendering-scaled.jpg"
+                src="/images/articles/modern-cozy-living-room-wooden-wall-texture-background-interior-design-3d-rendering-scaled.jpg"
                 alt="Refined living room interior"
                 fill
+                unoptimized
                 sizes="(max-width: 1024px) 90vw, 600px"
                 className="object-cover transition duration-700 hover:scale-[1.025]"
               />
@@ -366,9 +368,10 @@ function PropertyManagementPage() {
         <div className="container grid items-center gap-10 lg:grid-cols-2 lg:gap-24">
           <div className="relative min-h-[340px] overflow-hidden bg-[#f1f0f3] shadow-[0_25px_60px_rgba(25,28,51,.15)] sm:min-h-[420px] lg:min-h-[520px]">
             <Image
-              src="https://cordovaproperty.com/wp-content/uploads/2024/06/Dubai-Property1.jpg"
+              src="/images/articles/Dubai-PropertyBlog4.jpg"
               alt="Dubai skyline viewed from a luxury residence"
               fill
+              unoptimized
               sizes="(max-width: 1024px) 90vw, 580px"
               className="object-cover"
             />
@@ -593,10 +596,11 @@ function AboutPage() {
     <main className="overflow-hidden bg-white">
       <section className="relative min-h-[560px] bg-[#191c33] text-white sm:min-h-[680px] md:min-h-[760px]">
         <Image
-          src="https://cordovaproperty.com/wp-content/uploads/2024/06/Dubai-Property1.jpg"
+          src="/images/articles/Dubai-PropertyBlog4.jpg"
           alt="Luxury property overlooking the Dubai skyline"
           fill
           priority
+          unoptimized
           className="object-cover object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#191c33] via-[#191c33]/85 to-[#191c33]/25" />
@@ -842,9 +846,10 @@ function AboutPage() {
       <section className="bg-white px-4 pb-4 sm:px-6 sm:pb-6">
         <div className="relative mx-auto min-h-[470px] max-w-[1400px] overflow-hidden bg-[#191c33] text-white">
           <Image
-            src="https://cordovaproperty.com/wp-content/uploads/2021/07/Dubai-Property.jpg"
+            src="/images/articles/Dubai-PropertyBlog4.jpg"
             alt="Luxury Dubai property overlooking the skyline"
             fill
+            unoptimized
             sizes="100vw"
             className="object-cover"
           />
@@ -900,10 +905,11 @@ function PropertiesPage() {
     <main className="overflow-hidden bg-white">
       <section className="relative min-h-[570px] bg-[#191c33] text-white sm:min-h-[650px]">
         <Image
-          src="https://cordovaproperty.com/wp-content/uploads/2024/06/Dubai-Property1.jpg"
+          src="/images/articles/Dubai-PropertyBlog4.jpg"
           alt="Luxury residences overlooking the Dubai skyline"
           fill
           priority
+          unoptimized
           sizes="100vw"
           className="object-cover"
         />

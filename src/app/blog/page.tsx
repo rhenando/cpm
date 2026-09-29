@@ -51,7 +51,7 @@ export default async function BlogPage() {
             <Link href={docHref(featured)} className="group grid overflow-hidden border border-[#d5d2db] bg-white lg:grid-cols-[1.12fr_0.88fr]">
               <div className="relative min-h-[260px] overflow-hidden bg-[#f1f0f3] sm:min-h-[360px] md:min-h-[520px]">
                 {featured.image ? (
-                  <Image src={featured.image} alt={featured.title} fill priority sizes="(max-width: 1024px) 100vw, 58vw" className="object-cover transition duration-700 group-hover:scale-[1.025]" />
+                  <Image src={featured.image} alt={featured.title} fill priority unoptimized={featured.image.includes(".supabase.co/")} sizes="(max-width: 1024px) 100vw, 58vw" className="object-cover transition duration-700 group-hover:scale-[1.025]" />
                 ) : null}
                 <div className="absolute inset-0 bg-gradient-to-t from-[#191c33]/15 via-transparent to-transparent" />
               </div>
@@ -84,7 +84,7 @@ export default async function BlogPage() {
               <Link key={post.id} href={docHref(post)} className="group flex min-h-full flex-col overflow-hidden border border-[#d5d2db] bg-white transition duration-300 hover:border-[#afabb9] hover:shadow-[0_18px_45px_rgba(25,28,51,0.08)]">
                 <div className="relative aspect-[16/10] overflow-hidden bg-[#f1f0f3]">
                   {post.image ? (
-                    <Image src={post.image} alt={post.title} fill sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition duration-700 group-hover:scale-[1.035]" />
+                    <Image src={post.image} alt={post.title} fill unoptimized={post.image.includes(".supabase.co/")} sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw" className="object-cover transition duration-700 group-hover:scale-[1.035]" />
                   ) : (
                     <div className="absolute inset-0 bg-gradient-to-br from-white to-[#d5d2db]" />
                   )}

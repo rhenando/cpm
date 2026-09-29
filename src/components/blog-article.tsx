@@ -33,6 +33,7 @@ export function BlogArticle({ title, date, image, content, settings }: BlogArtic
             width={1340}
             height={580}
             priority
+            unoptimized={image.includes(".supabase.co/")}
             sizes="(max-width: 800px) 88vw, 610px"
             className="news-article-image"
           />

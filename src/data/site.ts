@@ -4,7 +4,29 @@ import type { NavItem, Property, StaticDoc } from "./types";
 
 const importedDocs = generatedDocs.length > 0 ? generatedDocs : fallbackDocs;
 
-export const docs = importedDocs satisfies StaticDoc[];
+const localLegacyImages: Record<string, string> = {
+  "Dubai-PropertyBlog4.webp": "/images/articles/Dubai-PropertyBlog4.jpg",
+  "Dubai-Property1.jpg": "/images/articles/Dubai-PropertyBlog4.jpg",
+  "Dubai-Property.jpg": "/images/articles/Dubai-PropertyBlog4.jpg",
+  "Dubai-Property-Blog.jpg": "/images/articles/Dubai-Property-Blog.jpg",
+  "modern-cozy-living-room-wooden-wall-texture-background-interior-design-3d-rendering-scaled.jpg": "/images/articles/modern-cozy-living-room-wooden-wall-texture-background-interior-design-3d-rendering-scaled.jpg",
+  "8981-300x200.jpg": "/images/articles/8981 (1).jpg"
+};
+
+const localProfileImages: Record<string, string> = {
+  "mary-joy-mendoza": "/images/pages/joy1.jpg",
+  "william-galang": "/images/pages/will.jpg",
+  "mamerto-adao": "/images/pages/mame.jpg",
+  "cristine-cabezas": "/images/pages/cris4.jpg"
+};
+
+function localizeLegacyImage(doc: StaticDoc): StaticDoc {
+  if (!/https:\/\/(?:cordovaproperty\.com|property\.breakout-website\.com)\/wp-content\//i.test(doc.image)) return doc;
+  const filename = doc.image.split("/").pop() || "";
+  return { ...doc, image: localProfileImages[doc.slug] || localLegacyImages[filename] || "" };
+}
+
+export const docs = importedDocs.map((doc) => localizeLegacyImage(doc)) satisfies StaticDoc[];
 
 export const pages = docs.filter((doc) => doc.type === "page");
 export const posts = docs.filter((doc) => doc.type === "post");
@@ -62,7 +84,7 @@ export const featuredProperties: Property[] = [
     slug: "mayfair-tower-business-bay",
     title: "Mayfair Tower, Business Bay",
     location: "Canal View | Fully Furnished | Prime Location",
-    image: "https://cordovaproperty.com/wp-content/uploads/2025/10/IMG-20251006-WA0002.jpg",
+    image: "/images/articles/Dubai-PropertyBlog4.jpg",
     imageAlt: "Mayfair Tower Apartment",
     specs: ["1 Bed", "2 Baths", "645 sqft"],
     summary: "Fully furnished Business Bay apartment with canal view access."
