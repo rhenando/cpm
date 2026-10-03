@@ -62,7 +62,7 @@ export async function login(formData: FormData) {
   const adminEmail = process.env.SUPABASE_ADMIN_EMAIL?.trim().toLowerCase();
 
   if (!adminEmail) redirect("/admin/login?error=configuration");
-  if (email !== adminEmail) redirect("/admin/login?error=email");
+  if (email !== adminEmail) redirect("/admin/login?error=credentials");
 
   const supabase = await createSupabaseServerClient();
   const { error } = await supabase.auth.signInWithPassword({ email, password });

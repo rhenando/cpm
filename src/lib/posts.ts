@@ -1,6 +1,5 @@
 import "server-only";
 import { createClient } from "@supabase/supabase-js";
-import { posts as importedPosts } from "@/data/site";
 import type { StaticDoc } from "@/data/types";
 import { getSupabaseConfig, isSupabaseConfigured } from "@/lib/supabase/config";
 import { cleanPostTitle } from "@/lib/post-title";
@@ -77,11 +76,7 @@ async function getSupabasePosts() {
 }
 
 export async function getPublishedPosts(): Promise<StaticDoc[]> {
-  const supabasePosts = await getSupabasePosts();
-  const seen = new Set(supabasePosts.map((post) => post.slug));
-  return [...supabasePosts, ...importedPosts.filter((post) => !seen.has(post.slug))].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
+  return getSupabasePosts();
 }
 
 export async function getPublishedPostBySlug(slug: string): Promise<StaticDoc | undefined> {

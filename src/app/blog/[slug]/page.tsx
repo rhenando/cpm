@@ -1,15 +1,15 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { BlogArticle } from "@/components/blog-article";
-import { posts } from "@/data/site";
 import { getSiteSettings } from "@/lib/cms";
-import { getPublishedPostBySlug } from "@/lib/posts";
+import { getPublishedPostBySlug, getPublishedPosts } from "@/lib/posts";
 
 type Props = {
   params: Promise<{ slug: string }>;
 };
 
-export function generateStaticParams() {
+export async function generateStaticParams() {
+  const posts = await getPublishedPosts();
   return posts.map((post) => ({ slug: post.slug }));
 }
 

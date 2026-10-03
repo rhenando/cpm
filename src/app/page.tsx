@@ -3,14 +3,18 @@ import Link from "next/link";
 import { Building2, CheckCircle2, ClipboardCheck, Home, ShieldCheck, Wrench } from "lucide-react";
 import { ButtonLink } from "@/components/button-link";
 import { LeadForm } from "@/components/lead-form";
-import { docHref, posts, services } from "@/data/site";
+import { docHref, services } from "@/data/site";
+import { getPublishedPosts } from "@/lib/posts";
 
 const heroImage = "/images/articles/Dubai-PropertyBlog4.jpg";
 const livingRoom = "/images/articles/modern-cozy-living-room-wooden-wall-texture-background-interior-design-3d-rendering-scaled.jpg";
 const managementImage =
   "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=85";
 
-export default function HomePage() {
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const posts = await getPublishedPosts();
   return (
     <>
       <section className="relative min-h-[560px] overflow-hidden bg-[#191c33] text-white sm:min-h-[620px] md:min-h-[720px]">

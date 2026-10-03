@@ -1,17 +1,5 @@
 import { generatedDocs } from "./generated";
-import { fallbackDocs } from "./fallback";
 import type { NavItem, Property, StaticDoc } from "./types";
-
-const importedDocs = generatedDocs.length > 0 ? generatedDocs : fallbackDocs;
-
-const localLegacyImages: Record<string, string> = {
-  "Dubai-PropertyBlog4.webp": "/images/articles/Dubai-PropertyBlog4.jpg",
-  "Dubai-Property1.jpg": "/images/articles/Dubai-PropertyBlog4.jpg",
-  "Dubai-Property.jpg": "/images/articles/Dubai-PropertyBlog4.jpg",
-  "Dubai-Property-Blog.jpg": "/images/articles/Dubai-Property-Blog.jpg",
-  "modern-cozy-living-room-wooden-wall-texture-background-interior-design-3d-rendering-scaled.jpg": "/images/articles/modern-cozy-living-room-wooden-wall-texture-background-interior-design-3d-rendering-scaled.jpg",
-  "8981-300x200.jpg": "/images/articles/8981 (1).jpg"
-};
 
 const localProfileImages: Record<string, string> = {
   "mary-joy-mendoza": "/images/pages/joy1.jpg",
@@ -22,14 +10,12 @@ const localProfileImages: Record<string, string> = {
 
 function localizeLegacyImage(doc: StaticDoc): StaticDoc {
   if (!/https:\/\/(?:cordovaproperty\.com|property\.breakout-website\.com)\/wp-content\//i.test(doc.image)) return doc;
-  const filename = doc.image.split("/").pop() || "";
-  return { ...doc, image: localProfileImages[doc.slug] || localLegacyImages[filename] || "" };
+  return { ...doc, image: localProfileImages[doc.slug] || "" };
 }
 
-export const docs = importedDocs.map((doc) => localizeLegacyImage(doc)) satisfies StaticDoc[];
+export const docs = generatedDocs.map((doc) => localizeLegacyImage(doc)) satisfies StaticDoc[];
 
 export const pages = docs.filter((doc) => doc.type === "page");
-export const posts = docs.filter((doc) => doc.type === "post");
 
 export const navItems: NavItem[] = [
   { label: "Home", href: "/" },

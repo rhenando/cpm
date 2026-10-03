@@ -13,19 +13,13 @@ export default async function AdminLoginPage({ searchParams }: { searchParams: P
   const { data: { user } } = await supabase.auth.getUser();
   if (user) redirect("/admin");
   const { error } = await searchParams;
-  const errorMessage = error === "email"
-    ? "This email address is not authorized to access the publishing area."
-    : error === "credentials"
-      ? "The email or password is incorrect. Reset this user's password in Supabase Authentication and try again."
-      : error === "unconfirmed"
-        ? "The Supabase user's email is not confirmed. Confirm the user in Authentication > Users."
-        : error === "connection"
-          ? "Supabase authentication could not be completed. Confirm the project URL and publishable key belong to the same project."
-      : error === "configuration"
-        ? "The admin email environment variable is missing."
-        : error
-          ? "Sign in failed. Check the configured credentials."
-          : "";
+  const errorMessages: Record<string, string> = {
+    credentials: "The email or password is incorrect. Reset the authorized user's password in Supabase Authentication and try again.",
+    unconfirmed: "The Supabase user's email is not confirmed. Confirm the user in Authentication > Users.",
+    connection: "Supabase authentication could not be completed. Confirm the project URL and publishable key belong to the same project.",
+    configuration: "The admin email environment variable is missing.",
+  };
+  const errorMessage = error ? errorMessages[error] ?? "Sign in failed. Check the configured credentials." : "";
 
   return (
     <main className="flex min-h-[calc(100svh-7rem)] items-center bg-[#f1f0f3] py-16">

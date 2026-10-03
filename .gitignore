@@ -7,6 +7,10 @@ out/
 
 # production
 build/
+*.tsbuildinfo
+
+# local content backups (large and may contain database content)
+backups/
 
 # logs
 *.log
