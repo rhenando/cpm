@@ -32,3 +32,6 @@ Thumbs.db
 # editor
 .vscode/
 .idea/
+
+# local SEO audit cache
+.seo-cache/

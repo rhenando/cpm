@@ -14,7 +14,7 @@ export default async function PostPreviewPage({ params }: { params: Promise<{ id
   const [{ data: post }, settings] = await Promise.all([
     supabase
       .from("posts")
-      .select("id,title,content,image_url,published_at")
+      .select("id,title,content,image_url,published_at,updated_at")
       .eq("id", id)
       .eq("author_id", user.id)
       .single(),
@@ -38,9 +38,11 @@ export default async function PostPreviewPage({ params }: { params: Promise<{ id
       <BlogArticle
         title={cleanPostTitle(post.title)}
         date={post.published_at}
+        modified={post.updated_at}
         image={post.image_url}
         content={post.content}
         settings={settings}
+        related={[]}
       />
     </>
   );

@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/admin";
@@ -122,7 +122,8 @@ export async function publishPost(formData: FormData) {
         : content;
     const timestamp = Date.now() + index;
     const baseSlug = safeSlug(title) || `article-${timestamp}`;
-    const slug = `${baseSlug}-${timestamp.toString().slice(-6)}`;
+    const { data: existingSlug } = await supabase.from("posts").select("id").eq("slug", baseSlug).maybeSingle();
+    const slug = existingSlug ? `${baseSlug}-${timestamp.toString().slice(-6)}` : baseSlug;
     const folder = `${user.id}/${slug}`;
     const imageExtension = image.name.split(".").pop()?.toLowerCase() || "jpg";
     const imagePath = `${folder}/featured.${imageExtension}`;
@@ -140,7 +141,7 @@ export async function publishPost(formData: FormData) {
     const pdfUrl = supabase.storage.from("blog-assets").getPublicUrl(pdfPath).data.publicUrl;
     const { error } = await supabase.from("posts").insert({
       author_id: user.id, slug, title,
-      excerpt: articleContent.replace(/\s+/g, " ").trim().slice(0, 220),
+      excerpt: articleContent.replace(/\s+/g, " ").trim().slice(0, 158),
       content: articleContent, image_url: imageUrl, pdf_url: pdfUrl,
       published: true, published_at: publishDate.toISOString()
     });
@@ -151,6 +152,7 @@ export async function publishPost(formData: FormData) {
     publishedSlugs.push(slug);
     revalidatePath(`/blog/${slug}`);
   }
+  revalidateTag("posts");
   revalidatePath("/blog");
   if (publishedSlugs.length > 1) redirect(`/admin?success=${publishDate.getTime() > Date.now() ? "batch-scheduled" : "batch-published"}&count=${publishedSlugs.length}`);
   if (publishDate.getTime() > Date.now()) redirect("/admin?success=scheduled");
@@ -193,6 +195,7 @@ export async function deletePost(formData: FormData) {
     if (storageError) redirect("/admin?error=delete-assets-failed");
   }
 
+  revalidateTag("posts");
   revalidatePath("/blog");
   revalidatePath(`/blog/${post.slug}`);
   redirect("/admin?success=deleted");

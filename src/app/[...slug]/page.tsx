@@ -5,9 +5,12 @@ import { notFound } from "next/navigation";
 import { ArrowUpRight, Check, Clock3, KeyRound, Mail, MapPin, Phone, ShieldCheck, Wrench } from "lucide-react";
 import { ButtonLink } from "@/components/button-link";
 import { DocContent } from "@/components/doc-content";
+import { JsonLd } from "@/components/json-ld";
 import { LeadForm } from "@/components/lead-form";
-import { docHref, docs, getDocBySlug, pages } from "@/data/site";
+import { docHref, docs, featuredProperties, getDocBySlug, pages } from "@/data/site";
+import type { SiteSettings } from "@/data/site-settings";
 import { getPageOverride, getSiteSettings } from "@/lib/cms";
+import { absoluteUrl, breadcrumbJsonLd, makeMetaDescription, pageMetadata, SITE_URL } from "@/lib/seo";
 
 const dubaiVision = "/images/pages/Dubai-vision.webp";
 const lestyPortrait = "/images/pages/lesty.webp";
@@ -17,29 +20,58 @@ type Props = {
   params: Promise<{ slug: string[] }>;
 };
 
+const metadataOverrides: Record<string, { title: string; description: string }> = {
+  "property-management": {
+    title: "Property Management Dubai",
+    description: "End-to-end Dubai property management for owners, including tenant screening, leasing, inspections, maintenance, rent collection and reporting."
+  },
+  "properties-for-rent-dubai": {
+    title: "Properties for Rent in Dubai",
+    description: "Explore professionally managed Dubai rental residences and register your requirements with Cordova for suitable upcoming property opportunities."
+  },
+  contact: {
+    title: "Contact Cordova Property Management",
+    description: "Contact Cordova's Dubai team about property management, leasing, inspections, tenant support or an upcoming property requirement."
+  },
+  "cleaning-services": {
+    title: "Professional Cleaning Services Dubai",
+    description: "Professional cleaning coordination for Dubai apartments, villas, offices and managed properties, with dependable scheduling and quality oversight."
+  },
+  "about-cordova-property-management": {
+    title: "About Cordova Property Management Dubai",
+    description: "Meet Cordova's Dubai property management team and learn about our personal approach to protecting properties, supporting owners and caring for tenants."
+  }
+};
+
 export function generateStaticParams() {
   return pages
-    .filter((page) => page.slug && page.slug !== "blog")
+    .filter((page) => page.slug && !["blog", "blog-old", "blog-list"].includes(page.slug))
     .map((page) => ({ slug: page.slug.split("/") }));
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const member = team.find((item) => item.href === `/${slug.join("/")}`);
-  if (member) return { title: member.name, description: `${member.name}, ${member.role} at Cordova Property Management in Dubai.` };
-  const source = getDocBySlug(slug.join("/"));
-  const override = await getPageOverride(slug.join("/"));
+  const path = slug.join("/");
+  const member = team.find((item) => item.href === `/${path}`);
+  if (member) {
+    return pageMetadata({
+      title: `${member.name} — ${member.role}`,
+      description: `${member.name}, ${member.role} at Cordova Property Management in Dubai.`,
+      path: `/${path}`,
+      image: member.image
+    });
+  }
+  const source = getDocBySlug(path);
+  const override = await getPageOverride(path);
   const doc = source ? { ...source, ...override } : source;
   if (!doc) return {};
-  return {
-    title: doc.title,
-    description: doc.description,
-    openGraph: {
-      title: doc.title,
-      description: doc.description,
-      images: doc.image ? [doc.image] : []
-    }
-  };
+  const preferredMetadata = metadataOverrides[path];
+  return pageMetadata({
+    title: preferredMetadata?.title || doc.title,
+    description: preferredMetadata?.description || doc.description,
+    path: `/${path}`,
+    image: doc.image || undefined
+  });
 }
 
 export default async function StaticPage({ params }: Props) {
@@ -47,39 +79,101 @@ export default async function StaticPage({ params }: Props) {
   const path = slug.join("/");
   const source = getDocBySlug(path);
   const member = team.find((item) => item.href === `/${path}`);
-  if (member) return <TeamProfilePage member={member} doc={source} />;
+  if (member) {
+    return (
+      <>
+        <JsonLd data={[
+          breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: "Our team", path: "/about-cordova-property-management#team" }, { name: member.name, path: member.href }]),
+          {
+            "@context": "https://schema.org",
+            "@type": "ProfilePage",
+            "@id": absoluteUrl(member.href),
+            url: absoluteUrl(member.href),
+            name: member.name,
+            mainEntity: {
+              "@type": "Person",
+              name: member.name,
+              jobTitle: member.role,
+              image: absoluteUrl(member.image),
+              worksFor: { "@id": `${SITE_URL}/#organization` }
+            }
+          }
+        ]} />
+        <TeamProfilePage member={member} doc={source} />
+      </>
+    );
+  }
   const override = await getPageOverride(path);
   const doc = source ? { ...source, ...override } : source;
   if (!doc || doc.type === "post") notFound();
 
+  const schemas: Array<Record<string, unknown>> = [
+    breadcrumbJsonLd([{ name: "Home", path: "/" }, { name: doc.title, path: `/${path}` }]),
+    {
+      "@context": "https://schema.org",
+      "@type": "WebPage",
+      "@id": absoluteUrl(`/${path}`),
+      url: absoluteUrl(`/${path}`),
+      name: doc.title,
+      description: makeMetaDescription(doc.description, `Learn more about ${doc.title} from Cordova Property Management in Dubai.`),
+      isPartOf: { "@id": `${SITE_URL}/#website` },
+      about: { "@id": `${SITE_URL}/#organization` }
+    }
+  ];
+  if (["property-management", "cleaning-services", "holiday-homes", "snagging-inspection"].includes(path)) {
+    schemas.push({
+      "@context": "https://schema.org",
+      "@type": "Service",
+      "@id": `${absoluteUrl(`/${path}`)}#service`,
+      name: doc.title,
+      description: makeMetaDescription(doc.description, `Professional ${doc.title.toLowerCase()} support from Cordova Property Management in Dubai.`),
+      url: absoluteUrl(`/${path}`),
+      provider: { "@id": `${SITE_URL}/#organization` },
+      areaServed: { "@type": "City", name: "Dubai" }
+    });
+  }
+
   if (path === "properties-for-rent-dubai") {
-    return <PropertiesPage />;
+    schemas.push({
+      "@context": "https://schema.org",
+      "@type": "ItemList",
+      name: "Recently managed Dubai residences",
+      itemListElement: featuredProperties.map((property, index) => ({
+        "@type": "ListItem",
+        position: index + 1,
+        name: property.title,
+        url: absoluteUrl(`/${property.slug}`)
+      }))
+    });
+    return <><JsonLd data={schemas} /><PropertiesPage /></>;
   }
 
   if (path === "contact") {
-    return <ContactPage doc={doc} />;
+    const settings = await getSiteSettings();
+    schemas.push({ "@context": "https://schema.org", "@type": "ContactPage", "@id": absoluteUrl("/contact"), url: absoluteUrl("/contact"), about: { "@id": `${SITE_URL}/#organization` } });
+    return <><JsonLd data={schemas} /><ContactPage settings={settings} /></>;
   }
 
   if (path === "about-cordova-property-management") {
-    return <AboutPage />;
+    schemas.push({ "@context": "https://schema.org", "@type": "AboutPage", "@id": absoluteUrl(`/${path}`), url: absoluteUrl(`/${path}`), about: { "@id": `${SITE_URL}/#organization` } });
+    return <><JsonLd data={schemas} /><AboutPage /></>;
   }
 
   if (path === "property-management") {
-    return <PropertyManagementPage />;
+    return <><JsonLd data={schemas} /><PropertyManagementPage /></>;
   }
 
-  const related = docs
-    .filter((item) => item.type === doc.type && item.slug && item.slug !== doc.slug)
-    .slice(0, 3);
+  const related = getRelatedDocs(path);
 
   return (
     <article>
+      <JsonLd data={schemas} />
       <section className="relative overflow-hidden bg-[#191c33] py-20 text-white md:py-28">
-        {doc.image ? <Image src={doc.image} alt="" fill unoptimized={doc.image.startsWith("/")} className="object-cover opacity-25" /> : null}
+        {doc.image ? <Image src={doc.image} alt="" fill sizes="100vw" className="object-cover opacity-25" /> : null}
         <div className="container relative max-w-4xl">
           <p className="eyebrow">Cordova Property Management</p>
           <h1 className="mt-4 text-3xl font-extrabold leading-tight sm:text-4xl md:text-6xl">{doc.title}</h1>
-          <p className="mt-5 max-w-2xl text-white/75">{doc.description}</p>
+          <p className="mt-5 max-w-2xl text-white/75">{makeMetaDescription(doc.description, `Learn more about ${doc.title} from Cordova Property Management in Dubai.`)}</p>
         </div>
       </section>
       <section className="section bg-white">
@@ -110,6 +204,22 @@ export default async function StaticPage({ params }: Props) {
       </section>
     </article>
   );
+}
+
+const relatedByPage: Record<string, string[]> = {
+  "cleaning-services": ["property-management", "holiday-homes", "contact"],
+  "holiday-homes": ["cleaning-services", "property-management", "contact"],
+  "snagging-inspection": ["property-management", "properties-for-rent-dubai", "contact"],
+  "privacy-policy": ["terms-of-service", "about-cordova-property-management", "contact"],
+  "terms-of-service": ["privacy-policy", "about-cordova-property-management", "contact"],
+  "dubai-real-estate-resources": ["property-management", "blog", "contact"]
+};
+
+function getRelatedDocs(path: string) {
+  const propertySlugs = ["sky-view-the-address", "clayton-residency-business-bay", "the-creek-palace-creek-harbour", "mayfair-tower-business-bay"];
+  const slugs = relatedByPage[path]
+    || (propertySlugs.includes(path) ? ["properties-for-rent-dubai", "property-management", "contact"] : ["property-management", "about-cordova-property-management", "contact"]);
+  return slugs.map((slug) => getDocBySlug(slug)).filter((item): item is NonNullable<typeof item> => Boolean(item));
 }
 
 const managementServices = [
@@ -173,11 +283,10 @@ function PropertyManagementPage() {
     <main className="overflow-hidden bg-white">
       <section className="relative min-h-[600px] bg-[#191c33] text-white md:min-h-[780px]">
         <Image
-          src="/images/articles/Dubai-PropertyBlog4.jpg"
+          src="/images/optimized/dubai-property-hero.webp"
           alt="Luxury Dubai residence managed by Cordova"
           fill
           priority
-          unoptimized
           sizes="100vw"
           className="object-cover object-center"
         />
@@ -227,10 +336,9 @@ function PropertyManagementPage() {
             <div className="absolute bottom-0 left-0 right-10 top-10 border border-[#bd8f13]/55" />
             <div className="relative aspect-[4/3] overflow-hidden shadow-[0_28px_70px_rgba(25,28,51,.22)]">
               <Image
-                src="/images/articles/modern-cozy-living-room-wooden-wall-texture-background-interior-design-3d-rendering-scaled.jpg"
+                src="/images/optimized/modern-living-room.webp"
                 alt="Refined living room interior"
                 fill
-                unoptimized
                 sizes="(max-width: 1024px) 90vw, 600px"
                 className="object-cover transition duration-700 hover:scale-[1.025]"
               />
@@ -368,10 +476,9 @@ function PropertyManagementPage() {
         <div className="container grid items-center gap-10 lg:grid-cols-2 lg:gap-24">
           <div className="relative min-h-[340px] overflow-hidden bg-[#f1f0f3] shadow-[0_25px_60px_rgba(25,28,51,.15)] sm:min-h-[420px] lg:min-h-[520px]">
             <Image
-              src="/images/articles/Dubai-PropertyBlog4.jpg"
+              src="/images/optimized/dubai-property-hero.webp"
               alt="Dubai skyline viewed from a luxury residence"
               fill
-              unoptimized
               sizes="(max-width: 1024px) 90vw, 580px"
               className="object-cover"
             />
@@ -430,7 +537,7 @@ const team = [
   {
     name: "Cristine Cabezas",
     role: "Head of Administration",
-    image: "/images/pages/cris4.jpg",
+    image: "/images/optimized/cris4.webp",
     href: "/cristine-cabezas",
     summary: "Bringing precision, warmth and dependable coordination to every client relationship and every detail behind the scenes.",
     strengths: ["Organizational excellence", "Client support", "Clear communication", "Practical problem-solving"]
@@ -438,7 +545,7 @@ const team = [
   {
     name: "Mamerto Adao",
     role: "Facilities Inspection Officer",
-    image: "/images/pages/mame.jpg",
+    image: "/images/optimized/mame.webp",
     href: "/mamerto-adao",
     summary: "Protecting property standards through attentive inspections, practical expertise and a meticulous eye for detail.",
     strengths: ["Detailed inspections", "Quality assurance", "Maintenance assessment", "Technical reporting"]
@@ -446,7 +553,7 @@ const team = [
   {
     name: "Mary Joy Mendoza",
     role: "FM Operations Manager",
-    image: "/images/pages/joy1.jpg",
+    image: "/images/optimized/joy1.webp",
     href: "/mary-joy-mendoza",
     summary: "Guiding facilities operations with calm leadership, responsive coordination and an unwavering focus on service quality.",
     strengths: ["Facilities operations", "Vendor coordination", "Team leadership", "Service delivery"]
@@ -454,7 +561,7 @@ const team = [
   {
     name: "William Galang",
     role: "Senior Property Manager",
-    image: "/images/pages/will.jpg",
+    image: "/images/optimized/will.webp",
     href: "/william-galang",
     summary: "Combining technical understanding and operational discipline to deliver consistently well-managed properties.",
     strengths: ["Operational leadership", "Preventive maintenance", "Process optimization", "Contractor management"]
@@ -462,7 +569,7 @@ const team = [
   {
     name: "Rosewell Sangco",
     role: "Property Manager",
-    image: "/images/pages/rose1.jpg",
+    image: "/images/optimized/rose1.webp",
     href: "/rosewell-sangco",
     summary: "",
     strengths: []
@@ -470,7 +577,7 @@ const team = [
   {
     name: "Carl Manalang",
     role: "Property Manager",
-    image: "/images/pages/car.jpg",
+    image: "/images/optimized/car.webp",
     href: "/carl-manalang",
     summary: "",
     strengths: []
@@ -480,14 +587,9 @@ const team = [
 async function TeamProfilePage({ member, doc }: { member: (typeof team)[number]; doc?: (typeof docs)[number] }) {
   const settings = await getSiteSettings();
   const nextMember = team[(team.indexOf(member) + 1) % team.length];
-  const profileLines = (doc?.content ?? "").split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
-  const contactValue = (label: string, fallback: string) => {
-    const index = profileLines.findIndex((line) => line.toLowerCase() === label);
-    return index >= 0 ? profileLines[index + 1] || fallback : fallback;
-  };
-  const memberPhone = contactValue("phone", settings.phone);
-  const memberEmail = contactValue("email", settings.email);
-  const memberOffice = contactValue("office", settings.address);
+  const memberPhone = settings.phone;
+  const memberEmail = settings.email;
+  const memberOffice = settings.address;
 
   return (
     <main className="member-profile">
@@ -596,11 +698,11 @@ function AboutPage() {
     <main className="overflow-hidden bg-white">
       <section className="relative min-h-[560px] bg-[#191c33] text-white sm:min-h-[680px] md:min-h-[760px]">
         <Image
-          src="/images/articles/Dubai-PropertyBlog4.jpg"
+          src="/images/optimized/dubai-property-hero.webp"
           alt="Luxury property overlooking the Dubai skyline"
           fill
           priority
-          unoptimized
+          sizes="100vw"
           className="object-cover object-center"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-[#191c33] via-[#191c33]/85 to-[#191c33]/25" />
@@ -671,7 +773,7 @@ function AboutPage() {
             <div className="grid h-full grid-cols-4 gap-2.5 sm:gap-4">
               <div className="group relative my-12 overflow-hidden bg-[#d8d1c3] shadow-xl shadow-[#191c33]/15 sm:my-16">
                 <Image
-                  src="/images/pages/4.png"
+                  src="/images/optimized/property-4.webp"
                   alt="Dubai skyline at sunset"
                   fill
                   sizes="500px"
@@ -681,7 +783,7 @@ function AboutPage() {
               </div>
               <div className="group relative mb-20 overflow-hidden bg-[#d8d1c3] shadow-xl shadow-[#191c33]/15 sm:mb-24">
                 <Image
-                  src="/images/pages/1.jpg"
+                  src="/images/optimized/property-1.webp"
                   alt="Burj Khalifa and the Dubai skyline at sunset"
                   fill
                   sizes="1200px"
@@ -691,7 +793,7 @@ function AboutPage() {
               </div>
               <div className="group relative mt-20 overflow-hidden bg-[#d8d1c3] shadow-xl shadow-[#191c33]/15 sm:mt-24">
                 <Image
-                  src="/images/pages/2.png"
+                  src="/images/optimized/property-2.webp"
                   alt="Luxury living room with a fireplace and chandelier"
                   fill
                   sizes="660px"
@@ -701,7 +803,7 @@ function AboutPage() {
               </div>
               <div className="group relative my-8 overflow-hidden bg-[#d8d1c3] shadow-xl shadow-[#191c33]/15 sm:my-12">
                 <Image
-                  src="/images/pages/3.png"
+                  src="/images/optimized/property-3.webp"
                   alt="Modern luxury villa with a swimming pool"
                   fill
                   sizes="1000px"
@@ -846,10 +948,9 @@ function AboutPage() {
       <section className="bg-white px-4 pb-4 sm:px-6 sm:pb-6">
         <div className="relative mx-auto min-h-[470px] max-w-[1400px] overflow-hidden bg-[#191c33] text-white">
           <Image
-            src="/images/articles/Dubai-PropertyBlog4.jpg"
+            src="/images/optimized/dubai-property-hero.webp"
             alt="Luxury Dubai property overlooking the skyline"
             fill
-            unoptimized
             sizes="100vw"
             className="object-cover"
           />
@@ -905,11 +1006,10 @@ function PropertiesPage() {
     <main className="overflow-hidden bg-white">
       <section className="relative min-h-[570px] bg-[#191c33] text-white sm:min-h-[650px]">
         <Image
-          src="/images/articles/Dubai-PropertyBlog4.jpg"
+          src="/images/optimized/dubai-property-hero.webp"
           alt="Luxury residences overlooking the Dubai skyline"
           fill
           priority
-          unoptimized
           sizes="100vw"
           className="object-cover"
         />
@@ -949,11 +1049,33 @@ function PropertiesPage() {
           </div>
         </div>
       </section>
+
+      <section className="bg-white py-16 md:py-24">
+        <div className="container">
+          <p className="eyebrow">Our portfolio</p>
+          <h2 className="mt-4 text-3xl font-extrabold text-[#191c33] sm:text-5xl">Recently managed Dubai residences</h2>
+          <p className="mt-5 max-w-2xl leading-8 text-[#242424]/70">Explore examples from our managed portfolio. These residences may not currently be available; contact the team for current rental opportunities.</p>
+          <div className="mt-10 grid gap-6 md:grid-cols-2">
+            {featuredProperties.map((property) => (
+              <Link key={property.slug} href={`/${property.slug}`} className="group overflow-hidden border border-[#d5d2db] bg-white transition hover:border-[#bd8f13] hover:shadow-xl hover:shadow-[#191c33]/10">
+                <div className="relative aspect-[16/10] overflow-hidden bg-[#f1f0f3]">
+                  <Image src={property.image} alt={property.imageAlt} fill sizes="(max-width: 768px) 100vw, 50vw" className="object-cover transition duration-500 group-hover:scale-[1.025]" />
+                </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-extrabold text-[#191c33]">{property.title}</h3>
+                  <p className="mt-2 text-sm font-semibold text-[#bd8f13]">{property.location}</p>
+                  <p className="mt-4 text-sm leading-7 text-[#242424]/70">{property.summary}</p>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
 
-function ContactPage({ doc }: { doc: { title: string; description: string; content: string } }) {
+function ContactPage({ settings }: { settings: SiteSettings }) {
   return (
     <main className="overflow-hidden bg-[#f7f8f9]">
       <section className="relative isolate min-h-[500px] overflow-hidden bg-[#191c33] text-white sm:min-h-[580px]">
@@ -978,7 +1100,7 @@ function ContactPage({ doc }: { doc: { title: string; description: string; conte
               <span className="block font-serif font-normal italic text-[#bd8f13]">property goals.</span>
             </h1>
             <p className="mt-7 max-w-xl text-base leading-8 text-white/72 md:text-lg">
-              {doc.description}
+              Contact Cordova&apos;s Dubai team for property management, leasing support, tenant assistance and property-care enquiries.
             </p>
           </div>
         </div>
@@ -1001,22 +1123,22 @@ function ContactPage({ doc }: { doc: { title: string; description: string; conte
                 <Phone className="mt-1 shrink-0 text-[#bd8f13]" size={21} strokeWidth={1.6} aria-hidden />
                 <div>
                   <p className="text-[0.68rem] font-extrabold uppercase tracking-[0.2em] text-[#191c33]/50">Call our team</p>
-                  <a href="tel:+971586287157" className="mt-2 block font-semibold text-[#191c33] transition group-hover:text-[#bd8f13]">+971 58 628 7157</a>
-                  <a href="tel:+971586580518" className="mt-1 block font-semibold text-[#191c33] transition group-hover:text-[#bd8f13]">+971 58 658 0518</a>
+                  <a href={`tel:${settings.phone.replace(/[^+\d]/g, "")}`} className="mt-2 block font-semibold text-[#191c33] transition group-hover:text-[#bd8f13]">{settings.phone}</a>
+                  {settings.secondaryPhone ? <a href={`tel:${settings.secondaryPhone.replace(/[^+\d]/g, "")}`} className="mt-1 block font-semibold text-[#191c33] transition group-hover:text-[#bd8f13]">{settings.secondaryPhone}</a> : null}
                 </div>
               </div>
-              <a href="mailto:customer@cordovaproperty.com" className="group flex gap-5 py-6">
+              <a href={`mailto:${settings.email}`} className="group flex gap-5 py-6">
                 <Mail className="mt-1 shrink-0 text-[#bd8f13]" size={21} strokeWidth={1.6} aria-hidden />
                 <div>
                   <p className="text-[0.68rem] font-extrabold uppercase tracking-[0.2em] text-[#191c33]/50">Email</p>
-                  <p className="mt-2 break-all font-semibold text-[#191c33] transition group-hover:text-[#bd8f13]">customer@cordovaproperty.com</p>
+                  <p className="mt-2 break-all font-semibold text-[#191c33] transition group-hover:text-[#bd8f13]">{settings.email}</p>
                 </div>
               </a>
               <div className="flex gap-5 py-6">
                 <MapPin className="mt-1 shrink-0 text-[#bd8f13]" size={21} strokeWidth={1.6} aria-hidden />
                 <div>
                   <p className="text-[0.68rem] font-extrabold uppercase tracking-[0.2em] text-[#191c33]/50">Office</p>
-                  <p className="mt-2 max-w-sm text-sm leading-7 text-[#242424]/75">The One Tower Business Centre, Sheikh Zayed Road, Barsha Heights, Dubai, UAE</p>
+                  <p className="mt-2 max-w-sm text-sm leading-7 text-[#242424]/75">{settings.address}</p>
                 </div>
               </div>
               <div className="flex gap-5 py-6">

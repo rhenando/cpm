@@ -28,8 +28,38 @@ const nextConfig: NextConfig = {
       ...(supabaseHostname ? [{ protocol: "https" as const, hostname: supabaseHostname }] : [])
     ]
   },
+  async redirects() {
+    return [
+      {
+        source: "/:path*",
+        has: [{ type: "host", value: "cordovaproperty.com" }],
+        destination: "https://www.cordovaproperty.com/:path*",
+        permanent: true
+      },
+      { source: "/blog-old", destination: "/blog", permanent: true },
+      { source: "/blog-list", destination: "/blog", permanent: true },
+      {
+        source: "/blog/test",
+        destination: "/blog/how-efficient-property-operations-increase-asset-value-in-dubai",
+        permanent: true
+      },
+      {
+        source: "/blog/planning-year-end-maintenance-before-vendor-demand-increases-861013",
+        destination: "/blog/planning-year-end-maintenance-before-vendor-demand-increases-291805",
+        permanent: true
+      }
+    ];
+  },
   async headers() {
     return [
+      {
+        source: "/admin/:path*",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }]
+      },
+      {
+        source: "/auth/:path*",
+        headers: [{ key: "X-Robots-Tag", value: "noindex, nofollow, noarchive" }]
+      },
       {
         source: "/:path*",
         headers: [

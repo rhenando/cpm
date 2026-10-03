@@ -2,6 +2,26 @@ type ContentBlock =
   | { type: "heading" | "subheading" | "paragraph"; text: string }
   | { type: "list"; items: string[] };
 
+function normalizeEncoding(value: string) {
+  return value
+    .replace(/\+971 00 000 0000/g, "+971 58 628 7157")
+    .replace(/â€™|â€˜/g, "'")
+    .replace(/â€œ|â€/g, '"')
+    .replace(/â€“/g, "–")
+    .replace(/â€”/g, "—")
+    .replace(/Â·/g, "·")
+    .replace(/Â/g, "");
+}
+
+function linkedText(text: string) {
+  return text.split(/(https?:\/\/[^\s]+)/g).map((part, index) => {
+    if (!/^https?:\/\//i.test(part)) return part;
+    const trailing = part.match(/[),.;:!?]+$/)?.[0] || "";
+    const href = trailing ? part.slice(0, -trailing.length) : part;
+    return <span key={`${href}-${index}`}><a href={href} target="_blank" rel="noreferrer" className="font-semibold text-[#191c33] underline decoration-[#bd8f13] underline-offset-4">{href}</a>{trailing}</span>;
+  });
+}
+
 function isPdfArtifact(line: string) {
   return /^file:\/\//i.test(line)
     || /^\d+\/\d+\/\d+,?\s+\d{1,2}:\d{2}\s+(?:AM|PM)/i.test(line)
@@ -60,7 +80,7 @@ function removeRepeatedTitle(lines: string[], title?: string) {
 }
 
 function formatContent(content: string, title?: string): ContentBlock[] {
-  let lines = content.replace(/\r/g, "").split("\n").map((line) => line.replace(/\s+/g, " ").trim());
+  let lines = normalizeEncoding(content).replace(/\r/g, "").split("\n").map((line) => line.replace(/\s+/g, " ").trim());
   lines = removeRepeatedTitle(lines, title);
   const introductionIndex = lines.findIndex((line) => /^introduction$/i.test(line));
   if (introductionIndex >= 0) lines = lines.slice(introductionIndex);
@@ -139,8 +159,8 @@ export function DocContent({ content, title }: { content: string; title?: string
       {blocks.map((block, index) =>
         block.type === "heading" ? <h2 key={`${index}-${block.text}`}>{block.text}</h2>
         : block.type === "subheading" ? <h3 key={`${index}-${block.text}`}>{block.text}</h3>
-        : block.type === "list" ? <ul key={`${index}-${block.items[0]}`}>{block.items.map((item) => <li key={item}>{item}</li>)}</ul>
-        : <p key={`${index}-${block.text.slice(0, 24)}`}>{block.text}</p>
+        : block.type === "list" ? <ul key={`${index}-${block.items[0]}`}>{block.items.map((item) => <li key={item}>{linkedText(item)}</li>)}</ul>
+        : <p key={`${index}-${block.text.slice(0, 24)}`}>{linkedText(block.text)}</p>
       )}
     </div>
   );

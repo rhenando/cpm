@@ -10,7 +10,9 @@
     "typecheck": "tsc --noEmit",
     "audit:prod": "npm audit --omit=dev",
     "impeccable:detect": "npx impeccable detect src/",
-    "backup:blog": "node scripts/backup-blog.mjs"
+    "backup:blog": "node scripts/backup-blog.mjs",
+    "optimize:images": "node scripts/optimize-public-images.mjs",
+    "verify:seo": "node scripts/verify-seo.mjs"
   },
   "dependencies": {
     "@napi-rs/canvas": "0.1.80",

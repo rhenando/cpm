@@ -44,11 +44,12 @@ export function Header({ settings = defaultSiteSettings }: { settings?: SiteSett
       <div className="container flex h-16 items-center justify-between gap-4 sm:h-20 sm:gap-6">
         <Link href="/" className="flex items-center gap-3" aria-label="Cordova Property home">
           <Image
-            src="/images/brand/CPM-primary-logo-header.png"
+            src="/images/optimized/cordova-logo-header.webp"
             alt="Cordova Property Management"
             width={220}
-            height={75}
+            height={90}
             priority
+            unoptimized
             className="h-auto w-36 object-contain sm:w-44"
           />
         </Link>

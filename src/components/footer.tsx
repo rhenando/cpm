@@ -20,10 +20,11 @@ export function Footer({ settings = defaultSiteSettings }: { settings?: SiteSett
       <div className="container grid gap-9 py-10 md:grid-cols-[1.1fr_1.2fr_1fr] md:py-12">
         <div>
           <Image
-            src="/images/brand/CPM-primary-logo-footer.png"
+            src="/images/optimized/cordova-logo-footer.webp"
             alt="Cordova Property Management Dubai"
             width={220}
-            height={75}
+            height={90}
+            unoptimized
             className="h-auto w-40 object-contain sm:w-48"
           />
           <p className="mt-5 max-w-sm text-sm leading-7 text-white/72">
@@ -86,7 +87,7 @@ export function Footer({ settings = defaultSiteSettings }: { settings?: SiteSett
           </div>
           <div className="mt-8 grid gap-2 text-sm text-white/70">
             <Link href="/privacy-policy">Privacy Policy</Link>
-            <Link href="/privacy-policy">Terms of Service</Link>
+            <Link href="/terms-of-service">Terms of Service</Link>
           </div>
         </div>
       </div>
