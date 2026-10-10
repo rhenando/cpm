@@ -48,11 +48,6 @@ export function BlogArticle({ title, date, modified, image, content, settings, r
           <DocContent content={content} title={title} />
         </div>
 
-        <aside className="mt-10 border-l-4 border-[#bd8f13] bg-[#f7f5f0] p-6 text-sm leading-7 text-[#242424]/75">
-          <p className="font-extrabold text-[#191c33]">Editorial responsibility</p>
-          <p className="mt-2">Prepared by the Cordova Property Management team in Dubai. Regulatory, legal, tax and investment topics are general information only and should be checked against current official guidance or a qualified adviser.</p>
-        </aside>
-
         {related.length ? (
           <section className="mt-12 border-t border-[#d3d3d3] pt-8" aria-labelledby="related-insights">
             <h2 id="related-insights" className="text-2xl font-extrabold text-[#191c33]">Related insights</h2>
