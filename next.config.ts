@@ -17,6 +17,8 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   serverExternalPackages: ["pdf-parse", "@napi-rs/canvas"],
   images: {
+    // Serve originals directly while Vercel image optimization is payment-blocked.
+    unoptimized: true,
     qualities: [75, 90],
     remotePatterns: [
       { protocol: "https", hostname: "images.unsplash.com" },
