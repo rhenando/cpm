@@ -4,6 +4,7 @@ import "./globals.css";
 import { Footer } from "@/components/footer";
 import { Header } from "@/components/header";
 import { JsonLd } from "@/components/json-ld";
+import { Analytics } from "@/components/analytics";
 import { getSiteSettings } from "@/lib/cms";
 import { DEFAULT_SOCIAL_IMAGE, organizationJsonLd, SITE_URL, websiteJsonLd } from "@/lib/seo";
 
@@ -21,6 +22,7 @@ export const metadata: Metadata = {
   description:
     "Expert property management in Dubai, from tenant screening and maintenance to leasing, inspections, and landlord support.",
   metadataBase: new URL(SITE_URL),
+  verification: { google: process.env.GOOGLE_SITE_VERIFICATION || undefined },
   alternates: { canonical: "/" },
   icons: {
     icon: "/favicon.ico",
@@ -60,6 +62,7 @@ export default async function RootLayout({
         <Header settings={settings} />
         <main>{children}</main>
         <Footer settings={settings} />
+        <Analytics />
       </body>
     </html>
   );

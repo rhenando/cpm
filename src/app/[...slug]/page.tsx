@@ -22,7 +22,7 @@ type Props = {
 
 const metadataOverrides: Record<string, { title: string; description: string }> = {
   "property-management": {
-    title: "Property Management Dubai",
+    title: "Dubai Property Management Services & Fees",
     description: "End-to-end Dubai property management for owners, including tenant screening, leasing, inspections, maintenance, rent collection and reporting."
   },
   "properties-for-rent-dubai": {

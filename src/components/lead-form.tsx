@@ -1,15 +1,19 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { trackSavedEnquiry } from "@/lib/analytics";
 
 export function LeadForm({ compact = false }: { compact?: boolean }) {
   const formRef = useRef<HTMLFormElement>(null);
   const startedAt = useRef(Date.now());
+  const submitting = useRef(false);
   const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">("idle");
   const [errorMessage, setErrorMessage] = useState("");
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (submitting.current) return;
+    submitting.current = true;
     setStatus("submitting");
     setErrorMessage("");
     const formData = new FormData(event.currentTarget);
@@ -20,14 +24,17 @@ export function LeadForm({ compact = false }: { compact?: boolean }) {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ ...payload, startedAt: startedAt.current, sourcePath: window.location.pathname })
       });
-      const result = await response.json() as { ok?: boolean; error?: string };
+      const result = await response.json() as { ok?: boolean; recorded?: boolean; error?: string };
       if (!response.ok || !result.ok) throw new Error(result.error || "Your enquiry could not be sent.");
       setStatus("success");
+      if (result.recorded) trackSavedEnquiry();
       formRef.current?.reset();
       startedAt.current = Date.now();
     } catch (error) {
       setStatus("error");
       setErrorMessage(error instanceof Error ? error.message : "Your enquiry could not be sent. Please call or email our team.");
+    } finally {
+      submitting.current = false;
     }
   }
 

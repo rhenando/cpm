@@ -8,7 +8,7 @@ import { getPublishedPosts } from "@/lib/posts";
 import { pageMetadata } from "@/lib/seo";
 
 const heroImage = "/images/optimized/dubai-property-hero.webp";
-const livingRoom = "/images/optimized/modern-living-room.webp";
+const livingRoom = "/images/optimized/modern-living-room-960.webp";
 const managementImage =
   "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1800&q=85";
 
@@ -134,7 +134,7 @@ export default async function HomePage() {
               <p>For expert property management in Dubai contact the team today.</p>
             </div>
             <ButtonLink href="/about-cordova-property-management" className="mt-8">
-              Find out more
+                About Cordova Property Management
             </ButtonLink>
           </div>
         </div>

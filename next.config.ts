@@ -32,6 +32,12 @@ const nextConfig: NextConfig = {
   },
   async redirects() {
     return [
+      // Existing external links still point to these pre-rebuild article URLs.
+      ...["rental-yields-dubai-marina-vs-downtown", "dubai-property-management-fees-overpaying"].map((slug) => ({
+        source: `/${slug}`,
+        destination: `https://www.cordovaproperty.com/blog/${slug}`,
+        permanent: true
+      })),
       {
         source: "/:path*",
         has: [{ type: "host", value: "cordovaproperty.com" }],

@@ -12,6 +12,7 @@ const urls = [...sitemap.html.matchAll(/<loc>(.*?)<\/loc>/g)].map((match) =>
 
 const failed = [];
 const metadataIssues = [];
+if (!sitemap.response.ok || urls.length === 0) failed.push(["/sitemap.xml", "Missing or empty sitemap"]);
 
 for (let index = 0; index < urls.length; index += 16) {
   await Promise.all(
@@ -60,15 +61,23 @@ const spots = await Promise.all(
   spotPaths.map(async (path) => [path, (await fetch(`${baseUrl}${path}`)).status]),
 );
 
-const redirectPaths = ["/blog/test", "/blog-old", "/blog-list"];
+const redirectPaths = ["/blog/test", "/blog-old", "/blog-list", "/rental-yields-dubai-marina-vs-downtown", "/dubai-property-management-fees-overpaying"];
 const redirects = await Promise.all(
   redirectPaths.map(async (path) => {
     const response = await fetch(`${baseUrl}${path}`, { redirect: "manual" });
+    if (![301, 308].includes(response.status) || !response.headers.get("location")) failed.push([path, "Expected permanent redirect"]);
+    if (path === "/rental-yields-dubai-marina-vs-downtown" || path === "/dubai-property-management-fees-overpaying") {
+      if (response.headers.get("location") !== `https://www.cordovaproperty.com/blog${path}`) failed.push([path, "Incorrect article destination"]);
+    }
     return [path, response.status, response.headers.get("location")];
   }),
 );
 
 const admin = await fetch(`${baseUrl}/admin/login`, { redirect: "manual" });
+for (const [path, status] of spots) if (status !== 200) failed.push([path, status]);
+const robots = await fetchText("/robots.txt");
+if (/Disallow:\s*\/_next\//i.test(robots.html)) failed.push(["/robots.txt", "Rendering assets blocked"]);
+if (!admin.headers.get("x-robots-tag")?.includes("noindex")) failed.push(["/admin/login", "Missing noindex"]);
 
 console.log(
   JSON.stringify(

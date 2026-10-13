@@ -65,5 +65,5 @@ export async function POST(request: NextRequest) {
     console.error("Unable to save contact enquiry:", error.message);
     return NextResponse.json({ error: "We could not save your enquiry. Please call or email our team." }, { status: 503 });
   }
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({ ok: true, recorded: true });
 }

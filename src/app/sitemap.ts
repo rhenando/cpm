@@ -9,7 +9,7 @@ const teamSlugs = ["lesty-cordova", "rosewell-sangco", "carl-manalang"];
 
 function validDate(value: string) {
   const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? new Date("2026-10-03T00:00:00Z") : date;
+  return Number.isNaN(date.getTime()) ? undefined : date;
 }
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
@@ -21,8 +21,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       lastModified: validDate(page.modified || page.date)
     }));
   const teamEntries: MetadataRoute.Sitemap = teamSlugs.map((slug) => ({
-    url: absoluteUrl(`/${slug}`),
-    lastModified: new Date("2026-10-03T00:00:00Z")
+    url: absoluteUrl(`/${slug}`)
   }));
   const postEntries: MetadataRoute.Sitemap = posts.map((post) => ({
     url: absoluteUrl(`/blog/${post.slug}`),
@@ -30,13 +29,12 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }));
   const totalBlogPages = Math.ceil(posts.length / POSTS_PER_PAGE);
   const paginationEntries: MetadataRoute.Sitemap = Array.from({ length: Math.max(0, totalBlogPages - 1) }, (_, index) => ({
-    url: absoluteUrl(`/blog/page/${index + 2}`),
-    lastModified: new Date()
+    url: absoluteUrl(`/blog/page/${index + 2}`)
   }));
 
   return [
-    { url: absoluteUrl("/"), lastModified: new Date("2026-10-03T00:00:00Z") },
-    { url: absoluteUrl("/blog"), lastModified: posts[0] ? validDate(posts[0].modified || posts[0].date) : new Date() },
+    { url: absoluteUrl("/") },
+    { url: absoluteUrl("/blog") },
     ...pageEntries,
     ...teamEntries,
     ...paginationEntries,
