@@ -107,9 +107,9 @@ export default async function HomePage() {
         <div className="container grid items-center gap-12 lg:grid-cols-2">
           <Image
             src={livingRoom}
-            alt="Modern cozy living room"
-            width={900}
-            height={620}
+            alt="Modern lounge with a curved sofa and floor-to-ceiling windows"
+            width={960}
+            height={641}
             sizes="(max-width: 1024px) 100vw, 50vw"
             className="aspect-[4/3] object-cover shadow-[0_28px_70px_rgba(25,28,51,0.14)]"
           />
