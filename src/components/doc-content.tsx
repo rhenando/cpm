@@ -32,9 +32,9 @@ function isPdfArtifact(line: string) {
 }
 
 function isNamedSectionHeading(line: string) {
-  if (line.length > 105 || /[.!?]$/.test(line)) return false;
-  return /^(?:introduction|conclusion|summary|final thoughts|key takeaways)$/i.test(line)
-    || /^(?:step[- ]by[- ]step|how|why|what|when|where|common|key|the importance|benefits|warning signs|best practices)\b/i.test(line);
+  // PDF line breaks are visual wraps, not semantic heading boundaries.
+  // A sentence starting with "When" or "How" must remain body text.
+  return /^(?:introduction|conclusion|summary|final thoughts|key takeaways)$/i.test(line);
 }
 
 function isTitleCaseHeading(line: string) {
