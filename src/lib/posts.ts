@@ -1,6 +1,6 @@
 import "server-only";
 import { createClient } from "@supabase/supabase-js";
-import { unstable_cache } from "next/cache";
+import { unstable_noStore as noStore } from "next/cache";
 import { cache } from "react";
 import type { StaticDoc } from "@/data/types";
 import { getSupabaseConfig, isSupabaseConfigured } from "@/lib/supabase/config";
@@ -73,6 +73,7 @@ function mapPost(row: PostRow): StaticDoc {
 }
 
 async function getSupabasePosts() {
+  noStore();
   if (!isSupabaseConfigured()) return [];
   const { url, key } = getSupabaseConfig();
   const supabase = createClient(url, key, { auth: { persistSession: false } });
@@ -90,16 +91,15 @@ async function getSupabasePosts() {
   return (data as PostRow[]).filter((row) => !hiddenPostIds.has(row.id)).map(mapPost);
 }
 
-const getCachedPublishedPosts = unstable_cache(getSupabasePosts, ["published-post-summaries"], {
-  revalidate: 3600,
-  tags: ["posts"]
-});
+// Deduplicate within a render, without retaining a time-filtered list across requests.
+const getCachedPublishedPosts = cache(getSupabasePosts);
 
 export async function getPublishedPosts(): Promise<StaticDoc[]> {
   return getCachedPublishedPosts();
 }
 
 const getPostBySlug = cache(async (slug: string): Promise<StaticDoc | undefined> => {
+  noStore();
   if (!isSupabaseConfigured()) return undefined;
   const { url, key } = getSupabaseConfig();
   const supabase = createClient(url, key, { auth: { persistSession: false } });

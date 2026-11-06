@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/admin";
 import { cleanPostTitle } from "@/lib/post-title";
+import { extractPdfText } from "@/lib/pdf-text";
 
 const MAX_PDF_SIZE = 2.5 * 1024 * 1024;
 const MAX_IMAGE_SIZE = 1.25 * 1024 * 1024;
@@ -48,14 +49,6 @@ function getPublishDate(value: FormDataEntryValue | null) {
   return Number.isNaN(date.getTime()) ? null : date;
 }
 
-async function installPdfNodeGlobals() {
-  const { DOMMatrix, ImageData, Path2D } = await import("@napi-rs/canvas");
-  const nodeGlobals = globalThis as unknown as Record<string, unknown>;
-  nodeGlobals.DOMMatrix ??= DOMMatrix;
-  nodeGlobals.ImageData ??= ImageData;
-  nodeGlobals.Path2D ??= Path2D;
-}
-
 export async function login(formData: FormData) {
   const email = String(formData.get("email") || "").trim().toLowerCase();
   const password = String(formData.get("password") || "");
@@ -94,18 +87,13 @@ export async function publishPost(formData: FormData) {
   if (images.some((image) => !ALLOWED_IMAGES.has(image.type) || image.size > MAX_IMAGE_SIZE)) redirect("/admin?error=invalid-image");
   if (pdfs.some((pdf, index) => pdf.size + images[index].size > MAX_COMBINED_SIZE)) redirect("/admin?error=files-too-large");
 
-  await installPdfNodeGlobals();
-  const { PDFParse } = await import("pdf-parse");
   const publishedSlugs: string[] = [];
   for (let index = 0; index < pdfs.length; index++) {
     const pdf = pdfs[index];
     const image = images[index];
     let content = "";
     try {
-      const parser = new PDFParse({ data: Buffer.from(await pdf.arrayBuffer()) });
-      const text = await parser.getText();
-      content = cleanPdfText(text.text);
-      await parser.destroy();
+      content = cleanPdfText(await extractPdfText(new Uint8Array(await pdf.arrayBuffer())));
     } catch (error) {
       console.error(`Unable to process uploaded PDF ${pdf.name}:`, error);
       redirect(`/admin?error=${publishedSlugs.length ? "batch-partial" : "pdf-processing-failed"}`);
@@ -150,6 +138,10 @@ export async function publishPost(formData: FormData) {
       redirect(`/admin?error=${publishedSlugs.length ? "batch-partial" : "publish-failed"}`);
     }
     publishedSlugs.push(slug);
+    // Invalidate each saved article even if a later item in the batch fails.
+    revalidateTag("posts");
+    revalidatePath("/blog", "layout");
+    revalidatePath("/sitemap.xml");
     revalidatePath(`/blog/${slug}`);
   }
   revalidateTag("posts");
