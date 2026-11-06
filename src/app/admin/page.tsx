@@ -20,7 +20,7 @@ const messages: Record<string, string> = {
   "invalid-image": "Use a JPG, PNG or WebP image no larger than 1.25 MB.",
   "files-too-large": "The PDF and image must be no larger than 3.75 MB combined.",
   "empty-pdf": "The PDF does not contain enough selectable text to create an article.",
-  "pdf-processing-failed": "The PDF could not be read. Export it again as a text-based PDF and retry.",
+  "pdf-processing-failed": "The server could not process this PDF. Retry the upload. If it keeps failing, check the server logs for the PDF processing error.",
   "invalid-date": "Choose a valid publication date and time.",
   "upload-failed": "The files could not be uploaded. Check the Supabase storage policies.",
   "publish-failed": "The article could not be saved. Check the Supabase posts policies.",
