@@ -50,20 +50,22 @@ const sourceSlugByPublicSlug: Record<string, string> = {
   "how-efficient-property-operations-increase-asset-value-in-dubai": "test"
 };
 
-function mapPost(row: PostRow): StaticDoc {
+export function mapPost(row: PostRow): StaticDoc {
   const correction = postCorrections[row.id];
+  // Corrections predate the editor. Later editorial changes take precedence.
+  const legacyCorrection = row.updated_at < "2026-11-12T00:00:00.000Z" ? correction : undefined;
   const rawContent = row.content || "";
-  const content = correction?.removeLeadingContent && rawContent.trimStart().startsWith(correction.removeLeadingContent)
-    ? rawContent.trimStart().slice(correction.removeLeadingContent.length).trimStart()
+  const content = legacyCorrection?.removeLeadingContent && rawContent.trimStart().startsWith(legacyCorrection.removeLeadingContent)
+    ? rawContent.trimStart().slice(legacyCorrection.removeLeadingContent.length).trimStart()
     : rawContent;
   return {
     id: row.id,
     slug: correction?.slug || row.slug,
-    title: correction?.title || cleanPostTitle(row.title),
+    title: legacyCorrection?.title || cleanPostTitle(row.title),
     description: row.excerpt,
     excerpt: row.excerpt,
     content,
-    image: correction?.image || row.image_url,
+    image: legacyCorrection?.image || row.image_url,
     sourceUrl: row.pdf_url || "",
     pdfUrl: row.pdf_url || "",
     type: "post",

@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import { Eye, LogOut } from "lucide-react";
+import { Eye, LogOut, Pencil } from "lucide-react";
 import { logout } from "./actions";
 import { DeletePostButton } from "./delete-post-button";
 import { UploadPostForm } from "./upload-post-form";
@@ -28,16 +28,18 @@ const messages: Record<string, string> = {
   "delete-assets-failed": "The article was deleted, but its uploaded files could not be removed. Check Supabase Storage."
 };
 
-export default async function AdminPage({ searchParams }: { searchParams: Promise<{ error?: string; success?: string; count?: string }> }) {
+export default async function AdminPage({ searchParams }: { searchParams: Promise<{ error?: string; success?: string; count?: string; page?: string }> }) {
   if (!isSupabaseConfigured()) redirect("/admin/login");
   const { supabase, user } = await requireAdmin();
-  const { error, success, count } = await searchParams;
-  const { data: recentPosts } = await supabase
+  const { error, success, count, page: pageParam } = await searchParams;
+  const page = Math.max(1, Math.min(100000, Math.floor(Number(pageParam) || 1)));
+  const { data: recentPosts, count: totalPosts } = await supabase
     .from("posts")
-    .select("id,title,slug,published_at")
+    .select("id,title,slug,published_at", { count: "exact" })
     .eq("author_id", user.id)
     .order("created_at", { ascending: false })
-    .limit(10);
+    .order("id")
+    .range((page - 1) * 10, page * 10 - 1);
 
   return (
     <main className="min-h-[calc(100svh-7rem)] bg-[#f1f0f3] py-14 md:py-20">
@@ -64,7 +66,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
         </div>
 
         <section className="mt-10 bg-white p-6 shadow-xl shadow-[#191c33]/5 sm:p-10">
-          <h2 className="text-2xl font-extrabold text-[#191c33]">Recent uploads</h2>
+          <h2 className="text-2xl font-extrabold text-[#191c33]">Manage articles</h2>
           <div className="mt-6 divide-y divide-[#d3d3d3]">
             {recentPosts?.length ? recentPosts.map((post) => {
               const scheduled = new Date(post.published_at).getTime() > Date.now();
@@ -77,7 +79,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
                       {new Date(post.published_at).toLocaleString("en-AE", { timeZone: "Asia/Dubai", dateStyle: "medium", timeStyle: "short" })} Dubai time
                     </p>
                   </div>
-                  <div className="flex items-center gap-2">
+                  <div className="flex flex-wrap items-center gap-2 sm:shrink-0">
                     <span className={`w-fit px-3 py-1.5 text-[0.65rem] font-extrabold uppercase tracking-wider ${scheduled ? "bg-[#bd8f13]/10 text-[#9f7410]" : "bg-emerald-50 text-emerald-700"}`}>
                       {scheduled ? "Scheduled" : "Published"}
                     </span>
@@ -89,12 +91,19 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
                     >
                       <Eye size={14} aria-hidden /> Preview
                     </Link>
+                    <Link href={`/admin/edit/${post.id}`} className="inline-flex items-center gap-1.5 px-2 py-1.5 text-[0.65rem] font-extrabold uppercase tracking-wider text-[#191c33] hover:bg-[#f1f0f3] hover:text-[#bd8f13]">
+                      <Pencil size={14} aria-hidden /> Edit
+                    </Link>
                     <DeletePostButton id={post.id} title={displayTitle} />
                   </div>
                 </div>
               );
             }) : <p className="py-5 text-sm text-[#242424]/60">No Supabase uploads yet.</p>}
           </div>
+          <nav aria-label="Article pages" className="mt-6 flex justify-between gap-4 text-sm font-bold">
+            {page > 1 ? <Link href={`/admin?page=${page - 1}`}>← Newer articles</Link> : <span />}
+            {page * 10 < (totalPosts || 0) ? <Link href={`/admin?page=${page + 1}`}>Older articles →</Link> : null}
+          </nav>
         </section>
       </div>
     </main>

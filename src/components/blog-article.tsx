@@ -8,7 +8,6 @@ import type { StaticDoc } from "@/data/types";
 type BlogArticleProps = {
   title: string;
   date: string;
-  modified: string;
   image: string;
   content: string;
   settings: SiteSettings;
@@ -21,15 +20,13 @@ function formatDate(date: string) {
     : "Cordova insight";
 }
 
-export function BlogArticle({ title, date, modified, image, content, settings, related }: BlogArticleProps) {
-  const wasUpdated = modified && new Date(modified).getTime() > new Date(date).getTime() + 86_400_000;
+export function BlogArticle({ title, date, image, content, settings, related }: BlogArticleProps) {
   return (
     <article className="news-article-page">
       <div className="news-article-container">
         <h1>{title}</h1>
         <div className="news-article-byline">
           By <Link href="/about-cordova-property-management">Cordova Property Management</Link> &bull; Published <time dateTime={date}>{formatDate(date)}</time>
-          {wasUpdated ? <> &bull; Updated <time dateTime={modified}>{formatDate(modified)}</time></> : null}
         </div>
 
         {image ? (

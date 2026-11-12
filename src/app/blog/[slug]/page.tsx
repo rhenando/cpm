@@ -76,7 +76,7 @@ export default async function BlogPostPage({ params }: Props) {
           isPartOf: { "@id": `${SITE_URL}/#website` }
         }
       ]} />
-      <BlogArticle title={post.title} date={post.date} modified={post.modified} image={post.image} content={post.content} settings={settings} related={relatedPosts(post, posts)} />
+      <BlogArticle title={post.title} date={post.date} image={post.image} content={post.content} settings={settings} related={relatedPosts(post, posts)} />
     </>
   );
 }
