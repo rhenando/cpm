@@ -336,8 +336,8 @@ function PropertyManagementPage() {
             <div className="absolute bottom-0 left-0 right-10 top-10 border border-[#bd8f13]/55" />
             <div className="relative aspect-[4/3] overflow-hidden shadow-[0_28px_70px_rgba(25,28,51,.22)]">
               <Image
-                src="/images/optimized/modern-living-room.webp"
-                alt="Refined living room interior"
+                src="/images/optimized/relaxing-with-dubai-skyline.webp"
+                alt="Man relaxing at home with views of the Dubai skyline"
                 fill
                 sizes="(max-width: 1024px) 90vw, 600px"
                 className="object-cover transition duration-700 hover:scale-[1.025]"
