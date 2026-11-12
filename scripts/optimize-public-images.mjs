@@ -3,6 +3,7 @@ import { dirname, extname } from "node:path";
 import { createCanvas, loadImage } from "@napi-rs/canvas";
 
 const jobs = [
+  ["public/images/pages/relaxing-with-dubai-skyline.png", "public/images/optimized/relaxing-with-dubai-skyline.webp", 1600, 80],
   ["public/images/pages/mainimg.jpeg", "public/images/optimized/modern-living-room-960.webp", 960, 80],
   ["public/images/articles/Dubai-PropertyBlog4.jpg", "public/images/optimized/dubai-property-hero.webp", 1200, 60],
   ["public/images/brand/CPM-primary-logo-header.png", "public/images/optimized/cordova-logo-header.webp", 300, 88],
