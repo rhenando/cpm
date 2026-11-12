@@ -6,6 +6,7 @@ import { createSupabaseServerClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/lib/admin";
 import { cleanPostTitle } from "@/lib/post-title";
 import { extractPdfText } from "@/lib/pdf-text";
+import { mapPost } from "@/lib/posts";
 
 const MAX_PDF_SIZE = 2.5 * 1024 * 1024;
 const MAX_IMAGE_SIZE = 1.25 * 1024 * 1024;
@@ -191,4 +192,69 @@ export async function deletePost(formData: FormData) {
   revalidatePath("/blog");
   revalidatePath(`/blog/${post.slug}`);
   redirect("/admin?success=deleted");
+}
+
+export async function updatePost(_state: { error: string }, formData: FormData): Promise<{ error: string }> {
+  const { supabase, user } = await requireAdmin();
+  const id = String(formData.get("id") || "");
+  const { data: post, error: lookupError } = await supabase.from("posts").select("*").eq("id", id).eq("author_id", user.id).single();
+  if (lookupError || !post) return { error: "This article could not be loaded. Return to the article list and try again." };
+  if (post.updated_at !== formData.get("updatedAt")) return { error: "This article changed since you opened it. Reload the page before editing again." };
+  const current = mapPost(post);
+  const image = formData.get("image");
+  const pdf = formData.get("pdf");
+  const newImage = image instanceof File && image.size > 0 ? image : null;
+  const newPdf = pdf instanceof File && pdf.size > 0 ? pdf : null;
+  if (newImage && (!ALLOWED_IMAGES.has(newImage.type) || newImage.size > MAX_IMAGE_SIZE)) return { error: "Use a JPG, PNG or WebP image no larger than 1.25 MB." };
+  if (newPdf && (newPdf.type !== "application/pdf" || newPdf.size > MAX_PDF_SIZE)) return { error: "Use a PDF no larger than 2.5 MB." };
+  if ((newImage?.size || 0) + (newPdf?.size || 0) > MAX_COMBINED_SIZE) return { error: "The PDF and image must be no larger than 3.75 MB combined." };
+  let title = String(formData.get("title") || "").trim();
+  let content = String(formData.get("content") || "").trim();
+  let excerpt = String(formData.get("excerpt") || "").trim();
+  if (newPdf) {
+    try {
+      const extracted = cleanPdfText(await extractPdfText(new Uint8Array(await newPdf.arrayBuffer())));
+      if (extracted.length < 100) return { error: "The PDF does not contain enough selectable text to create an article." };
+      title = deriveTitle(extracted, undefined, newPdf.name);
+      const lines = extracted.split("\n");
+      const byline = lines.findIndex((line) => /^\s*By Cordova Property Management\b/i.test(line));
+      content = byline > 0 ? lines.slice(byline).join("\n").trim() : extracted.toLowerCase().startsWith(title.toLowerCase()) ? extracted.slice(title.length).trimStart() : extracted;
+      excerpt = content.replace(/\s+/g, " ").slice(0, 158);
+    } catch {
+      return { error: "The PDF could not be processed. Please use a text-based PDF and try again." };
+    }
+  }
+  if (!title || title.length > 300 || !content || content.length > 200000 || excerpt.length > 500) return { error: "Enter a title (up to 300 characters), article text (up to 200,000 characters), and an excerpt of up to 500 characters." };
+  const uploaded: string[] = [];
+  let imageUrl = current.image;
+  let pdfUrl = post.pdf_url;
+  const folder = `${user.id}/${post.slug}/${crypto.randomUUID()}`;
+  for (const [file, name] of [[newImage, "featured"], [newPdf, "article"]] as const) {
+    if (!file) continue;
+    const extension = file.type === "application/pdf" ? "pdf" : file.type === "image/png" ? "png" : file.type === "image/webp" ? "webp" : "jpg";
+    const path = `${folder}/${name}.${extension}`;
+    const { error } = await supabase.storage.from("blog-assets").upload(path, file, { contentType: file.type });
+    if (error) {
+      if (uploaded.length) await supabase.storage.from("blog-assets").remove(uploaded);
+      return { error: "The replacement file could not be uploaded. Your article has not been changed." };
+    }
+    uploaded.push(path);
+    const url = supabase.storage.from("blog-assets").getPublicUrl(path).data.publicUrl;
+    if (name === "featured") imageUrl = url;
+    else pdfUrl = url;
+  }
+  const { data: saved, error } = await supabase.from("posts").update({ title, content, excerpt, image_url: imageUrl, pdf_url: pdfUrl, updated_at: new Date().toISOString() })
+    .eq("id", id).eq("author_id", user.id).eq("updated_at", post.updated_at).select("id").maybeSingle();
+  if (error || !saved) {
+    if (uploaded.length) await supabase.storage.from("blog-assets").remove(uploaded);
+    return { error: "The article could not be saved or was changed in another window. Reload before trying again." };
+  }
+  revalidateTag("posts");
+  revalidatePath("/admin");
+  revalidatePath(`/admin/edit/${id}`);
+  revalidatePath(`/admin/preview/${id}`);
+  revalidatePath("/blog", "layout");
+  revalidatePath(`/blog/${current.slug}`);
+  revalidatePath("/sitemap.xml");
+  redirect(`/admin/edit/${id}?saved=1`);
 }

@@ -4,7 +4,7 @@ import { notFound } from "next/navigation";
 import { BlogArticle } from "@/components/blog-article";
 import { requireAdmin } from "@/lib/admin";
 import { getSiteSettings } from "@/lib/cms";
-import { cleanPostTitle } from "@/lib/post-title";
+import { mapPost } from "@/lib/posts";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +14,7 @@ export default async function PostPreviewPage({ params }: { params: Promise<{ id
   const [{ data: post }, settings] = await Promise.all([
     supabase
       .from("posts")
-      .select("id,title,content,image_url,published_at,updated_at")
+      .select("id,slug,title,excerpt,content,image_url,published_at,updated_at")
       .eq("id", id)
       .eq("author_id", user.id)
       .single(),
@@ -22,6 +22,7 @@ export default async function PostPreviewPage({ params }: { params: Promise<{ id
   ]);
 
   if (!post) notFound();
+  const display = mapPost(post);
 
   return (
     <>
@@ -36,11 +37,10 @@ export default async function PostPreviewPage({ params }: { params: Promise<{ id
         </div>
       </div>
       <BlogArticle
-        title={cleanPostTitle(post.title)}
+        title={display.title}
         date={post.published_at}
-        modified={post.updated_at}
-        image={post.image_url}
-        content={post.content}
+        image={display.image || ""}
+        content={display.content || ""}
         settings={settings}
         related={[]}
       />
